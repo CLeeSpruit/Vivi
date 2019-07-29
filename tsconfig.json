@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "outDir": "./dist/",
+        "baseUrl": "./src/",
+        "module":"commonjs",
+        "sourceMap": true,
+        "paths": {
+            "@service/*": ["service/*"],
+            "@component/*": ["component/*"],
+            "@event/*": ["event/*"]
+        }
+    }
+}
