@@ -5,6 +5,7 @@
         "baseUrl": "./src/",
         "module":"commonjs",
         "sourceMap": true,
+        "declaration": true,
         "paths": {
             "@services/*": ["services/*"],
             "@events/*": ["events/*"],

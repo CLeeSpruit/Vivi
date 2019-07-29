@@ -4,8 +4,6 @@ import { Component } from '@models/component.class';
 import { ViviComponentConstructor } from '@models/component-constructor.interface';
 import { Service } from '@models/service.class';
 import { ViviServiceConstructor } from '@models/service-constructor.interface';
-import { FileService } from '@services/file.service';
-import { FileStoreService } from '@services/file-store.service';
 import { SystemService } from '@services/system.service';
 
 export interface ViviFactoryConstructor {
@@ -19,7 +17,6 @@ export class ViviFactory {
     services: Map<string, ViviServiceFactory<Service>> = new Map<string, ViviServiceFactory<Service>>();
     components: Map<string, ViviComponentFactory<Component>> = new Map<string, ViviComponentFactory<Component>>();
     system: SystemService;
-    file: FileStoreService;
 
     constructor(
         module: ViviFactoryConstructor
@@ -32,7 +29,7 @@ export class ViviFactory {
                     return this.services.get(prereq.name);
                 });
             }
-            this.services.set(serviceConstructor.constructor.name, new ViviServiceFactory(serviceConstructor.constructor, prereqArr, serviceConstructor.isGlobal));
+            this.services.set(serviceConstructor.constructor.name, new ViviServiceFactory(serviceConstructor.constructor, prereqArr));
         });
 
         // Init Components
@@ -68,13 +65,6 @@ export class ViviFactory {
             }
             this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, template, style, serviceArr, childrenArr));
         });
-
-        // Create File Service and install application
-        this.getFactory(FileService).create();
-        this.file = this.getFactory(FileStoreService).create({ returnService: true });
-        if (!this.file.hasBeenInstalled()) {
-            this.file.installDirectories();
-        }
 
         // Mount root component
         if (module.rootComponent) {

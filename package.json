@@ -8,7 +8,8 @@
         "flush": "rm -r ./dist || true",
         "nuke": "rm -r ./node_modules",
         "test": "jest",
-        "watch": "webpack-cli -w"
+        "watch": "webpack-cli -w",
+        "publish": "npm run build && tsc"
     },
     "repository": {
         "type": "git",
