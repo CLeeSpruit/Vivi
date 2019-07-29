@@ -1,5 +1,5 @@
 import { Component } from './component.class';
-import { Service } from '@system/service/service.class';
+import { Service } from '@models/service.class';
 
 export interface ViviComponentConstructor<T> {
     constructor: new (...args) => T;

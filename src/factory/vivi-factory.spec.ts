@@ -1,12 +1,12 @@
 
-import { ViviFactory } from './vivi-factory';
-import { ViviServiceConstructor } from './service/service-constructor.interface';
-import { SystemService } from '@app/services/__mocks__/system.mock';
-import { ViviComponentConstructor } from './component/component-constructor.interface';
-import { Component } from './component/component.class';
-import { ViviComponentFactory } from './component/component-factory.class';
-import { ViviServiceFactory } from './service/service-factory.class';
-import { Service } from './service/service.class';
+import { ViviComponentFactory } from '@factory/component-factory.class';
+import { ViviServiceFactory } from '@factory/service-factory.class';
+import { ViviFactory } from '@factory/vivi-factory';
+import { Component } from '@models/component.class';
+import { ViviComponentConstructor } from '@models/component-constructor.interface';
+import { Service } from '@models/service.class';
+import { ViviServiceConstructor } from '@models/service-constructor.interface';
+import { SystemService } from '@services/__mocks__/system.mock';
 
 describe('Vivi Factory', () => {
     const minimumConstructor = () => {

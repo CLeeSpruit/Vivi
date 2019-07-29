@@ -6,9 +6,10 @@
         "module":"commonjs",
         "sourceMap": true,
         "paths": {
-            "@service/*": ["service/*"],
-            "@component/*": ["component/*"],
-            "@event/*": ["event/*"]
+            "@services/*": ["services/*"],
+            "@events/*": ["events/*"],
+            "@models/*": ["models/*"],
+            "@factory/*": ["factory/*"]
         }
     }
 }

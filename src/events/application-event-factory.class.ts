@@ -1,8 +1,9 @@
-import { ApplicationListener } from './application-listener.class';
-import { ApplicationEvent } from './application-event.class';
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
-import { map, skip } from 'rxjs/operators';
-import { Service } from '@system/service/service.class';
+import { skip } from 'rxjs/operators';
+
+import { ApplicationListener } from '@event/application-listener.class';
+import { ApplicationEvent } from '@event/application-event.class';
+import { Service } from '@models/service.class';
 
 export interface ListenerOptions {
     getEvent?: boolean; // Retrieves only data by default

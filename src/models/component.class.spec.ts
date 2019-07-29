@@ -1,4 +1,4 @@
-import { Component } from './component.class';
+import { Component } from '@models/component.class';
 
 describe('Class: Component', () => {
     it('should init', () => {
