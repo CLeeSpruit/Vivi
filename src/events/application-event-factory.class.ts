@@ -1,8 +1,8 @@
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
-import { ApplicationListener } from '@event/application-listener.class';
-import { ApplicationEvent } from '@event/application-event.class';
+import { ApplicationListener } from '@events/application-listener.class';
+import { ApplicationEvent } from '@events/application-event.class';
 import { Service } from '@models/service.class';
 
 export interface ListenerOptions {
