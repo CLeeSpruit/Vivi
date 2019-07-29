@@ -1,7 +1,7 @@
-import { SystemService } from './system';
-import { Observable, AsyncSubject } from 'rxjs';
 import { WriteStream } from 'fs';
-import { Service } from '@system/service/service.class';
+import { Observable, AsyncSubject } from 'rxjs';
+import { Service } from '@models/service.class';
+import { SystemService } from '@services/system.service';
 
 export class FileService extends Service {
     constructor(

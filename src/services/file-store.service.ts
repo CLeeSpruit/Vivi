@@ -1,8 +1,7 @@
-import { Config } from '../config';
 import { WriteStream } from 'fs';
-import { SystemService } from './system';
-import { FileService } from './file';
-import { Service } from '@system/service/service.class';
+import { SystemService } from '@services/system.service';
+import { FileService } from '@services/file.service';
+import { Service } from '@models/service.class';
 
 export class FileStoreService extends Service {
     directory: string;
@@ -63,17 +62,5 @@ export class FileStoreService extends Service {
 
     private writeStream(stream: WriteStream, data: any) {
         this.file.writeToStream(stream, data);
-    }
-
-    installDirectories() {
-        this.file.createDirectory(this.directory, Config.folderData);
-        this.file.createDirectory(this.directory, Config.folderHistory);
-        this.file.createDirectory(this.directory, Config.folderBookmarks);
-        this.file.createDirectory(this.directory, Config.folderLogs);
-        this.file.createDirectory(this.directory, Config.folderConfig);
-    }
-
-    hasBeenInstalled(): boolean {
-        return this.file.existsDirectory(this.directory, Config.folderData);
     }
 }
