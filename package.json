@@ -9,7 +9,8 @@
         "nuke": "rm -r ./node_modules",
         "test": "jest",
         "watch": "webpack-cli -w",
-        "publish": "npm run build && tsc"
+        "dist": "npm run build && tsc",
+        "npm_publish": "./publish.sh"
     },
     "repository": {
         "type": "git",
