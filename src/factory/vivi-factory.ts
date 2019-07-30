@@ -6,7 +6,9 @@ import { loadViviServices } from '../services/load-services.static';
 export interface ViviFactoryConstructor {
     serviceConstructors?: Array<ViviServiceConstructor<Service>>,
     componentConstructors?: Array<ViviComponentConstructor<Component>>,
-    rootComponent?: new (...args) => Component
+    rootComponent?: new (...args) => Component,
+    // TODO: Find a more graceful solution to finding related files
+    baseDirectory?: string
 }
 
 // TODO: Rename ViviFactory to ModuleFactory
@@ -47,8 +49,8 @@ export class ViviFactory {
                 // TODO: Make each component read async
                 // Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
                 const dirname = constructor.constructor.name.replace('Component', '').replace(/\B(?=[A-Z])/, '-').toLowerCase();
-                const styleFile = this.system.path.join(__dirname, '../', dirname, dirname + '.component.scss');
-                const templateFile = this.system.path.join(__dirname, '../', dirname, dirname + '.component.html');
+                const styleFile = this.system.path.join(module.baseDirectory, dirname, dirname + '.component.scss');
+                const templateFile = this.system.path.join(module.baseDirectory, dirname, dirname + '.component.html');
                 // TODO: Make this file read fail more gracefully
                 const style = this.system.fs.existsSync(styleFile) ? this.system.fs.readFileSync(styleFile, { encoding: 'utf-8' }) : '';
                 const template = this.system.fs.existsSync(templateFile) ? this.system.fs.readFileSync(templateFile, { encoding: 'utf-8' }) : '';
