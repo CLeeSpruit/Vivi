@@ -5,6 +5,7 @@ import { ViviComponentConstructor } from '@models/component-constructor.interfac
 import { Service } from '@models/service.class';
 import { ViviServiceConstructor } from '@models/service-constructor.interface';
 import { SystemService } from '@services/system.service';
+import { loadViviServices } from '@services/load-services.static';
 
 export interface ViviFactoryConstructor {
     // TODO: Allow service and component constructors to be null
@@ -21,6 +22,9 @@ export class ViviFactory {
     constructor(
         module: ViviFactoryConstructor
     ) {
+        // Append Vivi services - these should be before any custom servies
+        module.serviceConstructors.unshift(...loadViviServices);
+
         // Init Services
         module.serviceConstructors.forEach(serviceConstructor => {
             let prereqArr = [];
@@ -35,7 +39,7 @@ export class ViviFactory {
         // Init Components
         // Init and fetch system since it's needed for the next step
         // TODO: Mesh the create and get functionality
-        // TODO: Autocreate system since this is required for Vivify
+        // TODO: Autocreate system since this is required
         const system = this.getFactory(SystemService);
         if (!system) { throw 'System is required.'; }
         this.system = system.create({ returnService: true });
