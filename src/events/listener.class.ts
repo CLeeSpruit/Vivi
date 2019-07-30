@@ -21,15 +21,17 @@ export class Listener {
         }
 
         // Others
-
-        this.add();
+        
+        if (this.element) this.add();
     }
 
     add() {
+        if (!this.element) throw 'No element found to add listener to';
         this.element.addEventListener(this.type, this.callback, this.options);
     }
 
     remove() {
+        if (!this.element) throw 'No element found to remove listener from';
         this.element.removeEventListener(this.type, this.callback, this.options);
     }
 }

@@ -1,4 +1,3 @@
-
 import { ViviComponentFactory, ViviServiceFactory, ViviFactory } from '../';
 import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../../models';
 import { SystemService } from '../../services/__mocks__/system.mock';
