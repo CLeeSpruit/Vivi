@@ -1,6 +1,6 @@
 import { ViviServiceFactory, ViviComponentFactory } from './';
 import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../models';
-import { SystemService } from '../services';
+import { SystemService } from '../services/system.service';
 import { loadViviServices } from '../services/load-services.static';
 
 export interface ViviFactoryConstructor {
@@ -39,9 +39,7 @@ export class ViviFactory {
         // Init Components
         // Init and fetch system since it's needed for the next step
         // TODO: Mesh the create and get functionality
-        // TODO: Autocreate system since this is required
         const system = this.getFactory(SystemService);
-        if (!system) { throw 'System is required.'; }
         this.system = system.create({ returnService: true });
 
         if (module.componentConstructors) {
@@ -83,11 +81,11 @@ export class ViviFactory {
 
     get(constuctor: new (...args) => any, id?: string): Component | any {
         const name = constuctor.name;
-        this.getByString(name, id);
+        return this.getByString(name, id);
     }
 
     // Exposed for Debugging only
-    getByString(name: string, id?: string) {
+    getByString(name: string, id?: string): Component | any {
         const matches = name.match(/(.*)(Component|Service)$/);
         if (matches && matches[2] && matches[2] === 'Service') {
             return this.services.get(name).get(id);
@@ -111,7 +109,6 @@ export class ViviFactory {
     }
 
     start() {
-        console.log('Vivify has been started');
         window.vivi = this;
     }
 }

@@ -1,16 +1,16 @@
 import { ViviComponentFactory, ViviServiceFactory, ViviFactory } from '../';
 import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../../models';
-import { SystemService } from '../../services/__mocks__/system.mock';
+jest.mock('../../services/system.service.ts');
+import { SystemService } from '../../services/system.service';
 
-describe('Vivi Factory', () => {
+describe('Class: Vivi Factory', () => {
     const minimumConstructor = () => {
-        return new ViviFactory({ serviceConstructors: [<ViviServiceConstructor<SystemService>>{ constructor: SystemService }], componentConstructors: [] });
+        return new ViviFactory({});
     }
 
     const fullConstructor = () => {
         return new ViviFactory({
             serviceConstructors: [
-                <ViviServiceConstructor<SystemService>>{ constructor: SystemService },
                 <ViviServiceConstructor<MockService>>{ constructor: MockService, prereqArr: [SystemService] }
             ],
             componentConstructors: [
@@ -30,12 +30,6 @@ describe('Vivi Factory', () => {
         const vivi = fullConstructor();
 
         expect(vivi).toBeTruthy();
-    });
-
-    it('should throw error if SystemService is not included', () => {
-        const vivi = () => { new ViviFactory({ serviceConstructors: [], componentConstructors: [] }) };
-
-        expect(vivi).toThrowError('System is required.');
     });
 
     describe('getFactory', () => {
