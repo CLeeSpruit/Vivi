@@ -4,7 +4,7 @@ import * as https from 'https';
 import * as http from 'http';
 import * as request from 'request';
 import * as url from 'url';
-import { Service } from '@models/service.class';
+import { Service } from '../models';
 
 export class SystemService extends Service {
     path: typeof path;

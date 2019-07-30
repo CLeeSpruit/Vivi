@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as https from 'https';
 
-import { Service } from '@models/service.class';
+import { Service } from '../../models';
 
 export class SystemService extends Service{
     path: typeof path;

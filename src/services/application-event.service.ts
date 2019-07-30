@@ -1,9 +1,8 @@
 import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
-import { ApplicationListener } from '@events/application-listener.class';
-import { ApplicationEvent } from '@events/application-event.class';
-import { Service } from '@models/service.class';
+import { ApplicationListener, ApplicationEvent } from '../events';
+import { Service } from '../models';
 
 export interface ListenerOptions {
     getEvent?: boolean; // Retrieves only data by default

@@ -1,3 +1,3 @@
-export * from '@factory/component-factory.class';
-export * from '@factory/service-factory.class';
-export * from '@factory/vivi-factory';
+export * from './component-factory.class';
+export * from './service-factory.class';
+export * from './vivi-factory';

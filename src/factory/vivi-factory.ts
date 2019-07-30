@@ -1,11 +1,7 @@
-import { ViviServiceFactory } from '@factory/service-factory.class';
-import { ViviComponentFactory } from '@factory/component-factory.class';
-import { Component } from '@models/component.class';
-import { ViviComponentConstructor } from '@models/component-constructor.interface';
-import { Service } from '@models/service.class';
-import { ViviServiceConstructor } from '@models/service-constructor.interface';
-import { SystemService } from '@services/system.service';
-import { loadViviServices } from '@services/load-services.static';
+import { ViviServiceFactory, ViviComponentFactory } from './';
+import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../models';
+import { SystemService } from '../services';
+import { loadViviServices } from '../services/load-services.static';
 
 export interface ViviFactoryConstructor {
     // TODO: Allow service and component constructors to be null

@@ -1,5 +1,5 @@
 import { Observable, Subscription } from 'rxjs';
-import { ApplicationEvent } from '@events/application-event.class';
+import { ApplicationEvent } from './';
 
 export class ApplicationListener {
     private subscription: Subscription;

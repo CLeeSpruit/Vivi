@@ -1,8 +1,7 @@
 import * as nodeUuid from 'uuid';
 
-import { ViviServiceFactory } from '@factory/service-factory.class';
-import { Component } from '@models/component.class';
-import { Service } from '@models/service.class';
+import { ViviServiceFactory } from './';
+import { Component, Service } from '../models';
 
 export class ViviComponentFactory<T> {
     components: Map<string, Component> = new Map<string, Component>();

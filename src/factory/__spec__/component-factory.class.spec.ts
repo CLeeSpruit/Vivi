@@ -1,5 +1,5 @@
-import { ViviComponentFactory } from '@factory/component-factory.class';
-import { Component } from '@models/component.class';
+import { ViviComponentFactory } from '../';
+import { Component } from '../../models';
 
 describe('Component Factory', () => {
     const basicMock = () => { return new ViviComponentFactory<MockComponent>(MockComponent, 'test', '', [], []) }

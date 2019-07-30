@@ -1,8 +1,5 @@
-import { ViviServiceConstructor } from '@models/service-constructor.interface';
-import { Service } from '@models/service.class';
-import { ApplicationEventService } from '@services/application-event.service';
-import { FileService } from '@services/file.service';
-import { SystemService } from '@services/system.service';
+import { ViviServiceConstructor, Service } from '../models';
+import { ApplicationEventService, FileService, SystemService } from './';
 
 export const loadViviServices: Array<ViviServiceConstructor<Service>> = [
     // Tier 0

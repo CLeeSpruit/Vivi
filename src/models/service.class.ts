@@ -1,5 +1,4 @@
-import { ApplicationListener } from '@events/application-listener.class';
-import { Listener } from '@events/listener.class';
+import { ApplicationListener, Listener } from '../events';
 
 export abstract class Service {
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
