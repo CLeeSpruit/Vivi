@@ -1,5 +1,3 @@
-import * as nodeUuid from 'uuid';
-
 import { ViviServiceFactory } from './';
 import { Component, Service } from '../models';
 
@@ -22,23 +20,22 @@ export class ViviComponentFactory<T> {
     }
 
     create(options?: { append?: boolean, parent?: Node, returnComponent?: boolean }): Component | string {
-        const uuid: string = nodeUuid();
-        const component = new this.constructor(...this.services.map(service => service.get()), uuid, this.template);
+        const component = new this.constructor(...this.services.map(service => service.get()), this.template);
         if (this.children) {
             component.children = this.children.map(child => {
                 return <Component>child.create({ returnComponent: true });
             });
         }
-        this.components.set(uuid, component);
+        this.components.set(component.id, component);
 
         if (options && (options.parent || options.append)) {
-            this.append(uuid, options.parent);
+            this.append(component.id, options.parent);
         }
 
         if (options && options.returnComponent) {
             return component;
         } else {
-            return uuid;
+            return component.id;
         }
     }
 

@@ -1,14 +1,21 @@
 import { Component } from '../';
 
 describe('Class: Component', () => {
+    afterEach(() => {
+        // Clear the document
+        for(let i = 0; i < document.body.children.length; i++) {
+            document.body.children.item(i).remove();
+        }
+    });
+
     it('should init', () => {
-        const component = new MockComponent('test', 'template');
+        const component = new MockComponent('template');
 
         expect(component).toBeTruthy();
     });
 
     it('should append to document body if parent is not provided', () => {
-        const component = new MockComponent('test', 'template');
+        const component = new MockComponent('template');
 
         component.append();
 
@@ -19,8 +26,9 @@ describe('Class: Component', () => {
     });
 
     it('should append to parent', () => {
-        const component = new MockComponent('test', 'template');
+        const component = new MockComponent('template');
         const mockParent = document.createElement('parent');
+        document.body.appendChild(mockParent);
 
         component.append(mockParent);
 
@@ -30,8 +38,8 @@ describe('Class: Component', () => {
     });
 
     it('should append children', () => {
-        const parent = new MockComponent('parent', 'parent template');
-        const child = new MockComponent('child', 'child template');
+        const parent = new MockComponent('parent template');
+        const child = new MockComponent('child template');
         parent.children = [child];
 
         parent.append();
@@ -42,7 +50,7 @@ describe('Class: Component', () => {
 });
 
 class MockComponent extends Component {
-    constructor(id: string, template: string) {
-        super(id, template);
+    constructor(template: string) {
+        super(template);
     }
 }

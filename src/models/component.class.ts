@@ -1,3 +1,4 @@
+import * as uuid from 'uuid';
 import { ApplicationListener, Listener } from '../events';
 
 export abstract class Component {
@@ -10,8 +11,8 @@ export abstract class Component {
     children: Array<Component> = new Array<Component>();
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
 
-    constructor(id: string, template: string) {
-        this.id = id;
+    constructor(template: string) {
+        this.id = uuid();
         this.template = template;
     }
 
@@ -22,7 +23,7 @@ export abstract class Component {
     append(parent?: Node) {
         const name = (<Object>this).constructor.name;
 
-        // Create Node
+        // Create Node that is named after the component class
         const node = document.createElement(name);
         node.id = this.id;
         node.innerHTML = this.template;
