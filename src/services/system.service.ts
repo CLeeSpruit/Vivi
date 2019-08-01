@@ -6,6 +6,7 @@ import * as request from 'request';
 import * as url from 'url';
 import { Service } from '../models';
 
+// TODO: This might no longer be needed
 export class SystemService extends Service {
     path: typeof path;
     fs: typeof fs;

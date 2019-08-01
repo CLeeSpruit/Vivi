@@ -2,21 +2,12 @@ import { ViviComponentFactory } from '../';
 import { Component } from '../../models';
 
 describe('Component Factory', () => {
-    const basicMock = () => { return new ViviComponentFactory<MockComponent>(MockComponent, 'test', '', [], []) }
+    const basicMock = () => { return new ViviComponentFactory<MockComponent>(MockComponent, [], []) }
 
     it('should init', () => {
         const mock = basicMock();
 
         expect(mock).toBeTruthy();
-    });
-
-    it('should append style to head if style is provided', () => {
-        const mockStyle = 'a { color: red }'
-        const mock = new ViviComponentFactory<MockComponent>(MockComponent, 'test', mockStyle, [], []);
-
-        const actual = document.getElementsByTagName('style');
-        expect(actual.length).toEqual(1);
-        expect(actual.item(0).innerHTML).toEqual(mockStyle);
     });
 
     describe('create', () => {
@@ -55,9 +46,19 @@ describe('Component Factory', () => {
             expect(actual.length).toBeTruthy();
         });
 
+        it('should append style to head if style is provided', () => {
+            const stylishMock = new ViviComponentFactory<MockComponentWithInjectedStyle>(MockComponentWithInjectedStyle, [], []);
+            const component = <MockComponent>stylishMock.create({ returnComponent: true });
+    
+            expect(component.style).toEqual(mockStyle);
+            const actual = document.getElementsByTagName('style');
+            expect(actual.length).toEqual(1);
+            expect(actual.item(0).innerHTML).toEqual(mockStyle);
+        });
+
         it('should create children if they exist', () => {
-            const child = new ViviComponentFactory<MockComponent>(MockComponent, 'child', '', [], []);
-            const parent = new ViviComponentFactory<MockComponent>(MockComponent, 'parent', '', [], [child]);
+            const child = new ViviComponentFactory<MockComponent>(MockComponent, [], []);
+            const parent = new ViviComponentFactory<MockComponent>(MockComponent, [], [child]);
 
             const parentComponent = <MockComponent>parent.create({ returnComponent: true });
             expect(parentComponent.children).toBeTruthy();
@@ -88,3 +89,12 @@ describe('Component Factory', () => {
 class MockComponent extends Component {
     //
 }
+
+class MockComponentWithInjectedStyle extends Component {
+    constructor() {
+        super();
+        this.style = mockStyle;
+    }
+}
+
+const mockStyle = 'a { color: red }';

@@ -9,13 +9,13 @@ describe('Class: Component', () => {
     });
 
     it('should init', () => {
-        const component = new MockComponent('template');
+        const component = new MockComponent();
 
         expect(component).toBeTruthy();
     });
 
     it('should append to document body if parent is not provided', () => {
-        const component = new MockComponent('template');
+        const component = new MockComponent();
 
         component.append();
 
@@ -26,7 +26,7 @@ describe('Class: Component', () => {
     });
 
     it('should append to parent', () => {
-        const component = new MockComponent('template');
+        const component = new MockComponent();
         const mockParent = document.createElement('parent');
         document.body.appendChild(mockParent);
 
@@ -38,8 +38,8 @@ describe('Class: Component', () => {
     });
 
     it('should append children', () => {
-        const parent = new MockComponent('parent template');
-        const child = new MockComponent('child template');
+        const parent = new MockComponent();
+        const child = new MockComponent();
         parent.children = [child];
 
         parent.append();
@@ -50,7 +50,5 @@ describe('Class: Component', () => {
 });
 
 class MockComponent extends Component {
-    constructor(template: string) {
-        super(template);
-    }
+    //
 }

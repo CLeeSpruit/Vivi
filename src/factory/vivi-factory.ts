@@ -38,22 +38,8 @@ export class ModuleFactory {
         });
 
         // Init Components
-        // Init and fetch system since it's needed for the next step
-        // TODO: Mesh the create and get functionality
-        const system = this.getFactory(SystemService);
-        this.system = system.create({ returnService: true }) as SystemService;
-
         if (module.componentConstructors) {
             module.componentConstructors.forEach(constructor => {
-                // TODO: Make each component read async
-                // Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
-                const dirname = constructor.constructor.name.replace('Component', '').replace(/\B(?=[A-Z])/, '-').toLowerCase();
-                const styleFile = this.system.path.join(module.baseDirectory, dirname, dirname + '.component.scss');
-                const templateFile = this.system.path.join(module.baseDirectory, dirname, dirname + '.component.html');
-                // TODO: Make this file read fail more gracefully
-                const style = this.system.fs.existsSync(styleFile) ? this.system.fs.readFileSync(styleFile, { encoding: 'utf-8' }) : '';
-                const template = this.system.fs.existsSync(templateFile) ? this.system.fs.readFileSync(templateFile, { encoding: 'utf-8' }) : '';
-
                 let childrenArr = [];
                 if (constructor.children) {
                     childrenArr = constructor.children.map(child => {
@@ -67,7 +53,7 @@ export class ModuleFactory {
                         return this.services.get(service.name);
                     });
                 }
-                this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, template, style, serviceArr, childrenArr));
+                this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, serviceArr, childrenArr));
             });
         }
 

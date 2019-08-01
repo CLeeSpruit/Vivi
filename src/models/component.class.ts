@@ -1,9 +1,11 @@
 import * as uuid from 'uuid';
 import { ApplicationListener, Listener } from '../events';
+import { RequireOptional } from '../helpers/require-optional';
 
 export abstract class Component {
     id: string;
     template: string;
+    style: string;
     element: HTMLElement;
     parent: Node;
     isLoaded: boolean = false;
@@ -11,9 +13,14 @@ export abstract class Component {
     children: Array<Component> = new Array<Component>();
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
 
-    constructor(template: string) {
+    constructor() {
         this.id = uuid();
-        this.template = template;
+
+        // Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
+        // Get template and style file
+        const dirname = this.constructor.name.replace('Component', '').replace(/\B(?=[A-Z])/, '-').toLowerCase();
+        this.template = RequireOptional('./' + dirname + '.component.html') || '';
+        this.style = RequireOptional('./' + dirname + './component.scss') || '';
     }
 
     load() {

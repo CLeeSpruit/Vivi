@@ -2,25 +2,21 @@ import { ViviServiceFactory } from './';
 import { Component, Service } from '../models';
 
 export class ViviComponentFactory<T> {
-    components: Map<string, Component> = new Map<string, Component>();
+    private components: Map<string, Component> = new Map<string, Component>();
+    private styleAppended: boolean;
 
     constructor(
         private constructor: new (...args) => Component,
-        private template: string,
-        private style: string,
         private services: Array<ViviServiceFactory<Service>> = new Array<ViviServiceFactory<Service>>(),
         private children: Array<ViviComponentFactory<Component>>
     ) {
-        // Apply style sheet
-        if (style) {
-            const styleEl = document.createElement('style');
-            styleEl.innerHTML = this.style;
-            document.head.appendChild(styleEl);
-        }
+        //
     }
 
     create(options?: { append?: boolean, parent?: Node, returnComponent?: boolean }): Component | string {
-        const component = new this.constructor(...this.services.map(service => service.get()), this.template);
+        const component = new this.constructor(...this.services.map(service => service.get()));
+        this.createStyle(component.style);
+
         if (this.children) {
             component.children = this.children.map(child => {
                 return <Component>child.create({ returnComponent: true });
@@ -36,6 +32,15 @@ export class ViviComponentFactory<T> {
             return component;
         } else {
             return component.id;
+        }
+    }
+
+    private createStyle(style: string) {
+        if (style && !this.styleAppended) {
+            const styleEl = document.createElement('style');
+            styleEl.innerHTML = style;
+            document.head.appendChild(styleEl);
+            this.styleAppended = true;
         }
     }
 
