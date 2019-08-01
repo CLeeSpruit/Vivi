@@ -1,15 +1,15 @@
-import { ViviComponentFactory, ViviServiceFactory, ViviFactory } from '../';
+import { ViviComponentFactory, ViviServiceFactory, ModuleFactory } from '../';
 import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../../models';
 jest.mock('../../services/system.service.ts');
 import { SystemService } from '../../services/system.service';
 
 describe('Class: Vivi Factory', () => {
     const minimumConstructor = () => {
-        return new ViviFactory({});
+        return new ModuleFactory({});
     }
 
     const fullConstructor = () => {
-        return new ViviFactory({
+        return new ModuleFactory({
             serviceConstructors: [
                 <ViviServiceConstructor<MockService>>{ constructor: MockService, prereqArr: [SystemService] }
             ],
@@ -33,7 +33,7 @@ describe('Class: Vivi Factory', () => {
     });
 
     describe('getFactory', () => {
-        let vivi: ViviFactory;
+        let vivi: ModuleFactory;
         beforeEach(() => {
             vivi = fullConstructor();
         });
@@ -52,7 +52,7 @@ describe('Class: Vivi Factory', () => {
     });
 
     describe('get', () => {
-        let vivi: ViviFactory;
+        let vivi: ModuleFactory;
         beforeEach(() => {
             vivi = fullConstructor();
         });

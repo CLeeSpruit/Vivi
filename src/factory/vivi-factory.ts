@@ -11,8 +11,7 @@ export interface ViviFactoryConstructor {
     baseDirectory?: string
 }
 
-// TODO: Rename ViviFactory to ModuleFactory
-export class ViviFactory {
+export class ModuleFactory {
     services: Map<string, ViviServiceFactory<Service>> = new Map<string, ViviServiceFactory<Service>>();
     components: Map<string, ViviComponentFactory<Component>> = new Map<string, ViviComponentFactory<Component>>();
     system: SystemService;
