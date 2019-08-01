@@ -41,7 +41,7 @@ export class ModuleFactory {
         // Init and fetch system since it's needed for the next step
         // TODO: Mesh the create and get functionality
         const system = this.getFactory(SystemService);
-        this.system = system.create({ returnService: true });
+        this.system = system.create({ returnService: true }) as SystemService;
 
         if (module.componentConstructors) {
             module.componentConstructors.forEach(constructor => {

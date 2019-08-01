@@ -1,12 +1,12 @@
-import * as nodeUuid from 'uuid';
+import { Service } from 'models';
 
 export class ViviServiceFactory<T> {
-    prerequisites: Map<string, ViviServiceFactory<T>> = new Map<string, ViviServiceFactory<T>>();
-    instances: Map<string, T> = new Map<string, T>();
+    prerequisites: Map<string, ViviServiceFactory<Service>> = new Map<string, ViviServiceFactory<Service>>();
+    instances: Map<string, Service> = new Map<string, Service>();
 
     constructor(
-        private constructor: new (...args) => T,
-        prerequisitesArr: Array<ViviServiceFactory<T>>
+        private constructor: new (...args) => Service,
+        prerequisitesArr: Array<ViviServiceFactory<Service>>
     ) {
         prerequisitesArr.forEach(prereq => {
             this.prerequisites.set(prereq.constructor.name, prereq);
@@ -15,19 +15,18 @@ export class ViviServiceFactory<T> {
         this.create();
     }
 
-    create(options?: { returnService?: boolean }): string | any {
+    create(options?: { returnService?: boolean }): string | Service {
         const service = new this.constructor(...Array.from(this.prerequisites.values()).map(pre => pre.get()));
-        const uuid: string = nodeUuid();
-        this.instances.set(uuid, service);
+        this.instances.set(service.id, service);
 
         if (options && options.returnService) {
             return service;
         }
 
-        return uuid;
+        return service.id;
     }
 
-    get(id?: string): T {
+    get(id?: string): Service {
         if (id) {
             return this.instances.get(id);
         } else {
