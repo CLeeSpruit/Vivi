@@ -6,9 +6,7 @@ import { loadViviServices } from '../services/load-services.static';
 export interface ViviFactoryConstructor {
     serviceConstructors?: Array<ViviServiceConstructor<Service>>,
     componentConstructors?: Array<ViviComponentConstructor<Component>>,
-    rootComponent?: new (...args) => Component,
-    // TODO: Find a more graceful solution to finding related files
-    baseDirectory?: string
+    rootComponent?: new (...args) => Component
 }
 
 export class ModuleFactory {
