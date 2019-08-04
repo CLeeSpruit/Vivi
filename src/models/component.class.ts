@@ -16,11 +16,31 @@ export abstract class Component {
     constructor() {
         this.id = uuid();
 
-        // Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
         // Get template and style file
+
+        // Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
         const dirname = this.constructor.name.replace('Component', '').replace(/\B(?=[A-Z])/, '-').toLowerCase();
-        this.template = RequireOptional('./' + dirname + '.component.html') || '';
-        this.style = RequireOptional('./' + dirname + './component.scss') || '';
+        const directory = './' + dirname;
+        // Sadly because of how context replacement plugin works for webpack, this can't really be functionalized
+        try {
+            this.template = require(directory + '.component.html');
+        } catch (e) {
+            // A vaild error, throw it back out to sea
+            if (e.code !== 'MODULE_NOT_FOUND') {
+                throw e;
+            }
+            this.template = '';
+        }
+
+        try {
+            this.style = require(directory + '.component.scss');
+        } catch (e) {
+            // A vaild error, throw it back out to sea
+            if (e.code !== 'MODULE_NOT_FOUND') {
+                throw e;
+            }
+            this.style = '';
+        }
     }
 
     load() {
