@@ -23,7 +23,7 @@ export abstract class Component {
         const directory = './' + dirname;
         // Sadly because of how context replacement plugin works for webpack, this can't really be functionalized
         try {
-            this.template = require(directory + '.component.html');
+            this.template = require('vivi_application/' + directory + '.component.html');
         } catch (e) {
             // A vaild error, throw it back out to sea
             if (e.code !== 'MODULE_NOT_FOUND') {
@@ -33,7 +33,7 @@ export abstract class Component {
         }
 
         try {
-            this.style = require(directory + '.component.scss');
+            this.style = require('vivi_application/' + directory + '.component.scss');
         } catch (e) {
             // A vaild error, throw it back out to sea
             if (e.code !== 'MODULE_NOT_FOUND') {
