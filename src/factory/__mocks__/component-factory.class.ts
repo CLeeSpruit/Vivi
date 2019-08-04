@@ -19,7 +19,7 @@ export class ViviComponentFactoryMock<T> {
         const uuid: string = nodeUuid();
 
         if (options && options.returnComponent) {
-            return new MockComponent(uuid, '');
+            return new MockComponent();
         } else {
             return uuid;
         }
