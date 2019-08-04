@@ -80,14 +80,14 @@ describe('Class: Vivi Factory', () => {
 
 // Generic Component class used for testing in this file
 class MockComponent extends Component {
-    constructor(private mockService: MockService, id: string, template: string) {
-        super(id, template);
+    constructor(private mockService: MockService) {
+        super();
     }
 }
 
 class MockChildComponent extends Component {
-    constructor(id: string, template: string) {
-        super(id, template);
+    constructor() {
+        super();
     }
 }
 
