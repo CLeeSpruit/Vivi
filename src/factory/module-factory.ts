@@ -1,6 +1,5 @@
 import { ViviServiceFactory, ViviComponentFactory } from './';
 import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../models';
-import { SystemService } from '../services/system.service';
 import { loadViviServices } from '../services/load-services.static';
 
 export interface ViviFactoryConstructor {
@@ -12,7 +11,6 @@ export interface ViviFactoryConstructor {
 export class ModuleFactory {
     services: Map<string, ViviServiceFactory<Service>> = new Map<string, ViviServiceFactory<Service>>();
     components: Map<string, ViviComponentFactory<Component>> = new Map<string, ViviComponentFactory<Component>>();
-    system: SystemService;
 
     constructor(
         module: ViviFactoryConstructor

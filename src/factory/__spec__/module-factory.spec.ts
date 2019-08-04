@@ -1,7 +1,5 @@
 import { ViviComponentFactory, ViviServiceFactory, ModuleFactory } from '../';
 import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../../models';
-jest.mock('../../services/system.service.ts');
-import { SystemService } from '../../services/system.service';
 
 describe('Class: Vivi Factory', () => {
     const minimumConstructor = () => {
@@ -11,7 +9,7 @@ describe('Class: Vivi Factory', () => {
     const fullConstructor = () => {
         return new ModuleFactory({
             serviceConstructors: [
-                <ViviServiceConstructor<MockService>>{ constructor: MockService, prereqArr: [SystemService] }
+                <ViviServiceConstructor<MockService>>{ constructor: MockService }
             ],
             componentConstructors: [
                 <ViviComponentConstructor<Component>>{ constructor: MockChildComponent },
@@ -93,7 +91,7 @@ class MockChildComponent extends Component {
 
 // Generic Service used for testing in this file
 class MockService extends Service {
-    constructor(private system: SystemService) {
+    constructor() {
         super();
     }
 }
