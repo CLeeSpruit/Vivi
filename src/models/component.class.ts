@@ -20,7 +20,7 @@ export abstract class Component {
 
         // Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
         const dirname = this.constructor.name.replace('Component', '').replace(/\B(?=[A-Z])/, '-').toLowerCase();
-        const directory = './' + dirname;
+        const directory = dirname + '/' + dirname;
         // Sadly because of how context replacement plugin works for webpack, this can't really be functionalized
         try {
             this.template = require('vivi_application/' + directory + '.component.html');
