@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 import { ApplicationListener, Listener } from '../events';
-import { RequireOptional } from '../helpers/require-optional';
+import { ComponentParams } from './component-params.class';
 
 export abstract class Component {
     id: string;
@@ -12,6 +12,7 @@ export abstract class Component {
     isVisible: boolean = false;
     children: Array<Component> = new Array<Component>();
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
+    params: ComponentParams;
 
     constructor() {
         this.id = uuid();
