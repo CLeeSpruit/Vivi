@@ -12,9 +12,8 @@ export abstract class Component {
     isVisible: boolean = false;
     children: Array<Component> = new Array<Component>();
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
-    params: ComponentParams;
 
-    constructor() {
+    constructor(protected params: ComponentParams = {}) {
         this.id = uuid();
 
         // Get template and style file
