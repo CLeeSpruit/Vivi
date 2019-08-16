@@ -15,6 +15,8 @@ export class ModuleFactory {
     constructor(
         module: ViviFactoryConstructor
     ) {
+        window.vivi = this;
+
         // Append Vivi services - these should be before any custom services
         if (!module.serviceConstructors) {
             module.serviceConstructors = loadViviServices;
@@ -95,6 +97,6 @@ export class ModuleFactory {
     }
 
     start() {
-        window.vivi = this;
+        // Placeholder
     }
 }
