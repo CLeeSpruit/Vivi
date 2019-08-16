@@ -12,6 +12,7 @@ export abstract class Component {
     isVisible: boolean = false;
     children: Array<Component> = new Array<Component>();
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
+    data: Object = {};
 
     constructor(protected params: ComponentParams = {}) {
         this.id = uuid();
@@ -44,7 +45,22 @@ export abstract class Component {
     }
 
     load() {
-        // Placeholder
+        // Load data into template
+
+        // Parse class names
+        const classAttrName = 'v-class';
+        this.element.querySelectorAll('[' + classAttrName + ']').forEach(el => {
+            const attr = el.getAttribute(classAttrName);
+
+            // Parse this list from parameters
+            const list = attr.split(' ');
+            const parsed = list.filter(li => this.data.hasOwnProperty(li)).map(li => this.data[li]);
+            el.classList.add(...parsed);
+
+            // Rename to data to make parseable
+            el.setAttribute('data-' + classAttrName, attr);
+            el.removeAttribute(classAttrName);
+        });
     }
 
     append(parent?: Node) {
