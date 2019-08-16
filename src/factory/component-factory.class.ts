@@ -52,7 +52,7 @@ export class ViviComponentFactory<T> {
             moduleFactory.getComponentRegistry().forEach(reg => {
                 // Strip 'Component' off of name
                 const name = reg.slice(0, reg.lastIndexOf('Component'));
-                const els = parentNode.querySelectorAll(name);
+                const els = parentNode.querySelectorAll(name.toLowerCase());
                 for (let i = 0; i < els.length; i++) {
                     const el = els.item(i);
                     const factory = moduleFactory.getFactoryByString(reg) as ViviComponentFactory<Component>;
