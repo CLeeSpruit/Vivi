@@ -1,6 +1,20 @@
 import { Component } from '../';
+import { ModuleFactory } from '../../factory/module-factory';
 
 describe('Class: Component', () => {
+    const mockModule = () => {
+        return new ModuleFactory({
+            componentConstructors: [
+                { constructor: MockComponent },
+                { constructor: MockWithChildComponent }
+            ]
+        });
+    };
+
+    beforeEach(() => {
+        window.vivi = mockModule();
+    });
+
     afterEach(() => {
         // Clear the document
         for (let i = 0; i < document.body.children.length; i++) {
@@ -37,22 +51,11 @@ describe('Class: Component', () => {
         expect(template.innerHTML).toEqual(component.template);
     });
 
-    it('should append children', () => {
-        const parent = new MockComponent();
-        const child = new MockComponent();
-        parent.children = [child];
-
-        parent.append();
-
-        const childNode = document.getElementById(child.id);
-        expect(childNode.innerHTML).toEqual(child.template);
-    });
-
     describe('Template Bindings', () => {
         it('should be able to parse class attr', () => {
             const mock = new MockComponent();
             mock.template = '<div v-class="test"></div>';
-            const mockData = { test: 'cool-class'};
+            const mockData = { test: 'cool-class' };
             mock.data = mockData;
 
             mock.append();
@@ -75,7 +78,7 @@ describe('Class: Component', () => {
         it('should be able to append new classes to existing class list', () => {
             const mock = new MockComponent();
             mock.template = '<div class="mock" v-class="test"></div>';
-            const mockData = { test: 'cool-class'};
+            const mockData = { test: 'cool-class' };
             mock.data = mockData;
 
             mock.append();
@@ -87,7 +90,7 @@ describe('Class: Component', () => {
         it('should not add classes that do not exist in the dataset', () => {
             const mock = new MockComponent();
             mock.template = '<div class="mock" v-class="test"></div>';
-            const mockData = { someProp: 'some-prop'};
+            const mockData = { someProp: 'some-prop' };
             mock.data = mockData;
 
             mock.append();
@@ -124,3 +127,12 @@ describe('Class: Component', () => {
 class MockComponent extends Component {
     //
 }
+
+class MockWithChildComponent extends Component {
+    constructor() {
+        super();
+        this.template = mockTemplate;
+    }
+}
+
+const mockTemplate = '<Mock></Mock>';

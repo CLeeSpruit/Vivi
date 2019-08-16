@@ -1,8 +1,18 @@
 import { ViviComponentFactory } from '../';
 import { Component } from '../../models';
+import { ModuleFactory } from '../module-factory';
 
 describe('Component Factory', () => {
-    const basicMock = () => { return new ViviComponentFactory<MockComponent>(MockComponent, [], []) }
+    const basicMock = () => { return new ViviComponentFactory<MockComponent>(MockComponent, []) };
+    const mockModule = () => {
+        return new ModuleFactory({
+            componentConstructors: [
+                { constructor: MockComponent },
+                { constructor: MockComponentWithChildComponent },
+                { constructor: MockComponentWithInjectedStyleComponent }
+            ]
+        });
+    };
 
     it('should init', () => {
         const mock = basicMock();
@@ -11,6 +21,10 @@ describe('Component Factory', () => {
     });
 
     describe('create', () => {
+        beforeEach(() => {
+            window.vivi = mockModule();
+        });
+
         it('should create a new component', () => {
             const mock = basicMock();
 
@@ -29,48 +43,29 @@ describe('Component Factory', () => {
             expect(component instanceof MockComponent).toBeTruthy();
         });
 
-        it('should create and append', () => {
-            const mock = basicMock();
-            const id = <string>mock.create({ append: true });
-
-            const actual = document.getElementById(id);
-            expect(actual).toBeTruthy();
-        });
-
-        it('should create and append to parent', () => {
-            const mock = basicMock();
-            const parent = document.createElement('parent');
-            const id = <string>mock.create({ append: true, parent });
-
-            const actual = parent.getElementsByTagName('mockcomponent');
-            expect(actual.length).toBeTruthy();
-        });
-
         it('should append style to head if style is provided', () => {
-            const stylishMock = new ViviComponentFactory<MockComponentWithInjectedStyle>(MockComponentWithInjectedStyle, [], []);
+            const stylishMock = new ViviComponentFactory<MockComponentWithInjectedStyleComponent>(MockComponentWithInjectedStyleComponent);
             const component = <MockComponent>stylishMock.create({ returnComponent: true });
-    
+
             expect(component.style).toEqual(mockStyle);
             const actual = document.getElementsByTagName('style');
             expect(actual.length).toEqual(1);
             expect(actual.item(0).innerHTML).toEqual(mockStyle);
         });
 
-        it('should create children if they exist', () => {
-            const child = new ViviComponentFactory<MockComponent>(MockComponent, [], []);
-            const parent = new ViviComponentFactory<MockComponent>(MockComponent, [], [child]);
+        it('should create a recipe if none was already created', () => {
+            const mockWithChild = new ViviComponentFactory<MockComponentWithChildComponent>(MockComponentWithChildComponent);
+            const component = <MockComponentWithChildComponent>mockWithChild.create({ returnComponent: true });
 
-            const parentComponent = <MockComponent>parent.create({ returnComponent: true });
-            expect(parentComponent.children).toBeTruthy();
-            expect(parentComponent.children[0] instanceof MockComponent).toBeTruthy();
+            expect(component.recipe.length).toBeTruthy();
         });
     });
 
     describe('get', () => {
         it('get should return specific component', () => {
             const mock = basicMock();
-            const componentA = <MockComponent>mock.create({ returnComponent: true});
-            const componentB = <MockComponent>mock.create({ returnComponent: true});
+            const componentA = <MockComponent>mock.create({ returnComponent: true });
+            const componentB = <MockComponent>mock.create({ returnComponent: true });
 
             expect(mock.get(componentA.id)).toEqual(componentA);
             expect(mock.get(componentB.id)).toEqual(componentB);
@@ -78,8 +73,8 @@ describe('Component Factory', () => {
 
         it('get should return first component created if no id is provided', () => {
             const mock = basicMock();
-            const componentA = <MockComponent>mock.create({ returnComponent: true});
-            const componentB = <MockComponent>mock.create({ returnComponent: true});
+            const componentA = <MockComponent>mock.create({ returnComponent: true });
+            const componentB = <MockComponent>mock.create({ returnComponent: true });
 
             expect(mock.get()).toEqual(componentA);
         });
@@ -90,7 +85,14 @@ class MockComponent extends Component {
     //
 }
 
-class MockComponentWithInjectedStyle extends Component {
+class MockComponentWithChildComponent extends Component {
+    constructor() {
+        super();
+        this.template = mockTemplate;
+    }
+}
+
+class MockComponentWithInjectedStyleComponent extends Component {
     constructor() {
         super();
         this.style = mockStyle;
@@ -98,3 +100,4 @@ class MockComponentWithInjectedStyle extends Component {
 }
 
 const mockStyle = 'a { color: red }';
+const mockTemplate = '<Mock></Mock>';

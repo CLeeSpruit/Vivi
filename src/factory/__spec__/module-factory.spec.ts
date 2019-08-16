@@ -1,7 +1,7 @@
 import { ViviComponentFactory, ViviServiceFactory, ModuleFactory } from '../';
 import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../../models';
 
-describe('Class: Vivi Factory', () => {
+describe('Class: Module Factory', () => {
     const minimumConstructor = () => {
         return new ModuleFactory({});
     }
@@ -13,7 +13,7 @@ describe('Class: Vivi Factory', () => {
             ],
             componentConstructors: [
                 <ViviComponentConstructor<Component>>{ constructor: MockChildComponent },
-                <ViviComponentConstructor<Component>>{ constructor: MockComponent, services: [MockService], children: [MockChildComponent] }
+                <ViviComponentConstructor<Component>>{ constructor: MockComponent, services: [MockService] }
             ]
         });
     }
@@ -47,6 +47,12 @@ describe('Class: Vivi Factory', () => {
 
             expect(actual instanceof ViviServiceFactory).toBeTruthy();
         });
+
+        it('get factory can be searched by string', () => {
+            const actual = vivi.getFactoryByString('MockComponent');
+
+            expect(actual instanceof ViviComponentFactory).toBeTruthy();
+        });
     });
 
     describe('get', () => {
@@ -72,6 +78,16 @@ describe('Class: Vivi Factory', () => {
             const actual = vivi.get(MockService);
 
             expect(actual instanceof MockService).toBeTruthy();
+        });
+    });
+
+    describe('getComponentRegistry', () => {
+        it('returns an array of component names in the module', () => {
+            const vivi = fullConstructor();
+
+            const actual = vivi.getComponentRegistry();
+
+            expect(actual).toEqual(['MockChildComponent', 'MockComponent']);
         });
     });
 });

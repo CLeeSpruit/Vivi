@@ -36,39 +36,33 @@ export class ModuleFactory {
         // Init Components
         if (module.componentConstructors) {
             module.componentConstructors.forEach(constructor => {
-                let childrenArr = [];
-                if (constructor.children) {
-                    childrenArr = constructor.children.map(child => {
-                        return this.components.get(child.name);
-                    });
-                }
-
                 let serviceArr = [];
                 if (constructor.services) {
                     serviceArr = constructor.services.map(service => {
                         return this.services.get(service.name);
                     });
                 }
-                this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, serviceArr, childrenArr));
+                this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, serviceArr));
             });
         }
 
         // Mount root component
         if (module.rootComponent) {
-            this.getFactory(module.rootComponent).create({ append: true });
+            const root = this.getFactory(module.rootComponent).create({returnComponent: true}) as Component;
+            root.append();
         }
 
         // Initialize
         this.start();
     }
 
-    get(constuctor: new (...args) => any, id?: string): Component | any {
+    get(constuctor: new (...args) => any, id?: string): Component | Service {
         const name = constuctor.name;
         return this.getByString(name, id);
     }
 
     // Exposed for Debugging only
-    getByString(name: string, id?: string): Component | any {
+    getByString(name: string, id?: string): Component | Service {
         const matches = name.match(/(.*)(Component|Service)$/);
         if (matches && matches[2] && matches[2] === 'Service') {
             return this.services.get(name).get(id);
@@ -81,6 +75,11 @@ export class ModuleFactory {
 
     getFactory(constuctor: new (...args) => any, id?: string): ViviComponentFactory<Component> | ViviServiceFactory<Service> {
         const name = constuctor ? constuctor.name : '(not found)';
+        return this.getFactoryByString(name);
+    }
+
+    
+    getFactoryByString(name: string): ViviComponentFactory<Component> | ViviServiceFactory<Service> {
         const matches = name.match(/(.*)(Component|Service)$/);
         if (matches && matches[2] && matches[2] === 'Service') {
             return this.services.get(name);
@@ -89,6 +88,10 @@ export class ModuleFactory {
             return this.components.get(name);
         }
         throw 'No service or component for ' + name;
+    }
+
+    getComponentRegistry(): Array<string> {
+        return Array.from(this.components.keys());
     }
 
     start() {

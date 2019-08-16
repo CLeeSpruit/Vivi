@@ -1,32 +1,32 @@
 import { ViviServiceFactory } from './';
 import { Component, Service } from '../models';
+import { ComponentIngredient } from '../models/component-ingredient.class';
+import { ModuleFactory } from './module-factory';
 
 export class ViviComponentFactory<T> {
     private components: Map<string, Component> = new Map<string, Component>();
     private styleAppended: boolean;
+    private recipe: Array<ComponentIngredient> = new Array<ComponentIngredient>();
+    private recipeCreated: boolean;
 
     constructor(
         private constructor: new (...args) => Component,
-        private services: Array<ViviServiceFactory<Service>> = new Array<ViviServiceFactory<Service>>(),
-        private children: Array<ViviComponentFactory<Component>>
+        private services: Array<ViviServiceFactory<Service>> = new Array<ViviServiceFactory<Service>>()
     ) {
         //
     }
 
-    create(options?: { append?: boolean, parent?: Node, returnComponent?: boolean }): Component | string {
+    // TODO: Determine if it's useful to still return the id by default
+    create(options?: { returnComponent?: boolean }): Component | string {
         const component = new this.constructor(...this.services.map(service => service.get()));
+
+        // Edit node, markup
+        component.createNode();
         this.createStyle(component.style);
+        this.createRecipe(<HTMLElement>component.node);
+        component.recipe = this.recipe;
 
-        if (this.children) {
-            component.children = this.children.map(child => {
-                return <Component>child.create({ returnComponent: true });
-            });
-        }
         this.components.set(component.id, component);
-
-        if (options && (options.parent || options.append)) {
-            this.append(component.id, options.parent);
-        }
 
         if (options && options.returnComponent) {
             return component;
@@ -44,9 +44,38 @@ export class ViviComponentFactory<T> {
         }
     }
 
+    private createRecipe(parentNode: HTMLElement) {
+        if (!this.recipeCreated) {
+            // Create recipe
+            // Get registry and parse for any elements with custom tags names
+            const moduleFactory: ModuleFactory = window.vivi;
+            moduleFactory.getComponentRegistry().forEach(reg => {
+                // Strip 'Component' off of name
+                const name = reg.slice(0, reg.lastIndexOf('Component'));
+                const els = parentNode.querySelectorAll(name);
+                for (let i = 0; i < els.length; i++) {
+                    const el = els.item(i);
+                    const factory = moduleFactory.getFactoryByString(reg) as ViviComponentFactory<Component>;
+                    const ingredient = new ComponentIngredient(el as HTMLElement, factory);
+                    this.recipe.push(ingredient);
+                }
+            });
+
+            this.recipeCreated = true;
+        }
+
+    }
+
+    // TODO: Determine if this is needed
     append(id: string, parent?: Node) {
         const component = this.get(id);
         component.append(parent);
+    }
+    
+    // TODO: Not Currently Used, determine if needed
+    detach(id: string) {
+        const component = this.get(id);
+        component.detach();
     }
 
     hide(id: string) {
@@ -67,12 +96,6 @@ export class ViviComponentFactory<T> {
 
         // Remove from the map
         this.components.delete(id);
-    }
-
-    // TODO: Not Currently Used, determine if needed
-    detach(id: string) {
-        const component = this.get(id);
-        component.detach();
     }
 
     get(id?: string): Component {
