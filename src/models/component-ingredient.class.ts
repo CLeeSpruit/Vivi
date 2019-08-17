@@ -15,7 +15,7 @@ export class ComponentIngredient {
     }
 
     create() {
-        this.component = this.factory.create({ returnComponent: true }) as Component;
+        this.component = this.factory.create(this.params);
         this.component.append(this.element);
     }
 }

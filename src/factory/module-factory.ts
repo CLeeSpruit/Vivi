@@ -50,7 +50,7 @@ export class ModuleFactory {
 
         // Mount root component
         if (module.rootComponent) {
-            const root = this.getFactory(module.rootComponent).create({returnComponent: true}) as Component;
+            const root = this.getFactory(module.rootComponent).create() as Component;
             root.append();
         }
 

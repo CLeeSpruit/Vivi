@@ -25,19 +25,10 @@ describe('Component Factory', () => {
             window.vivi = mockModule();
         });
 
-        it('should create a new component', () => {
-            const mock = basicMock();
-
-            const id = <string>mock.create();
-
-            expect(id).toBeTruthy();
-            expect(mock.get(id) instanceof MockComponent).toBeTruthy();
-        });
-
         it('should create a new component and return that component', () => {
             const mock = basicMock();
 
-            const component = <MockComponent>mock.create({ returnComponent: true });
+            const component = <MockComponent>mock.create();
 
             expect(component).toBeTruthy();
             expect(component instanceof MockComponent).toBeTruthy();
@@ -45,7 +36,7 @@ describe('Component Factory', () => {
 
         it('should append style to head if style is provided', () => {
             const stylishMock = new ViviComponentFactory<MockComponentWithInjectedStyleComponent>(MockComponentWithInjectedStyleComponent);
-            const component = <MockComponent>stylishMock.create({ returnComponent: true });
+            const component = <MockComponent>stylishMock.create();
 
             expect(component.style).toEqual(mockStyle);
             const actual = document.getElementsByTagName('style');
@@ -55,7 +46,7 @@ describe('Component Factory', () => {
 
         it('should create a recipe if none was already created', () => {
             const mockWithChild = new ViviComponentFactory<MockComponentWithChildComponent>(MockComponentWithChildComponent);
-            const component = <MockComponentWithChildComponent>mockWithChild.create({ returnComponent: true });
+            const component = <MockComponentWithChildComponent>mockWithChild.create();
 
             expect(component.recipe.length).toBeTruthy();
         });
@@ -64,8 +55,8 @@ describe('Component Factory', () => {
     describe('get', () => {
         it('get should return specific component', () => {
             const mock = basicMock();
-            const componentA = <MockComponent>mock.create({ returnComponent: true });
-            const componentB = <MockComponent>mock.create({ returnComponent: true });
+            const componentA = <MockComponent>mock.create();
+            const componentB = <MockComponent>mock.create();
 
             expect(mock.get(componentA.id)).toEqual(componentA);
             expect(mock.get(componentB.id)).toEqual(componentB);
@@ -73,8 +64,8 @@ describe('Component Factory', () => {
 
         it('get should return first component created if no id is provided', () => {
             const mock = basicMock();
-            const componentA = <MockComponent>mock.create({ returnComponent: true });
-            const componentB = <MockComponent>mock.create({ returnComponent: true });
+            const componentA = <MockComponent>mock.create();
+            const componentB = <MockComponent>mock.create();
 
             expect(mock.get()).toEqual(componentA);
         });

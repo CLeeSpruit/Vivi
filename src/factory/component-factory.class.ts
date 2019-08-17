@@ -2,6 +2,7 @@ import { ViviServiceFactory } from './';
 import { Component, Service } from '../models';
 import { ComponentIngredient } from '../models/component-ingredient.class';
 import { ModuleFactory } from './module-factory';
+import { ComponentParams } from '../models/component-params.class';
 
 export class ViviComponentFactory<T> {
     private components: Map<string, Component> = new Map<string, Component>();
@@ -16,10 +17,10 @@ export class ViviComponentFactory<T> {
         //
     }
 
-    // TODO: Determine if it's useful to still return the id by default
-    create(options?: { returnComponent?: boolean }): Component | string {
+    create(data?: ComponentParams): Component {
         const component = new this.constructor(...this.services.map(service => service.get()));
-
+        component.data = data || {};
+ 
         // Edit node, markup
         component.createNode();
         this.createStyle(component.style);
@@ -27,12 +28,7 @@ export class ViviComponentFactory<T> {
         component.createRecipe(this.recipe);
 
         this.components.set(component.id, component);
-
-        if (options && options.returnComponent) {
-            return component;
-        } else {
-            return component.id;
-        }
+        return component;
     }
 
     private createStyle(style: string) {

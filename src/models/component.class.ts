@@ -58,25 +58,39 @@ export abstract class Component {
         const node = document.createElement(name);
         node.id = this.id;
         node.innerHTML = this.template;
-
+        this.node = node;
         // Load data into template
 
         // Parse class names
-        const classAttrName = 'v-class';
-        (<HTMLElement>node).querySelectorAll('[' + classAttrName + ']').forEach(el => {
-            const attr = el.getAttribute(classAttrName);
-
-            // Parse this list from parameters
+        this.attributeParse('v-class', (name, el, attr) => {
             const list = attr.split(' ');
             const parsed = list.filter(li => this.data.hasOwnProperty(li)).map(li => this.data[li]);
             el.classList.add(...parsed);
-
-            // Rename to data to make parseable
-            el.setAttribute('data-' + classAttrName, attr);
-            el.removeAttribute(classAttrName);
         });
 
-        this.node = node;
+        // TODO: Just go over a list of known html element attributes
+        this.attributeParse('v-innerHTML');
+        this.attributeParse('v-href');
+    }
+
+    private attributeParse(name: string, customParseFn?: (name: string, el: Element, attr: string) => void) {
+        (<HTMLElement>this.node).querySelectorAll('[' + name + ']').forEach(el => {
+            const attr = el.getAttribute(name);
+
+            if (customParseFn) {
+                customParseFn(name, el, attr);
+            } else {
+                // Do a simple replace
+                const regex = name.match(/^v-(.*)/);
+                if (this.data.hasOwnProperty(attr) && regex.length > 1) {
+                    const nonVAttr = regex[1];
+                    el.setAttribute(nonVAttr, this.data[attr]);
+                }
+            }
+            // Rename to data to make parseable
+            el.setAttribute('data-' + name, attr);
+            el.removeAttribute(name);
+        });
     }
 
     createRecipe(recipe: Array<ComponentIngredient>) {
