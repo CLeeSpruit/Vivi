@@ -41,10 +41,11 @@ describe('Class: Component Ingredient', () => {
         expect(actual.component).toBeTruthy();
     });
 
-    it('create should append element', () => {
+    it('load should append element', () => {
         const actual = mockIngredient();
 
         actual.create();
+        actual.load(null);
     
         expect(actual.component.element).toBeTruthy();
         expect(actual.component.element.innerHTML).toEqual(mockTemplate);

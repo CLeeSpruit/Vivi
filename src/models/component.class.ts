@@ -98,8 +98,16 @@ export abstract class Component {
         this.recipe.forEach(ingredient => ingredient.create());
     }
 
-    loadAll() {
-        this.recipe.forEach(ingredient => ingredient.load());
+    loadAll(parent: Node) {
+        // Assign Element and class params
+        this.element = document.getElementById(this.id);
+        this.parent = parent;
+        this.isLoaded = true;
+        this.isVisible = true;
+
+        this.recipe.forEach(ingredient => ingredient.load(this.element));
+        
+        // Run hook
         this.load();
     }
 
@@ -117,19 +125,13 @@ export abstract class Component {
         }
         parent.appendChild(this.node);
 
-        // Set class variables
-        this.parent = parent;
-        this.isLoaded = true;
-        this.isVisible = true;
-        this.element = document.getElementById(this.id);
-
         // Opt out of loading if this is an ingredient
         if (doNotLoad) {
             return;
         }
 
         // Run load all, which loads children, then the load hook
-        this.loadAll();
+        this.loadAll(parent);
     }
 
     detach() {

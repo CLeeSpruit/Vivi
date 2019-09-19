@@ -19,7 +19,7 @@ export class ComponentIngredient {
         this.component.append(this.element.parentElement, true);
     }
 
-    load() {
-        this.component.loadAll();
+    load(parent: Node) {
+        this.component.loadAll(parent);
     }
 }
