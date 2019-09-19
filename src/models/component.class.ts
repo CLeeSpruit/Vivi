@@ -98,11 +98,16 @@ export abstract class Component {
         this.recipe.forEach(ingredient => ingredient.create());
     }
 
+    loadAll() {
+        this.recipe.forEach(ingredient => ingredient.load());
+        this.load();
+    }
+
     load() {
         // Placeholder hook for inherited classes
     }
 
-    append(parent?: Node) {
+    append(parent?: Node, doNotLoad?: boolean) {
         if (!this.node) {
             this.createNode();
         }
@@ -118,8 +123,13 @@ export abstract class Component {
         this.isVisible = true;
         this.element = document.getElementById(this.id);
 
-        // Run load hook
-        this.load();
+        // Opt out of loading if this is an ingredient
+        if (doNotLoad) {
+            return;
+        }
+
+        // Run load all, which loads children, then the load hook
+        this.loadAll();
     }
 
     detach() {
