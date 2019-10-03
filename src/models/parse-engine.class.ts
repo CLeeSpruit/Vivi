@@ -26,7 +26,7 @@ export class ParseEngine {
                         const ternary = attr.match(/(?<=\()(.*?)(?=\)\s*\?).*?(?<=\?)\s?(.*?)\s?:\s?(.*)/);
                         let result = match[2] || '';
                         if (ternary && ternary.length > 3) {
-                            result = this.conditional(match[1]) ? ternary[2] : ternary[3];   
+                            result = this.conditional(match[1]) ? ternary[2] : ternary[3];
                         }
                         if (data.hasOwnProperty(result)) {
                             el.setAttribute(ogAttr, data[attr]);
@@ -47,16 +47,24 @@ export class ParseEngine {
 
         this.attributeParse(node, data, 'v-if', (name, el, attr) => {
             // If the condition is not true, remove entire node
-            if (!this.conditional(attr)) {
+            if (data.hasOwnProperty(attr) && data[attr]) {
                 el.remove();
-            } 
+            } else {
+                try {
+                    if (!this.conditional(attr)) {
+                        el.remove();
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            }
         });
     }
 
     private static buildAttributeList(node: Node, attributes: Set<string> = new Set<string>()): Set<string> {
         const attr = (<HTMLElement>node).attributes;
         if (attr) {
-            for(let i = 0; i < attr.length; i++) {
+            for (let i = 0; i < attr.length; i++) {
                 attributes.add(attr.item(i).name);
             }
         }
