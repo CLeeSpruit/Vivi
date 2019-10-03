@@ -46,7 +46,13 @@ export class ParseEngine {
             el.classList.add(...parsed);
         });
 
-        this.attributeParse(node, data, 'v-innerHTML');
+        this.attributeParse(node, data, 'v-innerHTML', (name, el, attr) => {
+            // Simple replace
+            const newAttribute = name.replace('v-', '');
+            if (data.hasOwnProperty(attr)) {
+                el.innerHTML = data[attr];
+            }
+        });
 
         // TODO: Fix this
         this.attributeParse(node, data, 'v-if', (name, el, attr) => {
@@ -88,10 +94,9 @@ export class ParseEngine {
                 customParseFn(name, el, attr);
             } else {
                 // Simple replace
-                const regex = name.match(/^v-(.*)/);
-                if (data.hasOwnProperty(attr) && regex.length > 1) {
-                    const nonVAttr = regex[1];
-                    el.setAttribute(nonVAttr, data[attr]);
+                const newAttribute = name.replace('v-', '');
+                if (data.hasOwnProperty(attr)) {
+                    el.setAttribute(newAttribute, data[attr]);
                 }
             }
             // Rename to data to make parseable
