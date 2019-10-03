@@ -1,7 +1,8 @@
 export class ParseEngine {
     private static attributeBlackList = [
         'v-class',
-        'v-if'
+        'v-if',
+        'v-innerhtml'
     ];
 
     static parseNode(node: Node, data: Object): Node {
@@ -19,14 +20,14 @@ export class ParseEngine {
 
             if (attr.startsWith('vif-')) {
                 const ogAttr = attr.replace('vif-', '');
-                this.attributeParse(node, data, ogAttr, (name, el, attr) => {
+                this.attributeParse(node, data, attr, (name, el, attr) => {
                     // Match against (conditional) ? trueResult : falseResult
                     const match = attr.match(/(?<=\()(.*?)(?=\)\s*\?).*?(?<=\?)\s?(.*)/);
                     if (match && match.length > 1) {
                         const ternary = attr.match(/(?<=\()(.*?)(?=\)\s*\?).*?(?<=\?)\s?(.*?)\s?:\s?(.*)/);
                         let result = match[2] || '';
                         if (ternary && ternary.length > 3) {
-                            result = this.conditional(match[1]) ? ternary[2] : ternary[3];
+                            result = this.conditional(match[1], data) ? ternary[2] : ternary[3];
                         }
                         if (data.hasOwnProperty(result)) {
                             el.setAttribute(ogAttr, data[attr]);
@@ -45,13 +46,16 @@ export class ParseEngine {
             el.classList.add(...parsed);
         });
 
+        this.attributeParse(node, data, 'v-innerHTML');
+
+        // TODO: Fix this
         this.attributeParse(node, data, 'v-if', (name, el, attr) => {
             // If the condition is not true, remove entire node
             if (data.hasOwnProperty(attr) && data[attr]) {
                 el.remove();
             } else {
                 try {
-                    if (!this.conditional(attr)) {
+                    if (!this.conditional(attr, data)) {
                         el.remove();
                     }
                 } catch (e) {
@@ -96,8 +100,17 @@ export class ParseEngine {
         });
     }
 
-    private static conditional(condition: string): boolean {
+    private static conditional(condition: string, data: Object): boolean {
         // Someone grab the holy water, we're going in
-        return eval(condition);
+        try {
+            return eval(condition);
+        } catch(e) {
+            try {
+                return eval('data.' + condition);
+            } catch (e) {
+                console.log(e);
+                return false;
+            }
+        }
     }
 }
