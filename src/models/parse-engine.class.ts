@@ -1,5 +1,8 @@
 export class ParseEngine {
-    private static attributeBlackList = ['v-class'];
+    private static attributeBlackList = [
+        'v-class',
+        'v-if'
+    ];
 
     static parseNode(node: Node, data: Object): Node {
         this.assignAttributes(node, data);
@@ -13,6 +16,26 @@ export class ParseEngine {
             if (attr.startsWith('v-') && !this.attributeBlackList.find(bl => bl === attr)) {
                 this.attributeParse(node, data, attr);
             }
+
+            if (attr.startsWith('vif-')) {
+                const ogAttr = attr.replace('vif-', '');
+                this.attributeParse(node, data, ogAttr, (name, el, attr) => {
+                    // Match against (conditional) ? trueResult : falseResult
+                    const match = attr.match(/(?<=\()(.*?)(?=\)\s*\?).*?(?<=\?)\s?(.*)/);
+                    if (match && match.length > 1) {
+                        const ternary = attr.match(/(?<=\()(.*?)(?=\)\s*\?).*?(?<=\?)\s?(.*?)\s?:\s?(.*)/);
+                        let result = match[2] || '';
+                        if (ternary && ternary.length > 3) {
+                            result = this.conditional(match[1]) ? ternary[2] : ternary[3];   
+                        }
+                        if (data.hasOwnProperty(result)) {
+                            el.setAttribute(ogAttr, data[attr]);
+                        } else {
+                            el.setAttribute(ogAttr, result);
+                        }
+                    }
+                });
+            }
         });
 
         // Parse blacklist items
@@ -20,6 +43,13 @@ export class ParseEngine {
             const list = attr.split(' ');
             const parsed = list.filter(li => data.hasOwnProperty(li)).map(li => data[li]);
             el.classList.add(...parsed);
+        });
+
+        this.attributeParse(node, data, 'v-if', (name, el, attr) => {
+            // If the condition is not true, remove entire node
+            if (!this.conditional(attr)) {
+                el.remove();
+            } 
         });
     }
 
@@ -45,7 +75,7 @@ export class ParseEngine {
             if (customParseFn) {
                 customParseFn(name, el, attr);
             } else {
-                // Do a simple replace
+                // Simple replace
                 const regex = name.match(/^v-(.*)/);
                 if (data.hasOwnProperty(attr) && regex.length > 1) {
                     const nonVAttr = regex[1];
@@ -58,4 +88,8 @@ export class ParseEngine {
         });
     }
 
+    private static conditional(condition: string): boolean {
+        // Someone grab the holy water, we're going in
+        return eval(condition);
+    }
 }
