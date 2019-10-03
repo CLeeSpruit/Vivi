@@ -2,6 +2,7 @@ import * as uuid from 'uuid';
 import { ApplicationListener, Listener } from '../events';
 import { ComponentParams } from './component-params.class';
 import { ComponentIngredient } from './component-ingredient.class';
+import { ParseEngine } from './parse-engine.class';
 
 export abstract class Component {
     id: string;
@@ -60,37 +61,7 @@ export abstract class Component {
         node.innerHTML = this.template;
         this.node = node;
         // Load data into template
-
-        // Parse class names
-        this.attributeParse('v-class', (name, el, attr) => {
-            const list = attr.split(' ');
-            const parsed = list.filter(li => this.data.hasOwnProperty(li)).map(li => this.data[li]);
-            el.classList.add(...parsed);
-        });
-
-        // TODO: Just go over a list of known html element attributes
-        this.attributeParse('v-innerHTML');
-        this.attributeParse('v-href');
-    }
-
-    private attributeParse(name: string, customParseFn?: (name: string, el: Element, attr: string) => void) {
-        (<HTMLElement>this.node).querySelectorAll('[' + name + ']').forEach(el => {
-            const attr = el.getAttribute(name);
-
-            if (customParseFn) {
-                customParseFn(name, el, attr);
-            } else {
-                // Do a simple replace
-                const regex = name.match(/^v-(.*)/);
-                if (this.data.hasOwnProperty(attr) && regex.length > 1) {
-                    const nonVAttr = regex[1];
-                    el.setAttribute(nonVAttr, this.data[attr]);
-                }
-            }
-            // Rename to data to make parseable
-            el.setAttribute('data-' + name, attr);
-            el.removeAttribute(name);
-        });
+        this.node = ParseEngine.parseNode(node, this.data);
     }
 
     createRecipe(recipe: Array<ComponentIngredient>) {
