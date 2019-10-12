@@ -20,6 +20,10 @@ export abstract class Component {
     constructor(protected params: ComponentParams = {}) {
         this.id = uuid();
 
+        // Turn params into data
+        // TODO: Consider defining a difference between params and data
+        this.data = params;
+
         // Get template and style file
 
         // Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
