@@ -118,7 +118,7 @@ describe('Class: Component', () => {
             expect(mock.element.querySelectorAll('[v-class]').length).toEqual(0);
         });
 
-        describe.only('vif', () => {
+        describe('vif', () => {
             it('should only render an attribute something if the result is true', () => {
                 const mock = new MockComponent({ fluffy: 'bunny' });
                 const trueText = 'bun bun bun';

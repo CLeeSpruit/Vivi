@@ -56,6 +56,12 @@ export class ParseEngine {
         });
 
         // Blacklisted vif
+        this.attributeParseVif(node, data, 'vif-class', (name, el, attr) => {
+            const list = attr.split(' ');
+            const parsed = list.filter(li => data.hasOwnProperty(li)).map(li => data[li]);
+            el.classList.add(...parsed);
+        });
+
         this.attributeParseVif(node, data, 'vif-innerHTML', (name, el, attr) => {
             if (data.hasOwnProperty(attr)) {
                 el.innerHTML = data[attr];
@@ -112,7 +118,7 @@ export class ParseEngine {
                     result = this.conditional(match[1], data) ? match[2] || null : null
                 }
                 // Do not bother setting if there's no result
-                if (!result === null) return;
+                if (result === null) return;
                 if (customParseFn) {
                     customParseFn(name, el, result);
                 } else {
@@ -130,9 +136,12 @@ export class ParseEngine {
     private static conditional(condition: string, data: Object): boolean {
         // Someone grab the holy water, we're going in
         try {
-            return eval(condition);
-        } catch(e) {
+            const evil = eval(condition);
+            console.log('well hot dog this worked right away');
+            return evil;
+        } catch (e) {
             try {
+                // TODO: This can probably be evaluated as return !!data.condition
                 return eval('data.' + condition);
             } catch (e) {
                 console.log(e);
