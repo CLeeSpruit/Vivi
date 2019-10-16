@@ -39,7 +39,6 @@ export class ParseEngine {
             }
         });
 
-        // TODO: Fix this
         this.attributeParse(node, data, 'v-if', (name, el, attr) => {
             if (!this.conditional(attr, data)) {
                 el.remove();
