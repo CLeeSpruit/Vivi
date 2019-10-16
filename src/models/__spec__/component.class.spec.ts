@@ -117,6 +117,30 @@ describe('Class: Component', () => {
 
             expect(mock.element.querySelectorAll('[v-class]').length).toEqual(0);
         });
+
+        describe('vif', () => {
+            it('should only render an attribute something if the result is true', () => {
+                const mock = new MockComponent({ fluffy: 'bunny' });
+                const trueText = 'bun bun bun';
+                mock.template = '<span vif-innerHTML="(fluffy === \'bunny\') ? ' + trueText + '"></span>';
+
+                mock.append();
+
+                expect(mock.data['fluffy']).toEqual('bunny');
+                expect(mock.element.querySelector('span').innerHTML).toEqual(trueText);
+            });
+
+
+            it('should not render an attribute something if the result is false', () => {
+                const mock = new MockComponent({ fluffy: 'puppy' });
+                mock.template = '<span vif-innerHTML="(fluffy === \'bunny\') ? \'bow wow\'"></span>';
+
+                mock.append();
+
+                expect(mock.data['fluffy']).toEqual('puppy');
+                expect(mock.element.querySelector('span').innerHTML).toBeFalsy();
+            });
+        });
     });
 
     describe('Parameter bindings', () => {
