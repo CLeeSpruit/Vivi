@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 stage="./dist"
 
+echo "Switching to master branch..."
+git checkout master
+
 echo "Is this a major, minor, or patch update?"
 select update in "major" "minor" "patch";
 do
