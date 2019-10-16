@@ -126,7 +126,6 @@ describe('Class: Component', () => {
 
                 mock.append();
 
-                console.log(mock.data);
                 expect(mock.data['fluffy']).toEqual('bunny');
                 expect(mock.element.querySelector('span').innerHTML).toEqual(trueText);
             });
@@ -140,26 +139,6 @@ describe('Class: Component', () => {
 
                 expect(mock.data['fluffy']).toEqual('puppy');
                 expect(mock.element.querySelector('span').innerHTML).toBeFalsy();
-            });
-
-            it('should render only the true value if the result is true', () => {
-                const mock = new MockComponent({ fluffy: 'puppy' });
-                mock.template = '<span vif-innerHTML="(fluffy === \'bunny\') ? \'bun\' : \'bow\'"></span>';
-
-                mock.append();
-
-                expect(mock.data['fluffy']).toEqual('puppy');
-                expect(mock.element.querySelector('span').innerHTML).toEqual('bow');
-            });
-
-            it('multiple vifs should only render the last truthy statement', () => {
-                const mock = new MockComponent({ fluffy: 'puppy' });
-                mock.template = '<span vif-innerHTML="(fluffy === \'bunny\') ? \'bun\' : \'bow\'" vif-innerHTML="(fluffy === \'puppy\') ? \'bow\'" vif-innerHTML="(fluffy) ? \'bow wow\'"></span>';
-
-                mock.append();
-
-                expect(mock.data['fluffy']).toEqual('puppy');
-                expect(mock.element.querySelector('span').innerHTML).toEqual('bow wow');
             });
         });
     });

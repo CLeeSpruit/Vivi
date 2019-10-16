@@ -131,4 +131,32 @@ describe('Parse Engine', () => {
             testAttributeIf('vif-' + attr);
         });
     });
+
+    describe('v-if nodes', () => {
+        it('should render the node if value is truthy', () => {
+            const parent = document.createElement('div');
+            const node = document.createElement('span');
+            const data = { fluffy: 'bunny' };
+            const value = `fluffy === 'bunny'`;
+            node.setAttribute('v-if', value);
+            parent.append(node);
+            const result = ParseEngine.parseNode(parent, data) as HTMLDivElement;
+            const actual = result.querySelector('span');
+
+            expect(actual).toBeTruthy();
+        });
+
+        it('should not render the node if value is falsy', () => {
+            const parent = document.createElement('div');
+            const node = document.createElement('span');
+            const data = { fluffy: 'puppy' };
+            const value = `fluffy === 'bunny'`;
+            node.setAttribute('v-if', value);
+            parent.append(node);
+            const result = ParseEngine.parseNode(parent, data) as HTMLDivElement;
+            const actual = result.querySelector('span');
+
+            expect(actual).toBeFalsy();
+        });
+    });
 });

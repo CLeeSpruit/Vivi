@@ -41,17 +41,8 @@ export class ParseEngine {
 
         // TODO: Fix this
         this.attributeParse(node, data, 'v-if', (name, el, attr) => {
-            // If the condition is not true, remove entire node
-            if (data.hasOwnProperty(attr) && data[attr]) {
+            if (!this.conditional(attr, data)) {
                 el.remove();
-            } else {
-                try {
-                    if (!this.conditional(attr, data)) {
-                        el.remove();
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
             }
         });
 
@@ -136,9 +127,7 @@ export class ParseEngine {
     private static conditional(condition: string, data: Object): boolean {
         // Someone grab the holy water, we're going in
         try {
-            const evil = eval(condition);
-            console.log('well hot dog this worked right away');
-            return evil;
+            return eval(condition);
         } catch (e) {
             try {
                 // TODO: This can probably be evaluated as return !!data.condition
