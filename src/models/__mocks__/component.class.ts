@@ -1,4 +1,4 @@
-import { Component } from 'models/component.class';
+import { Component } from '../component.class';
 
 export class MockComponent extends Component {
     constructor() {
