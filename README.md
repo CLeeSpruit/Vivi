@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/username/projectname.svg?branch=master)](https://travis-ci-com/CassandraSpruit/Vivi)
+[![Build Status](https://travis-ci.com/CassandraSpruit/Vivi.svg?branch=master)](https://travis-ci.com/CassandraSpruit/Vivi)
 [![codecov](https://codecov.io/gh/CassandraSpruit/Vivi/branch/master/graph/badge.svg)](https://codecov.io/gh/CassandraSpruit/Vivi)
 
 ---
