@@ -9,7 +9,8 @@ describe('Class: Module Factory', () => {
     const fullConstructor = () => {
         return new ModuleFactory({
             serviceConstructors: [
-                <ViviServiceConstructor<MockService>>{ constructor: MockService }
+                <ViviServiceConstructor<MockService>>{ constructor: MockService },
+                <ViviServiceConstructor<MockServicePrereq>>{ constructor: MockServicePrereq, prereqArr: [MockService] }
             ],
             componentConstructors: [
                 <ViviComponentConstructor<Component>>{ constructor: MockChildComponent },
@@ -28,6 +29,17 @@ describe('Class: Module Factory', () => {
         const vivi = fullConstructor();
 
         expect(vivi).toBeTruthy();
+    });
+
+    it('init - root component is created', () => {
+        const vivi = new ModuleFactory({
+            componentConstructors: [{ constructor: MockComponent, services: [MockService] }],
+            serviceConstructors: [{ constructor: MockService }],
+            rootComponent: MockComponent
+        });
+
+        expect(vivi).toBeTruthy();
+        expect(vivi.get(MockComponent)).toBeTruthy();
     });
 
     describe('getFactory', () => {
@@ -52,6 +64,10 @@ describe('Class: Module Factory', () => {
             const actual = vivi.getFactoryByString('MockComponent');
 
             expect(actual instanceof ViviComponentFactory).toBeTruthy();
+        });
+
+        it('get factory should throw error if no service or component is found', () => {
+            expect(() => { vivi.getFactoryByString('test'); }).toThrowError('No service or component for test');
         });
     });
 
@@ -78,6 +94,10 @@ describe('Class: Module Factory', () => {
             const actual = vivi.get(MockService);
 
             expect(actual instanceof MockService).toBeTruthy();
+        });
+
+        it('get should throw error if no service or component is found', () => {
+            expect(() => { vivi.getByString('test'); }).toThrowError('No service or component for test');
         });
     });
 
@@ -108,6 +128,12 @@ class MockChildComponent extends Component {
 // Generic Service used for testing in this file
 class MockService extends Service {
     constructor() {
+        super();
+    }
+}
+
+class MockServicePrereq extends Service {
+    constructor(private mockService: MockService) {
         super();
     }
 }

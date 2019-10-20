@@ -2,6 +2,7 @@ import { Component } from '../';
 import { ModuleFactory } from '../../factory/module-factory';
 import { ComponentIngredient } from '../component-ingredient.class';
 import { ViviComponentFactory } from '../../factory/component-factory.class';
+import { MockComponent, MockWithTemplateComponent, MockWithChildrenComponent } from '../__mocks__/component.class';
 
 describe('Class: Component Ingredient', () => {
     const mockModule = () => {
@@ -13,8 +14,12 @@ describe('Class: Component Ingredient', () => {
     };
 
     const mockIngredient = () => {
-        return new ComponentIngredient( document.createElement('a'), new ViviComponentFactory(MockComponent));
-    }
+        return new ComponentIngredient( document.createElement('a'), new ViviComponentFactory(MockWithTemplateComponent));
+    };
+
+    const mockIngredientWithChildren = () => {
+        return new ComponentIngredient( document.createElement('a'), new ViviComponentFactory(MockWithChildrenComponent));
+    };
 
     beforeEach(() => {
         window.vivi = mockModule();
@@ -48,16 +53,16 @@ describe('Class: Component Ingredient', () => {
         actual.load(null);
     
         expect(actual.component.element).toBeTruthy();
-        expect(actual.component.element.innerHTML).toEqual(mockTemplate);
+        expect(actual.component.element.innerHTML).toEqual('test');
+    });
+
+    it('should loadAll of children components', () => {
+        const ingredient = mockIngredientWithChildren();
+
+        ingredient.create();
+        ingredient.load(null);
+
+        expect(ingredient.component.element).toBeTruthy();
+        expect(ingredient.component.element.getElementsByTagName('mockcomponent')).toBeTruthy();
     });
 });
-
-
-class MockComponent extends Component {
-    constructor() {
-        super();
-        this.template = mockTemplate;
-    }
-}
-
-const mockTemplate = 'test';

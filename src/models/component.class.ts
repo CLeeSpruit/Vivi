@@ -30,29 +30,17 @@ export abstract class Component {
         const dirname = this.constructor.name.replace('Component', '').replace(/\B(?=[A-Z])/, '-').toLowerCase();
         const directory = dirname + '/' + dirname;
 
-        if (!this.template) {
-            // Sadly because of how context replacement plugin works for webpack, this can't really be functionalized
-            try {
-                this.template = require('vivi_application/' + directory + '.component.html');
-            } catch (e) {
-                // A vaild error, throw it back out to sea
-                if (e.code !== 'MODULE_NOT_FOUND') {
-                    throw e;
-                }
-                this.template = '';
-            }
+        // Sadly because of how context replacement plugin works for webpack, this can't really be functionalized
+        try {
+            this.template = require('vivi_application/' + directory + '.component.html');
+        } catch (e) {
+             this.template = '';
         }
 
-        if (!this.style) {
-            try {
-                this.style = require('vivi_application/' + directory + '.component.scss');
-            } catch (e) {
-                // A vaild error, throw it back out to sea
-                if (e.code !== 'MODULE_NOT_FOUND') {
-                    throw e;
-                }
-                this.style = '';
-            }
+        try {
+            this.style = require('vivi_application/' + directory + '.component.scss');
+        } catch (e) {
+            this.style = '';
         }
     }
     

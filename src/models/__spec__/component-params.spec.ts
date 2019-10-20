@@ -17,6 +17,15 @@ describe('Class: Component Params', () => {
         expect(component).toBeTruthy();
         expect(component.params).toEqual({});
     });
+
+    it('params should still init without params', () => {
+        const params = new MockComponentParams(null);
+        const component = new MockComponent(params);
+
+        expect(component).toBeTruthy();
+        expect(component.params).toBeTruthy();
+        expect(component.params).toEqual({});
+    });
 });
 
 class MockComponentParams extends ComponentParams {

@@ -5,3 +5,17 @@ export class MockComponent extends Component {
         super();
     }
 }
+
+export class MockWithTemplateComponent extends Component {
+    constructor() {
+        super();
+        this.template = 'test';
+    }
+}
+
+export class MockWithChildrenComponent extends Component {
+    constructor() {
+        super();
+        this.template = '<mock></mock>';
+    }
+}

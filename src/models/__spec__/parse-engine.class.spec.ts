@@ -2,11 +2,58 @@ import { ParseEngine } from '../parse-engine.class';
 import { attributeList } from './attribute-list';
 
 describe('Parse Engine', () => {
+    afterEach(() => {
+        // Clear the document
+        for (let i = 0; i < document.body.children.length; i++) {
+            document.body.children.item(i).remove();
+        }
+    });
+
     it('should work', () => {
         const node = document.createElement('div');
         const actual = ParseEngine.parseNode(node, {});
 
         expect(actual).toBeTruthy();
+    });
+
+    it('should work even if an element is just text', () => {
+        const node = document.createElement('div');
+        node.textContent = 'test';
+
+        const actual = ParseEngine.parseNode(node, {});
+
+        expect(actual).toBeTruthy();
+    });
+
+    describe('conditional', () => {
+        it('should eval as true for strings that are true', () => {
+            expect(ParseEngine.conditional('2 + 2 === 4', {})).toBeTruthy();
+        });
+
+        it('should eval as false for strings that are false', () => {
+            expect(ParseEngine.conditional('2 + 2 === 5', {})).toBeFalsy();
+        });
+
+        it('should eval as true for variables that are true', () => {
+            const data = { bunny: true };
+            const result = ParseEngine.conditional('this.bunny', data);
+            expect(result).toBeTruthy();
+        });
+
+        it('should eval as false for variables that are false', () => {
+            const data = { bunny: false };
+            expect(ParseEngine.conditional('this.bunny', data)).toBeFalsy();
+        });
+
+        it('should eval as true for variables with comparisons that are true', () => {
+            const data = { bunny: 'fluffy', puppy: 'fluffy' };
+            expect(ParseEngine.conditional('this.bunny === this.puppy', data)).toBeTruthy();
+        });
+
+        it('should eval as false for variables with comparisons that are false', () => {
+            const data = { bunny: 'fluffy', puppy: 'cute' };
+            expect(ParseEngine.conditional('this.bunny === this.puppy', data)).toBeFalsy();
+        });
     });
 
     const testAttribute = (attr: string) => {
@@ -15,28 +62,14 @@ describe('Parse Engine', () => {
             it('should evaluate data objects', () => {
                 const node = document.createElement('div');
                 const child = document.createElement('div');
-                const ogValue = 'fluffy';
-                const value = 'bunny';
-                child.setAttribute(attr, ogValue);
+                const data = { fluffy: 'bunny'};
+                const value = 'this.fluffy';
+                child.setAttribute(attr, 'this.fluffy');
                 node.append(child);
-                const result = ParseEngine.parseNode(node, { fluffy: value }) as HTMLDivElement;
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
                 const actual = result.querySelector('div');
                 expect(actual).toBeTruthy();
-                expect(actual.getAttribute(normalAttrName)).toEqual(value);
-                expect(actual.getAttribute('data-' + attr)).toEqual(ogValue);
-                expect(actual.getAttribute(attr)).toBeFalsy();
-            });
-            it('should not evaluate items that do not belong in the data object', () => {
-                const node = document.createElement('div');
-                const child = document.createElement('div');
-                const value = 'fluffy';
-                child.setAttribute(attr, value);
-                node.append(child);
-                const result = ParseEngine.parseNode(node, {}) as HTMLDivElement;
-                const actual = result.querySelector('div');
-
-                expect(actual).toBeTruthy();
-                expect(actual.getAttribute(normalAttrName)).toBeFalsy();
+                expect(actual.getAttribute(normalAttrName)).toEqual(data.fluffy);
                 expect(actual.getAttribute('data-' + attr)).toEqual(value);
                 expect(actual.getAttribute(attr)).toBeFalsy();
             });
@@ -50,15 +83,14 @@ describe('Parse Engine', () => {
                 const node = document.createElement('div');
                 const child = document.createElement('div');
                 const data = { fluffy: 'bunny' };
-                const trueValue = 'bun bun bun';
-                const value = `(fluffy === 'bunny') ? ${trueValue}`;
+                const value = `(this.fluffy === 'bunny') ? this.fluffy`;
                 child.setAttribute(attr, value);
                 node.append(child);
                 const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
                 const actual = result.querySelector('div');
 
                 expect(actual).toBeTruthy();
-                expect(actual.getAttribute(normalAttrName)).toEqual(trueValue);
+                expect(actual.getAttribute(normalAttrName)).toEqual(data.fluffy);
                 expect(actual.getAttribute('data-' + attr)).toEqual(value);
                 expect(actual.getAttribute(attr)).toBeFalsy();
             });
@@ -68,7 +100,7 @@ describe('Parse Engine', () => {
                 const child = document.createElement('div');
                 const data = { fluffy: 'puppy' };
                 const trueValue = 'bow wow';
-                const value = `(fluffy === 'bunny') ? ${trueValue}`;
+                const value = `(this.fluffy === 'bunny') ? this.fluffy`;
                 child.setAttribute(attr, value);
                 node.append(child);
                 const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
@@ -84,16 +116,14 @@ describe('Parse Engine', () => {
                 const node = document.createElement('div');
                 const child = document.createElement('div');
                 const data = { fluffy: 'bunny' };
-                const trueValue = 'bun bun bun';
-                const falseValue = 'bow wow';
-                const value = `(fluffy === 'bunny') ? ${trueValue} : ${falseValue}`;
+                const value = `(this.fluffy === 'bunny') ? this.fluffy : this.puppy`;
                 child.setAttribute(attr, value);
                 node.append(child);
                 const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
                 const actual = result.querySelector('div');
 
                 expect(actual).toBeTruthy();
-                expect(actual.getAttribute(normalAttrName)).toEqual(trueValue);
+                expect(actual.getAttribute(normalAttrName)).toEqual(data.fluffy);
                 expect(actual.getAttribute('data-' + attr)).toEqual(value);
                 expect(actual.getAttribute(attr)).toBeFalsy();
             });
@@ -101,17 +131,63 @@ describe('Parse Engine', () => {
             it('should only render the false value if the result is false', () => {
                 const node = document.createElement('div');
                 const child = document.createElement('div');
-                const data = { fluffy: 'puppy' };
-                const trueValue = 'bun bun bun';
-                const falseValue = 'bow wow';
-                const value = `(fluffy === 'bunny') ? ${trueValue} : ${falseValue}`;
+                const data = { fluffy: 'puppy', puppy: 'cute' };
+                const value = `(this.fluffy === 'bunny') ? this.fluffy : this.puppy`;
                 child.setAttribute(attr, value);
                 node.append(child);
                 const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
                 const actual = result.querySelector('div');
 
                 expect(actual).toBeTruthy();
-                expect(actual.getAttribute(normalAttrName)).toEqual(falseValue);
+                expect(actual.getAttribute(normalAttrName)).toEqual(data.puppy);
+                expect(actual.getAttribute('data-' + attr)).toEqual(value);
+                expect(actual.getAttribute(attr)).toBeFalsy();
+            });
+
+            it('should not render as true if the result is garbage', () => {
+                const node = document.createElement('div');
+                const child = document.createElement('div');
+                const data = { fluffy: 'puppy' };
+                const value = `(whatever) ? this.fluffly`;
+                child.setAttribute(attr, value);
+                node.append(child);
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
+                const actual = result.querySelector('div');
+
+                expect(actual).toBeTruthy();
+                expect(actual.getAttribute(normalAttrName)).toBeFalsy();
+                expect(actual.getAttribute('data-' + attr)).toEqual(value);
+                expect(actual.getAttribute(attr)).toBeFalsy();
+            });
+
+            it('should not render if the conditional is not formatted properly', () => {
+                const node = document.createElement('div');
+                const child = document.createElement('div');
+                const data = { fluffy: 'bunny' };
+                const value = `whatever ? this.fluffy`;
+                child.setAttribute(attr, value);
+                node.append(child);
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
+                const actual = result.querySelector('div');
+
+                expect(actual).toBeTruthy();
+                expect(actual.getAttribute(normalAttrName)).toBeFalsy();
+                expect(actual.getAttribute('data-' + attr)).toEqual(value);
+                expect(actual.getAttribute(attr)).toBeFalsy();
+            });
+
+            it('should not render if the result is missing', () => {
+                const node = document.createElement('div');
+                const child = document.createElement('div');
+                const data = { fluffy: 'bunny' };
+                const value = `(this.fluffy) ?`;
+                child.setAttribute(attr, value);
+                node.append(child);
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
+                const actual = result.querySelector('div');
+
+                expect(actual).toBeTruthy();
+                expect(actual.getAttribute(normalAttrName)).toBeFalsy();
                 expect(actual.getAttribute('data-' + attr)).toEqual(value);
                 expect(actual.getAttribute(attr)).toBeFalsy();
             });
@@ -123,12 +199,95 @@ describe('Parse Engine', () => {
         attributeList.forEach(attr => {
             testAttribute('v-' + attr);
         });
+
+        describe('v-class', () => {
+            it('should add a list of classes', () => {
+                const node = document.createElement('div');
+                const child = document.createElement('span');
+                const data = { fluffy: 'bunny', puppy: 'bow-wow' };
+                const value = 'this.fluffy this.puppy';
+                child.setAttribute('v-class', value);
+                node.append(child);
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
+                const actual = result.querySelector('span');
+
+                expect(actual.classList.value).toEqual('bunny bow-wow');
+            });
+        });
+
+        describe('v-innerHTML', () => {
+            it('should add content to innerHTML', () => {
+                const node = document.createElement('div');
+                const child = document.createElement('span');
+                const data = { fluffy: 'bunny' };
+                const value = 'this.fluffy';
+                child.setAttribute('v-innerHTML', value);
+                node.append(child);
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
+                const actual = result.querySelector('span');
+
+                expect(actual.innerHTML).toEqual(data.fluffy);
+            });
+        });
+
     });
 
     // Vif
     describe('vif-* attributes', () => {
         attributeList.forEach(attr => {
             testAttributeIf('vif-' + attr);
+        });
+
+        describe('vif-class', () => {
+            it('should add a list of classes if true', () => {
+                const node = document.createElement('div');
+                const child = document.createElement('div');
+                const data = { fluffy: 'bunny', puppy: 'bow' };
+                const value = `(this.fluffy === 'bunny') ? this.fluffy this.puppy : this.puppy`;
+                child.setAttribute('vif-class', value);
+                node.append(child);
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
+                const actual = result.querySelector('div');
+
+                expect(actual).toBeTruthy();
+                expect(actual.classList.value).toEqual('bunny bow');
+                expect(actual.getAttribute('data-vif-class')).toEqual(value);
+                expect(actual.getAttribute('vif-class')).toBeFalsy();
+            });
+
+            it('should add a list of classes from data and strings', () => {
+                const node = document.createElement('div');
+                const child = document.createElement('div');
+                const data = { fluffy: 'bunny' };
+                const value = `(this.fluffy === 'bunny') ? this.fluffy pupper : this.puppy`;
+                child.setAttribute('vif-class', value);
+                node.append(child);
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
+                const actual = result.querySelector('div');
+
+                expect(actual).toBeTruthy();
+                expect(actual.classList.value).toEqual('bunny pupper');
+                expect(actual.getAttribute('data-vif-class')).toEqual(value);
+                expect(actual.getAttribute('vif-class')).toBeFalsy();
+            });
+        });
+
+        describe('vif-innerHTML', () => {
+            it('should add content to innerHTML if true', () => {
+                const node = document.createElement('div');
+                const child = document.createElement('div');
+                const data = { fluffy: 'bunny' };
+                const value = `(this.fluffy === 'bunny') ? this.fluffy : bow`;
+                child.setAttribute('vif-innerHTML', value);
+                node.append(child);
+                const result = ParseEngine.parseNode(node, data) as HTMLDivElement;
+                const actual = result.querySelector('div');
+
+                expect(actual).toBeTruthy();
+                expect(actual.innerHTML).toEqual('bunny');
+                expect(actual.getAttribute('data-vif-innerhtml')).toEqual(value);
+                expect(actual.getAttribute('vif-innerhtml')).toBeFalsy();
+            });
         });
     });
 
@@ -137,7 +296,7 @@ describe('Parse Engine', () => {
             const parent = document.createElement('div');
             const node = document.createElement('span');
             const data = { fluffy: 'bunny' };
-            const value = `fluffy === 'bunny'`;
+            const value = `this.fluffy === 'bunny'`;
             node.setAttribute('v-if', value);
             parent.append(node);
             const result = ParseEngine.parseNode(parent, data) as HTMLDivElement;
@@ -150,7 +309,7 @@ describe('Parse Engine', () => {
             const parent = document.createElement('div');
             const node = document.createElement('span');
             const data = { fluffy: 'puppy' };
-            const value = `fluffy === 'bunny'`;
+            const value = `this.fluffy === 'bunny'`;
             node.setAttribute('v-if', value);
             parent.append(node);
             const result = ParseEngine.parseNode(parent, data) as HTMLDivElement;

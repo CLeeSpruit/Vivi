@@ -25,6 +25,7 @@ export class Listener {
         if (this.element) this.add();
     }
 
+    // TODO: Is this ever going to be called outside of the constructor? Should this be private/moved?
     add() {
         if (!this.element) throw 'No element found to add listener to';
         this.element.addEventListener(this.type, this.callback, this.options);

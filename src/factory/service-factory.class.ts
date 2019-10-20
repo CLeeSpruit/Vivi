@@ -15,15 +15,11 @@ export class ViviServiceFactory<T> {
         this.create();
     }
 
-    create(options?: { returnService?: boolean }): string | Service {
+    create(): Service {
         const service = new this.constructor(...Array.from(this.prerequisites.values()).map(pre => pre.get()));
         this.instances.set(service.id, service);
 
-        if (options && options.returnService) {
-            return service;
-        }
-
-        return service.id;
+        return service;
     }
 
     get(id?: string): Service {
@@ -32,5 +28,14 @@ export class ViviServiceFactory<T> {
         } else {
             return Array.from(this.instances.values())[0] || null;
         }
+    }
+
+    destroy(id: string) {
+        const service = this.get(id);
+        // Run cleanup
+        service.destroy();
+
+        // Remove from the map
+        this.instances.delete(id);
     }
 }

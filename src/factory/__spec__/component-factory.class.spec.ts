@@ -69,6 +69,47 @@ describe('Component Factory', () => {
 
             expect(mock.get()).toEqual(componentA);
         });
+
+        it('get should return null if no id is provided and no components have been created', () => {
+            const mock = basicMock();
+
+            expect(mock.get()).toEqual(null);
+        });
+    });
+
+    describe('destroy', () => {
+        it('should trigger component.destroy', () => {
+            const mock = basicMock();
+            const comp = <MockComponent>mock.create();
+            const destroySpy = spyOn(comp, 'destroy');
+            comp.append();
+
+            mock.destroy(comp.id);
+
+            expect(destroySpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should remove from the DOM', () => {
+            const mock = basicMock();
+            const comp = <MockComponent>mock.create();
+            comp.append();
+
+            mock.destroy(comp.id);
+
+            const actual = document.getElementById(comp.id);
+            expect(actual).toBeFalsy();
+        });
+
+        it('should remove from the factory map', () => {
+            const mock = basicMock();
+            const comp = <MockComponent>mock.create();
+            comp.append();
+
+            mock.destroy(comp.id);
+
+            const actual = mock.get(comp.id);
+            expect(actual).toBeFalsy();
+        });
     });
 });
 
