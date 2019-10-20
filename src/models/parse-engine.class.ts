@@ -28,15 +28,16 @@ export class ParseEngine {
         // Parse blacklist items
         this.attributeParse(node, data, 'v-class', (name, el, attr) => {
             const list = attr.split(' ');
-            const parsed = list.filter(li => data.hasOwnProperty(li)).map(li => data[li]);
+            const parsed = list.map(li => {
+                // Allow for data and non-data strings
+                return ParseEngine.applyWithContext(li, data);
+            });
             el.classList.add(...parsed);
         });
 
         this.attributeParse(node, data, 'v-innerHTML', (name, el, attr) => {
             // Simple replace
-            if (data.hasOwnProperty(attr)) {
-                el.innerHTML = data[attr];
-            }
+            el.innerHTML = ParseEngine.applyWithContext(attr, data);
         });
 
         this.attributeParse(node, data, 'v-if', (name, el, attr) => {
@@ -48,22 +49,21 @@ export class ParseEngine {
         // Blacklisted vif
         this.attributeParseVif(node, data, 'vif-class', (name, el, attr) => {
             const list = attr.split(' ');
-            const parsed = list.filter(li => data.hasOwnProperty(li)).map(li => data[li]);
+            const parsed = list.map(li => {
+                // Allow for data and non-data strings
+                return ParseEngine.applyWithContext(li, data);
+            });
             el.classList.add(...parsed);
         });
 
         this.attributeParseVif(node, data, 'vif-innerHTML', (name, el, attr) => {
-            if (data.hasOwnProperty(attr)) {
-                el.innerHTML = data[attr];
-            } else {
-                el.innerHTML = attr;
-            }
+            el.innerHTML = ParseEngine.applyWithContext(attr, data);
         });
     }
 
     private static buildAttributeList(node: Node, attributes: Set<string> = new Set<string>()): Set<string> {
         const attr = (<HTMLElement>node).attributes;
-        if (attr) {
+        if (attr){
             for (let i = 0; i < attr.length; i++) {
                 attributes.add(attr.item(i).name);
             }
@@ -85,9 +85,7 @@ export class ParseEngine {
             } else {
                 // Simple replace
                 const newAttribute = name.replace('v-', '');
-                if (data.hasOwnProperty(attr)) {
-                    el.setAttribute(newAttribute, data[attr]);
-                }
+                el.setAttribute(newAttribute, ParseEngine.applyWithContext(attr, data));
             }
             // Rename to data to make parseable
             el.setAttribute('data-' + name, attr);
@@ -105,7 +103,7 @@ export class ParseEngine {
                 if (ternary && ternary.length > 3) {
                     result = this.conditional(match[1], data) ? ternary[2] : ternary[3];
                 } else {
-                    result = this.conditional(match[1], data) ? match[2] || null : null
+                    result = this.conditional(match[1], data) ? match[2] || null : null;
                 }
                 // Do not bother setting if there's no result
                 if (result === null) return;
@@ -113,28 +111,30 @@ export class ParseEngine {
                     customParseFn(name, el, result);
                 } else {
                     let newAttribute = name.replace('vif-', '');
-                    if (data.hasOwnProperty(result)) {
-                        el.setAttribute(newAttribute, data[result]);
-                    } else {
-                        el.setAttribute(newAttribute, result);
-                    }
+                    el.setAttribute(newAttribute, ParseEngine.applyWithContext(result, data));
                 }
             }
         });
     }
 
-    private static conditional(condition: string, data: Object): boolean {
-        // Someone grab the holy water, we're going in
-        try {
-            return eval(condition);
-        } catch (e) {
+    static conditional(condition: string, context: Object): boolean {
+        return function (condition) {
+            // Someone grab the holy water, we're going in
             try {
-                // TODO: This can probably be evaluated as return !!data.condition
-                return eval('data.' + condition);
+                return eval(condition);
             } catch (e) {
-                console.log(e);
                 return false;
             }
-        }
+        }.call(context, condition);
+    }
+
+    private static applyWithContext(value: string, context: Object): string {
+        return function(value) {
+            try {
+                return eval(value);
+            } catch (e) {
+                return value;
+            }
+        }.call(context, value);
     }
 }

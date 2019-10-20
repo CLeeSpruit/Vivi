@@ -29,6 +29,7 @@ export class ModuleFactory {
             let prereqArr = [];
             if (serviceConstructor.prereqArr) {
                 prereqArr = serviceConstructor.prereqArr.map(prereq => {
+                    // TODO: Throw a specific warning to the user telling them about a missing service
                     return this.services.get(prereq.name);
                 });
             }
@@ -41,6 +42,7 @@ export class ModuleFactory {
                 let serviceArr = [];
                 if (constructor.services) {
                     serviceArr = constructor.services.map(service => {
+                        // TODO: Throw a specific warning to the user telling them about a missing service
                         return this.services.get(service.name);
                     });
                 }
@@ -75,8 +77,8 @@ export class ModuleFactory {
         throw 'No service or component for ' + name;
     }
 
-    getFactory(constuctor: new (...args) => (Component | Service)): ViviComponentFactory<Component> | ViviServiceFactory<Service> {
-        const name = constuctor ? constuctor.name : '(not found)';
+    getFactory(constructor: new (...args) => (Component | Service)): ViviComponentFactory<Component> | ViviServiceFactory<Service> {
+        const name = constructor.name;
         return this.getFactoryByString(name);
     }
 

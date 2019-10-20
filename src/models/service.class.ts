@@ -9,10 +9,6 @@ export abstract class Service {
         this.id = uuid();
     }
 
-    load() {
-        // Placeholder
-    }
-
     destroy() {
         this.listeners.forEach(listener => {
             listener.remove();

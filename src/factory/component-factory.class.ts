@@ -62,25 +62,6 @@ export class ViviComponentFactory<T> {
 
     }
 
-    // TODO: Determine if this is needed
-    append(id: string, parent?: Node) {
-        const component = this.get(id);
-        component.append(parent);
-    }
-    
-    // TODO: Not Currently Used, determine if needed
-    detach(id: string) {
-        const component = this.get(id);
-        component.detach();
-    }
-
-    hide(id: string) {
-        const component = this.get(id);
-        const node = document.getElementById(id);
-        node.hidden = true;
-        component.isVisible = false;
-    }
-
     destroy(id: string) {
         const component = this.get(id);
         // Run cleanup
