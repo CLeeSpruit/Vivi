@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 stage="./dist"
 
-echo "Switching to master branch..."
+echo "Switching to master branch and grabbing latest..."
 git checkout master
+git pull
 
 echo "Is this a major, minor, or patch update?"
 select update in "major" "minor" "patch";
