@@ -5,9 +5,8 @@ import { ApplicationListener, ApplicationEvent } from '../events';
 import { Service } from '../models';
 
 export interface ListenerOptions {
-    getEvent?: boolean; // Retrieves only data by default
     getCurrentValue?: boolean; // If event has already been triggered, get data from last event
-    pipe?: OperatorFunction<any, {}>; // TODO: Accepts rxjs operator functions to customize observable
+    pipe?: OperatorFunction<ApplicationEvent, ApplicationEvent>; // Accepts rxjs operator functions to customize observable
 }
 
 export class ApplicationEventService extends Service {
@@ -43,15 +42,10 @@ export class ApplicationEventService extends Service {
             obs = obs.pipe(skip(1));
         }
 
-        // // Extract the data from the event unless otherwise stated
-        // if (!(options && options.getEvent)) {
-        //     obs = obs.pipe(map(evt => evt ? evt.data : evt ));
-        // }
-
-        // TODO: Include other pipes if provided
-        // if (options && options.pipe) {
-        //     obs = obs.pipe(options.pipe);
-        // }
+        // Include other pipes if provided
+        if (options && options.pipe) {
+            obs = obs.pipe<ApplicationEvent>(options.pipe);
+        }
 
         // Create listener
         return new ApplicationListener(eventName, callback, obs);

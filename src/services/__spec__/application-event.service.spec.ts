@@ -1,5 +1,6 @@
 import { ApplicationEventService } from '../application-event.service';
-import { ApplicationListener } from '../../events';
+import { ApplicationListener, ApplicationEvent } from '../../events';
+import { map } from 'rxjs/operators';
 
 describe('ApplicationEventService', () => {
     it('should init', () => {
@@ -35,6 +36,22 @@ describe('ApplicationEventService', () => {
                 expect(true).toBeTruthy();
                 done();
             }, { getCurrentValue: true });
+        });
+
+        
+        it('should add pipes if provided in options.pipe', (done) => {
+            const service = new ApplicationEventService();
+            const pipe = map<ApplicationEvent, ApplicationEvent>((value) => {
+                value.data = 2;
+                return value;
+            });
+
+            service.createListener('test', (data) => {
+                expect(data).toEqual(2);
+                done();
+            }, { pipe });
+
+            service.sendEvent('test', 1);
         });
     });
 
