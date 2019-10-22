@@ -59,23 +59,47 @@ describe('Class: Listener', () => {
             element.click();
         });
 
-        it('enter - should trigger call back on keypress:enter', (done) => {
-            const element = document.createElement('button');
-            const listener = new Listener(EventTypes.enter, element, () => {
-                expect(true).toBeTruthy();
-                done();
+        describe('keypress', () => {
+            it('enter - should trigger call back on keypress:enter', (done) => {
+                const element = document.createElement('button');
+                const listener = new Listener(EventTypes.enter, element, () => {
+                    expect(true).toBeTruthy();
+                    done();
+                });
+                
+                element.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'Enter' }));
             });
-
-            element.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'Enter' }));
+            
+            it('enter - should nto trigger call back on keypress:anything else', () => {
+                const element = document.createElement('button');
+                const listener = new Listener(EventTypes.enter, element, () => {
+                    throw 'If you are seeing this, this test is failing.';
+                });
+                
+                element.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'Shift' }));
+            });
         });
 
-        it('enter - should nto trigger call back on keypress:anything else', () => {
-            const element = document.createElement('button');
-            const listener = new Listener(EventTypes.enter, element, () => {
-                throw 'If you are seeing this, this test is failing.';
+        describe('scroll', () => {
+            it('scroll up - should trigger call back when mouse scrolls up', (done) => {
+                const element = document.createElement('div');
+                const listener = new Listener(EventTypes.scrollUp, element, () => {
+                    expect(true).toBeTruthy();
+                    done();
+                });
+                
+                element.dispatchEvent(new WheelEvent('wheel', { deltaY: -100 }));
             });
 
-            element.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'Shift' }));
+            it('scroll down - should trigger call back when mouse scrolls up', (done) => {
+                const element = document.createElement('div');
+                const listener = new Listener(EventTypes.scrollDown, element, () => {
+                    expect(true).toBeTruthy();
+                    done();
+                });
+                
+                element.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+            });
         });
     });
 });

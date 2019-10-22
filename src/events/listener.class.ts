@@ -20,12 +20,35 @@ export class Listener {
             }
         }
 
+        /*
+        @todo merge scroll and wheel events
+        @body Wheel event only affects the mouse wheel, rather than a scroll bar, however the wheel has the delta property which tells which way to go
+        */
+        if (type === EventTypes.scrollDown) {
+            this.type = EventTypes.wheel;
+            const ogFn = this.callback;
+            this.callback = (event: WheelEvent) => {
+                if (event.deltaY > 0) {
+                    ogFn(event);
+                }
+            }
+        }
+
+        if (type === EventTypes.scrollUp) {
+            this.type = EventTypes.wheel;
+            const ogFn = this.callback;
+            this.callback = (event: WheelEvent) => {
+                if (event.deltaY < 0) {
+                    ogFn(event);
+                }
+            }
+        }
+
         // Others
         
         if (this.element) this.add();
     }
 
-    // TODO: Is this ever going to be called outside of the constructor? Should this be private/moved?
     add() {
         if (!this.element) throw 'No element found to add listener to';
         this.element.addEventListener(this.type, this.callback, this.options);
