@@ -46,6 +46,26 @@ describe('Class: Component Ingredient', () => {
         expect(actual.component).toBeTruthy();
     });
 
+    it('should be able to pass in params to the factory', () => {
+        const el = document.createElement('div');
+        el.setAttribute('data-test', 'testing');
+
+        const ingredient = new ComponentIngredient(el, new ViviComponentFactory(MockWithChildrenComponent));
+        expect(ingredient.params).toBeTruthy();
+        expect(ingredient.params.hasOwnProperty('test')).toBeTruthy();
+        expect(ingredient.params['test']).toEqual('testing');
+    });
+
+    it('should be able to pass in params with camelCasing to the factory', () => {
+        const el = document.createElement('div');
+        el.setAttribute('data-test-test', 'testing');
+
+        const ingredient = new ComponentIngredient(el, new ViviComponentFactory(MockWithChildrenComponent));
+        expect(ingredient.params).toBeTruthy();
+        expect(ingredient.params.hasOwnProperty('testTest')).toBeTruthy();
+        expect(ingredient.params['testTest']).toEqual('testing');
+    });
+
     it('load should append element', () => {
         const actual = mockIngredient();
 
