@@ -4,6 +4,7 @@ import { ComponentParams } from './component-params.class';
 import { ComponentIngredient } from './component-ingredient.class';
 import { ParseEngine } from './parse-engine.class';
 import { ApplicationEventService, ListenerOptions } from '../services/application-event.service';
+import { getElements } from '../decorators/element.decorator';
 
 export abstract class Component {
     id: string;
@@ -75,7 +76,21 @@ export abstract class Component {
 
         this.recipe.forEach(ingredient => ingredient.load(this.element));
         
-        // Run hook
+        // Start hook run
+        this.beforeLoadHook();
+    }
+
+    private beforeLoadHook() {
+        // Load in decorated elements
+        const els = getElements(this);
+        els.forEach(el => {
+            this[el.propertyKey] = this.element.querySelector(el.selector);
+            if (el.handlerFnName) {
+                this.listen(this[el.propertyKey], el.eventType, this[el.handlerFnName]);
+            }
+        });
+        
+        // User Hook
         this.load();
     }
 

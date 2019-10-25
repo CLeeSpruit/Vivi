@@ -1,13 +1,14 @@
 import { ModuleFactory } from '../../factory/module-factory';
 import { Listener } from '../../events';
-import { MockComponent, MockWithChildrenComponent } from '../__mocks__/component.class';
+import { MockComponent, MockWithChildrenComponent, MockWithElementsComponent } from '../__mocks__/component.class';
 
 describe('Class: Component', () => {
     const mockModule = () => {
         return new ModuleFactory({
             componentConstructors: [
                 { constructor: MockComponent },
-                { constructor: MockWithChildrenComponent }
+                { constructor: MockWithChildrenComponent },
+                { constructor: MockWithElementsComponent }
             ]
         });
     };
@@ -56,6 +57,26 @@ describe('Class: Component', () => {
         expect(component.parent).toEqual(mockParent);
         const template = document.getElementById(component.id);
         expect(template.innerHTML).toEqual(component.template);
+    });
+
+    describe('beforeLoad', () => {
+        it('should automatically add elements and bind them', () => {
+            const component = new MockWithElementsComponent();
+            component.append();
+            
+            component.button.click();
+
+            expect(component.clicked).toBeTruthy();
+        });
+
+        it('should accept element selectors without events', () => {
+            const component = new MockWithElementsComponent();
+            component.append();
+            
+            component.button.click();
+
+            expect(component.testingText.innerHTML).toEqual('clicked!');
+        });
     });
 
     describe('detach', () => {
