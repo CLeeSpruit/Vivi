@@ -1,13 +1,13 @@
-import { Component } from '../';
 import { ModuleFactory } from '../../factory/module-factory';
 import { Listener } from '../../events';
+import { MockComponent, MockWithChildrenComponent } from '../__mocks__/component.class';
 
 describe('Class: Component', () => {
     const mockModule = () => {
         return new ModuleFactory({
             componentConstructors: [
                 { constructor: MockComponent },
-                { constructor: MockWithChildComponent }
+                { constructor: MockWithChildrenComponent }
             ]
         });
     };
@@ -87,19 +87,32 @@ describe('Class: Component', () => {
             expect(removeSpy).toHaveBeenCalled();
         });
     });
+
+    describe('listen', () => {
+        it('creates a listener for an element', (done) => {
+            const component = new MockComponent();
+
+            const el = document.createElement('button');
+
+            component.listen(el, 'click', () => {
+                expect(true).toBeTruthy();
+                done();
+            });
+
+            el.click();
+        });
+    });
+
+    describe('appListen', () => {
+        it('creates an appListener for an event', (done) => {
+            const component = new MockComponent();
+
+            component.appListen('test', () => {
+                expect(true).toBeTruthy();
+                done();
+            });
+
+            component.appEvents.sendEvent('test', {});
+        });
+    });
 });
-
-class MockComponent extends Component {
-    constructor() {
-        super();
-    }
-}
-
-class MockWithChildComponent extends Component {
-    constructor() {
-        super();
-        this.template = mockTemplate;
-    }
-}
-
-const mockTemplate = '<Mock></Mock>';

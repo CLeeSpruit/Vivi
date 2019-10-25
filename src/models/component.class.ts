@@ -3,7 +3,7 @@ import { ApplicationListener, Listener } from '../events';
 import { ComponentParams } from './component-params.class';
 import { ComponentIngredient } from './component-ingredient.class';
 import { ParseEngine } from './parse-engine.class';
-import { ApplicationEventService } from '../services/application-event.service';
+import { ApplicationEventService, ListenerOptions } from '../services/application-event.service';
 
 export abstract class Component {
     id: string;
@@ -79,6 +79,7 @@ export abstract class Component {
         this.load();
     }
 
+    /* Hooks */
     load() {
         // Placeholder hook for inherited classes
     }
@@ -113,5 +114,14 @@ export abstract class Component {
         this.listeners.forEach(listener => {
             listener.remove();
         });
+    }
+
+    /* Events */
+    listen(el: HTMLElement, eventType: string, cb: Function, options?: AddEventListenerOptions) {
+        this.listeners.push(new Listener(eventType, el, cb.bind(this), options));
+    }
+
+    appListen(eventName: string, cb: Function, options?: ListenerOptions) {
+        this.listeners.push(this.appEvents.createListener(eventName, cb.bind(this), options));
     }
 }
