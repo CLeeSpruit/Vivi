@@ -1,5 +1,3 @@
-import { ComponentParams } from '../component-params.class';
-import { Component } from '../component.class';
 import { ModuleFactory } from '../../factory';
 import { MockComponentParams } from '../__mocks__/component-params.class';
 import { MockWithParamsComponent } from '../__mocks__/component.class';

@@ -1,6 +1,5 @@
-export abstract class ComponentParams extends Object {
+export abstract class ComponentParams {
     constructor(obj?: Object) {
-        super();
         if (obj) {
             Object.keys(obj).forEach(key => {
                 this[key] = obj[key];
