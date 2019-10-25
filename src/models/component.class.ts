@@ -3,6 +3,7 @@ import { ApplicationListener, Listener } from '../events';
 import { ComponentParams } from './component-params.class';
 import { ComponentIngredient } from './component-ingredient.class';
 import { ParseEngine } from './parse-engine.class';
+import { ApplicationEventService } from '../services/application-event.service';
 
 export abstract class Component {
     id: string;
@@ -16,9 +17,13 @@ export abstract class Component {
     recipe: Array<ComponentIngredient> = new Array<ComponentIngredient>(); // Contains children from the template
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
     data: Object = {};
+    appEvents: ApplicationEventService; 
 
     constructor(protected params: ComponentParams = {}) {
         this.id = uuid();
+
+        // Default Services
+        this.appEvents = (<any>window).vivi.get(ApplicationEventService);
 
         // Turn params into data
         // TODO: Consider defining a difference between params and data

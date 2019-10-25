@@ -91,6 +91,15 @@ describe('Class: Listener', () => {
                 element.dispatchEvent(new WheelEvent('wheel', { deltaY: -100 }));
             });
 
+            it('scroll up - should not trigger call back when mouse scrolls down', () => {
+                const element = document.createElement('div');
+                const listener = new Listener(EventTypes.scrollUp, element, () => {
+                    throw 'If you are seeing this, this test is failing.';
+                });
+                
+                element.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+            });
+
             it('scroll down - should trigger call back when mouse scrolls up', (done) => {
                 const element = document.createElement('div');
                 const listener = new Listener(EventTypes.scrollDown, element, () => {
@@ -99,6 +108,15 @@ describe('Class: Listener', () => {
                 });
                 
                 element.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+            });
+
+            it('scroll down - should not trigger call back when mouse scrolls up', () => {
+                const element = document.createElement('div');
+                const listener = new Listener(EventTypes.scrollDown, element, () => {
+                    throw 'If you are seeing this, this test is failing.';
+                });
+                
+                element.dispatchEvent(new WheelEvent('wheel', { deltaY: -100 }));
             });
         });
     });

@@ -2,7 +2,7 @@ import { BehaviorSubject, OperatorFunction } from 'rxjs';
 import { skip } from 'rxjs/operators';
 
 import { ApplicationListener, ApplicationEvent } from '../events';
-import { Service } from '../models';
+import { Service } from '../models/service.class';
 
 export interface ListenerOptions {
     getCurrentValue?: boolean; // If event has already been triggered, get data from last event

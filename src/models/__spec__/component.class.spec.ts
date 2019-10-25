@@ -29,6 +29,12 @@ describe('Class: Component', () => {
         expect(component).toBeTruthy();
     });
 
+    it('should grab the application event service', () => {
+        const component = new MockComponent();
+
+        expect(component.appEvents).toBeTruthy();
+    });
+
     it('should append to document body if parent is not provided', () => {
         const component = new MockComponent();
 
