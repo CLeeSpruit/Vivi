@@ -27,7 +27,7 @@ echo "Push changes to github?"
 select push in "Yes" "No"; 
 do
     case $push in
-        Yes) git push
+        Yes) git push --tags
         break
         ;;
         No) echo "Skipping push. Don't forget to do it yourself!"
