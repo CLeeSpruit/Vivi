@@ -15,8 +15,9 @@ done
 echo "Building and staging files..."
 npm run dist
 
-# Copy over newly edited package.json
+# Copy over newly edited package.json, Readme.md for npm
 cp package.json $stage
+cp README.md $stage
 
 cd $stage
 npm publish --scope=public
