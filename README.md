@@ -19,7 +19,7 @@ Check out the [Issues](https://github.com/CassandraSpruit/Vivi/issues) page. In 
 
 ### How to Contribute
 1. Fork this repository
-2. Create a branch: ```git checkout -b <branch_name>
+2. Create a branch: ```git checkout -b <branch_name>```
     - There's no standard for branch names, but if it's connected to an issue try starting with i(issue-number)_branch-name. Ex: i17_My-cool-branch-name
 3. Make your changes and commit them: ```git commit -m '<commit_message>'```
     - It's not enforced, but please remeber to write unit tests, if applicable.
