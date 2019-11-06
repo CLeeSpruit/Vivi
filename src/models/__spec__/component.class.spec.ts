@@ -1,6 +1,8 @@
 import { ModuleFactory } from '../../factory/module-factory';
 import { Listener } from '../../events';
-import { MockComponent, MockWithChildrenComponent, MockWithElementsComponent } from '../__mocks__/component.class';
+import { MockComponent, MockWithChildrenComponent, MockWithElementsComponent, MockWithParamsInTemplate } from '../__mocks__/component.class';
+import { MockComponentParams } from '../__mocks__/component-params.class';
+import { ParseEngine } from '../parse-engine.class';
 
 describe('Class: Component', () => {
     const mockModule = () => {
@@ -63,7 +65,7 @@ describe('Class: Component', () => {
         it('should automatically add elements and bind them', () => {
             const component = new MockWithElementsComponent();
             component.append();
-            
+
             component.button.click();
 
             expect(component.clicked).toBeTruthy();
@@ -72,7 +74,7 @@ describe('Class: Component', () => {
         it('should accept element selectors without events', () => {
             const component = new MockWithElementsComponent();
             component.append();
-            
+
             component.button.click();
 
             expect(component.testingText.innerHTML).toEqual('clicked!');
@@ -134,6 +136,60 @@ describe('Class: Component', () => {
             });
 
             component.appEvents.sendEvent('test', {});
+        });
+    });
+
+    describe('redraw', () => {
+        it('should not blow up if there is no template', () => {
+            const component = new MockComponent();
+            const mockParent = document.createElement('parent');
+            document.body.appendChild(mockParent);
+
+            component.append(mockParent);
+            component.redraw();
+
+            expect(component).toBeTruthy();
+        });
+
+        it('should not blow up if there is no element', () => {
+            const component = new MockComponent();
+
+            component.redraw();
+
+            expect(component).toBeTruthy();
+        });
+
+        it('should redraw on the same component does not do anything', () => {
+            const component = new MockWithParamsInTemplate();
+            component.data = <MockComponentParams>{ name: 'test' };
+
+            component.append();
+
+            const before = document.getElementById(component.id);
+            let expectedParse = ParseEngine.parseNode(component.ogNode, component.data);
+            expect(before).toEqual(expectedParse);
+
+            component.redraw();
+
+            const after = document.getElementById(component.id);
+            expect(before).toEqual(after);
+        });
+
+        it('should redraw with new params', () => {
+            const component = new MockWithParamsInTemplate();
+            component.data = <MockComponentParams>{ name: 'fluffy' };
+
+            component.append();
+
+            const newName = 'bunny';
+            component.data.name = newName;
+
+            component.redraw();
+
+            const componentEl = document.getElementById(component.id);
+            const actual = componentEl.querySelector('span');
+            
+            expect(actual.innerHTML).toEqual('bunny');
         });
     });
 });

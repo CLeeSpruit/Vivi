@@ -24,7 +24,7 @@ export class ViviComponentFactory<T> {
         // Edit node, markup
         component.createNode();
         this.createStyle(component.style);
-        this.createRecipe(<HTMLElement>component.node);
+        this.createRecipe(<HTMLElement>component.parsedNode);
         component.createRecipe(this.recipe);
 
         this.components.set(component.id, component);

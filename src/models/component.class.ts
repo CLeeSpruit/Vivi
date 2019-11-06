@@ -11,7 +11,8 @@ export abstract class Component {
     template: string;
     style: string;
     element: HTMLElement;
-    node: Node;
+    ogNode: Node;
+    parsedNode: Node;
     parent: Node;
     isLoaded: boolean = false;
     isVisible: boolean = false;
@@ -57,9 +58,9 @@ export abstract class Component {
         const node = document.createElement(name);
         node.id = this.id;
         node.innerHTML = this.template;
-        this.node = node;
+        this.ogNode = node.cloneNode(true);
         // Load data into template
-        this.node = ParseEngine.parseNode(node, this.data);
+        this.parsedNode = ParseEngine.parseNode(node, this.data);
     }
 
     createRecipe(recipe: Array<ComponentIngredient>) {
@@ -100,14 +101,14 @@ export abstract class Component {
     }
 
     append(parent?: Node, doNotLoad?: boolean) {
-        if (!this.node) {
+        if (!this.parsedNode) {
             this.createNode();
         }
 
         if (!parent) {
             parent = document.body;
         }
-        parent.appendChild(this.node);
+        parent.appendChild(this.parsedNode);
 
         // Opt out of loading if this is an ingredient
         if (doNotLoad) {
@@ -116,6 +117,16 @@ export abstract class Component {
 
         // Run load all, which loads children, then the load hook
         this.loadAll(parent);
+    }
+
+    redraw() {
+        if (this.element) {
+            const newNode = ParseEngine.parseNode(this.ogNode, this.data);
+            const oldNode = document.getElementById(this.id);
+            this.parent.replaceChild(newNode, oldNode);
+            this.parsedNode = newNode;
+            this.element = document.getElementById(this.id);
+        }
     }
 
     detach() {
