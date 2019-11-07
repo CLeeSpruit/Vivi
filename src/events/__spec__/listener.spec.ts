@@ -20,14 +20,14 @@ describe('Class: Listener', () => {
     });
 
     describe('add() / remove()', () => {
-        it('Add should throw an error if there is no element', () => {
+        it('Add should not do anything if there is no element', () => {
             const listener = new Listener('test', null, null);
-            expect(() => { listener.add(); }).toThrowError('No element found to add listener to');
+            expect(() => { listener.add(); }).not.toThrowError();
         });
 
-        it('Remove should throw an error if there is no element', () => {
+        it('Remove should not do anything if there is no element', () => {
             const listener = new Listener('test', null, null);
-            expect(() => { listener.remove(); }).toThrowError('No element found to remove listener from');
+            expect(() => { listener.remove(); }).not.toThrowError();
         });
 
         it('Add should add an event listener to the element', () => {
@@ -70,7 +70,7 @@ describe('Class: Listener', () => {
                 element.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'Enter' }));
             });
             
-            it('enter - should nto trigger call back on keypress:anything else', () => {
+            it('enter - should not trigger call back on keypress:anything else', () => {
                 const element = document.createElement('button');
                 const listener = new Listener(EventTypes.enter, element, () => {
                     throw 'If you are seeing this, this test is failing.';

@@ -50,12 +50,12 @@ export class Listener {
     }
 
     add() {
-        if (!this.element) throw 'No element found to add listener to';
+        if (!this.element) return;
         this.element.addEventListener(this.type, this.callback, this.options);
     }
 
     remove() {
-        if (!this.element) throw 'No element found to remove listener from';
+        if (!this.element) return;
         this.element.removeEventListener(this.type, this.callback, this.options);
     }
 }
