@@ -3,11 +3,22 @@
 [![npm](https://img.shields.io/npm/v/@cspruit/vivi)](https://www.npmjs.com/package/@cspruit/vivi)
 [![license](https://img.shields.io/github/license/CassandraSpruit/Vivi)](https://github.com/CassandraSpruit/Vivi/blob/master/LICENSE)
 
----
-
 # Vivi
+
 A lightweight component-focused Javascript framework. Vivi is currently still in it's early stages, so breaking changes are more common. This package uses semantic versioning, so major breaking changes is generally reserved for major versions.
 
+---
+
+## v3 Update:
+Milestone for v3 has started! Things to look forward to:
+- Dynamic loading for child components from the template
+- Easier loading for child components from the component class
+- Lots of component and template-related bugfixes! Yay!
+- Smaller package size!
+
+Check out progress on the [milestones page](https://github.com/CassandraSpruit/Vivi/milestones).
+
+---
 ## Installation and Gettings Started
 - Install by running ```npm install --save-dev @cspruit/vivi``` in the same directory as the package.json file lives.
 - Webpack is required to use Vivi's automatic template and style loading. For more detail, checkout the [Getting Started](https://github.com/CassandraSpruit/Vivi/wiki/Getting-Started) page.
