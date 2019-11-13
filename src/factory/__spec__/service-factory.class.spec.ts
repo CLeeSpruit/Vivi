@@ -2,7 +2,7 @@ import { ModuleFactory, ViviServiceFactory } from '../';
 import { MockService, MockWithPrereqService } from '../../models/__mocks__/service.class';
 
 describe('ServiceFactory', () => {
-    const basicMock = () => { return new ViviServiceFactory<MockService>(MockService, []) };
+    const basicMock = () => { return new ViviServiceFactory<MockService>(MockService) };
     const mockModule = () => {
         return new ModuleFactory({
             serviceConstructors: [

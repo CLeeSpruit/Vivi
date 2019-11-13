@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-const metadataKey = Symbol('ViviElement');
+const elementMetadataKey = 'ViviElement';
 
-interface ViviElementParams {
+export interface ViviElementParams {
     propertyKey?: string;
     selector: string;
     eventType?: string;
@@ -10,17 +10,17 @@ interface ViviElementParams {
 
 export function ViviElement(params: ViviElementParams): PropertyDecorator {
     return function (target: Object, propertyKey: string) {
-        let props = Reflect.getMetadata(metadataKey, target);
+        let props = Reflect.getMetadata(elementMetadataKey, target);
         const objParams: ViviElementParams = { ...params, propertyKey };
         if (props) {
             props.push(objParams);
         } else {
             props = [objParams];
-            Reflect.defineMetadata(metadataKey, props, target);
+            Reflect.defineMetadata(elementMetadataKey, props, target);
         }
     }
 }
 
 export function getElements(origin: Object): Array<ViviElementParams> {
-    return Reflect.getMetadata(metadataKey, origin) || new Array<ViviElementParams>();
+    return Reflect.getMetadata(elementMetadataKey, origin) || new Array<ViviElementParams>();
 }

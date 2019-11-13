@@ -1,8 +1,9 @@
-import { Service, Component } from '../models';
+import { Component } from '../models/component.class';
+import { Service } from '../models/service.class';
 import { ModuleFactory } from '../factory/module-factory';
 
 export class FactoryService extends Service {
-    private module: ModuleFactory;
+    module: ModuleFactory;
 
     constructor() {
         super();

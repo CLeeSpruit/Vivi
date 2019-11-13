@@ -1,4 +1,4 @@
-import { Service } from '../';
+import { Service } from '../service.class';
 
 export class MockService extends Service {
     constructor() {

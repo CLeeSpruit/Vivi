@@ -1,89 +1,136 @@
-import { ModuleFactory } from '../../factory/module-factory';
-import { Listener } from '../../events';
-import { MockComponent, MockWithChildrenComponent, MockWithElementsComponent, MockWithParamsInTemplate } from '../__mocks__/component.class';
-import { MockComponentParams } from '../__mocks__/component-params.class';
-import { ParseEngine } from '../parse-engine.class';
+import { Listener, EventTypes } from '../../events';
+import { Mocker } from '../../meta/mocker';
 
 describe('Class: Component', () => {
-    const mockModule = () => {
-        return new ModuleFactory({
-            componentConstructors: [
-                { constructor: MockComponent },
-                { constructor: MockWithChildrenComponent },
-                { constructor: MockWithElementsComponent }
-            ]
-        });
-    };
-
-    beforeEach(() => {
-        window.vivi = mockModule();
-    });
+    const mock = new Mocker();
 
     afterEach(() => {
-        // Clear the document
-        for (let i = 0; i < document.body.children.length; i++) {
-            document.body.children.item(i).remove();
-        }
+        mock.clearMocks();
     });
 
-    it('should init', () => {
-        const component = new MockComponent();
+    describe('Constructor', () => {
+        it('should init via creator', () => {
+            const component = mock.createMock();
 
-        expect(component).toBeTruthy();
+            expect(component).toBeTruthy();
+        });
+
+        it('should grab the application event service', () => {
+            const component = mock.createMock();
+
+            expect(component.appEvents).toBeTruthy();
+        });
+
+        it('should assign template and style', () => {
+            const component = mock.createMock();
+
+            expect(component.template).toEqual('');
+            expect(component.style).toEqual('');
+        });
     });
 
-    it('should grab the application event service', () => {
-        const component = new MockComponent();
+    describe('append', () => {
+        it('should create a copy of the original node', () => {
+            const component = mock.createMock();
 
-        expect(component.appEvents).toBeTruthy();
-    });
+            expect(component.ogNode).toBeTruthy();
+            expect(component.ogNode.id).toEqual(component.id);
+        });
 
-    it('should append to document body if parent is not provided', () => {
-        const component = new MockComponent();
+        it('should parse node', () => {
+            const data = { name: 'test ' };
+            const comp = mock.createMock({ data });
 
-        component.append();
+            expect(comp.parsedNode).toBeTruthy();
+        });
 
-        expect(component.parent).toEqual(document.body);
-        expect(component.isLoaded).toBeTruthy();
-        expect(component.isVisible).toBeTruthy();
-        expect(component.element).toBeTruthy();
-    });
+        it('should append style to head', () => {
+            const component = mock.createMock({ hasStyle: true });
 
-    it('should append to parent', () => {
-        const component = new MockComponent();
-        const mockParent = document.createElement('parent');
-        document.body.appendChild(mockParent);
+            const styleTag = document.head.querySelector('style#style-mock');
+            expect(component.style).toBeTruthy();
+            expect(styleTag).toBeTruthy();
+        });
 
-        component.append(mockParent);
+        it('should not append style if it already exists', () => {
+            const component = mock.createMock({ hasStyle: true });
+            const componentB = mock.createMock({ hasStyle: true });
 
-        expect(component.parent).toEqual(mockParent);
-        const template = document.getElementById(component.id);
-        expect(template.innerHTML).toEqual(component.template);
-    });
+            const styleTags = document.head.querySelectorAll('style#style-mock');
 
-    describe('beforeLoad', () => {
-        it('should automatically add elements and bind them', () => {
-            const component = new MockWithElementsComponent();
+            expect(styleTags.length).toEqual(1);
+        });
+
+        it('should append to document body if parent is not provided', () => {
+            const component = mock.createMock();
+
             component.append();
 
-            component.button.click();
+            expect(component.parent).toEqual(document.body);
+            expect(component.element).toBeTruthy();
+        });
 
-            expect(component.clicked).toBeTruthy();
+        it('should append to parent', () => {
+            const component = mock.createMock();
+            const mockParent = document.createElement('parent');
+            document.body.appendChild(mockParent);
+
+            component.append(mockParent);
+
+            expect(component.parent).toEqual(mockParent);
+            const template = document.getElementById(component.id);
+            expect(template.innerHTML).toEqual(component.template);
+        });
+
+        it('should automatically add elements and bind them', () => {
+            const el = { propertyKey: 'test', selector: 'button.test', handlerFnName: 'testClick', eventType: EventTypes.click };
+            const component = mock.createMock({
+                elements: [el],
+                template: `<button class="test"></button>`
+            });
+
+            const mockClick = jest.fn();
+            component[el.handlerFnName] = mockClick;
+            component.append();
+            component[el.propertyKey].click();
+
+            expect(mockClick.mock.calls.length).toBe(1);
         });
 
         it('should accept element selectors without events', () => {
-            const component = new MockWithElementsComponent();
+            const testEl = { selector: 'span.test', propertyKey: 'testSpan' };
+            const component = mock.createMock({
+                elements: [testEl],
+                template: `<span class="test"></span>`
+            });
+
             component.append();
 
-            component.button.click();
+            expect(component[testEl.propertyKey]).toBeTruthy();
+        });
+    });
 
-            expect(component.testingText.innerHTML).toEqual('clicked!');
+    describe('loadall', () => {
+        it('should throw an error if component is not appended', () => {
+            const comp = mock.createMock({ doNotAppend: true });
+            const errorSpy = spyOn(console, 'error');
+            comp.loadAll();
+
+            expect(errorSpy).toHaveBeenCalled();
+        });
+
+        it('children should be called', () => {
+            const comp = mock.createMock({ hasChild: true, doNotLoad: true });
+            const loadSpy = spyOn(comp.children[0], 'loadAll');
+            comp.append(); // Append calls loadAll
+
+            expect(loadSpy).toHaveBeenCalled();
         });
     });
 
     describe('detach', () => {
         it('should remove element from DOM', () => {
-            const component = new MockComponent();
+            const component = mock.createMock();
             const mockParent = document.createElement('parent');
             document.body.appendChild(mockParent);
 
@@ -92,15 +139,13 @@ describe('Class: Component', () => {
             component.detach();
 
             expect(component.element.isConnected).toBeFalsy();
-            expect(component.isLoaded).toBeFalsy();
-            expect(component.isVisible).toBeFalsy();
             expect(component.parent).toBeNull();
         });
     });
 
     describe('destroy', () => {
         it('should remove any listeners', () => {
-            const component = new MockComponent();
+            const component = mock.createMock();
             const listen = new Listener('test', null, null);
             component.listeners.push(listen);
             const removeSpy = spyOn(listen, 'remove');
@@ -113,7 +158,7 @@ describe('Class: Component', () => {
 
     describe('listen', () => {
         it('creates a listener for an element', (done) => {
-            const component = new MockComponent();
+            const component = mock.createMock();
 
             const el = document.createElement('button');
 
@@ -128,7 +173,7 @@ describe('Class: Component', () => {
 
     describe('appListen', () => {
         it('creates an appListener for an event', (done) => {
-            const component = new MockComponent();
+            const component = mock.createMock();
 
             component.appListen('test', () => {
                 expect(true).toBeTruthy();
@@ -141,7 +186,7 @@ describe('Class: Component', () => {
 
     describe('redraw', () => {
         it('should not blow up if there is no template', () => {
-            const component = new MockComponent();
+            const component = mock.createMock();
             const mockParent = document.createElement('parent');
             document.body.appendChild(mockParent);
 
@@ -152,7 +197,7 @@ describe('Class: Component', () => {
         });
 
         it('should not blow up if there is no element', () => {
-            const component = new MockComponent();
+            const component = mock.createMock();
 
             component.redraw();
 
@@ -160,13 +205,15 @@ describe('Class: Component', () => {
         });
 
         it('should redraw on the same component does not do anything', () => {
-            const component = new MockWithParamsInTemplate();
-            component.data = <MockComponentParams>{ name: 'test' };
+            const component = mock.createMock({
+                data: { name: 'test' },
+                template: `<span v-innerHTML="this.name"></span>`
+            });
 
             component.append();
 
             const before = document.getElementById(component.id);
-            let expectedParse = ParseEngine.parseNode(component.ogNode, component.data);
+            const expectedParse = component.engine.parseElements(component.ogNode, component.data);
             expect(before).toEqual(expectedParse);
 
             component.redraw();
@@ -176,20 +223,22 @@ describe('Class: Component', () => {
         });
 
         it('should redraw with new params', () => {
-            const component = new MockWithParamsInTemplate();
-            component.data = <MockComponentParams>{ name: 'fluffy' };
+            const component = mock.createMock({
+                data: { name: 'fluffy' },
+                template: `<span v-innerHTML="this.name"></span>`
+            });
 
             component.append();
 
             const newName = 'bunny';
-            component.data.name = newName;
+            component.data = { name: newName };
 
             component.redraw();
 
             const componentEl = document.getElementById(component.id);
             const actual = componentEl.querySelector('span');
-            
-            expect(actual.innerHTML).toEqual('bunny');
+
+            expect(actual.innerHTML).toEqual(newName);
         });
     });
 });

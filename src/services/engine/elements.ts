@@ -1,5 +1,5 @@
-export class ParseEngine {
-    private static attributeBlackList = [
+export class ParseElements {
+    private attributeBlackList = [
         'v-class',
         'v-if',
         'v-innerhtml',
@@ -7,12 +7,17 @@ export class ParseEngine {
         'vif-class'
     ];
 
-    static parseNode(node: Node, data: Object): Node {
-        this.assignAttributes(node, data);
-        return node;
+    constructor() {
+        //
     }
 
-    private static assignAttributes(node: Node, data: Object) {
+    parseNode(el: HTMLElement, data: Object): HTMLElement {
+        const newNode = this.assignAttributes(el, data);
+        return newNode;
+    }
+
+    private assignAttributes(ogNode: HTMLElement, data: Object): HTMLElement {
+        const node = <HTMLElement>ogNode.cloneNode(true);
         // Get a list of all unique attributes
         const attributes = this.buildAttributeList(node);
         attributes.forEach(attr => {
@@ -30,14 +35,14 @@ export class ParseEngine {
             const list = attr.split(' ');
             const parsed = list.map(li => {
                 // Allow for data and non-data strings
-                return ParseEngine.applyWithContext(li, data);
+                return this.applyWithContext(li, data);
             });
             el.classList.add(...parsed);
         });
 
         this.attributeParse(node, data, 'v-innerHTML', (name, el, attr) => {
             // Simple replace
-            el.innerHTML = ParseEngine.applyWithContext(attr, data);
+            el.innerHTML = this.applyWithContext(attr, data);
         });
 
         this.attributeParse(node, data, 'v-if', (name, el, attr) => {
@@ -51,18 +56,20 @@ export class ParseEngine {
             const list = attr.split(' ');
             const parsed = list.map(li => {
                 // Allow for data and non-data strings
-                return ParseEngine.applyWithContext(li, data);
+                return this.applyWithContext(li, data);
             });
             el.classList.add(...parsed);
         });
 
         this.attributeParseVif(node, data, 'vif-innerHTML', (name, el, attr) => {
-            el.innerHTML = ParseEngine.applyWithContext(attr, data);
+            el.innerHTML = this.applyWithContext(attr, data);
         });
+
+        return node;
     }
 
-    private static buildAttributeList(node: Node, attributes: Set<string> = new Set<string>()): Set<string> {
-        const attr = (<HTMLElement>node).attributes;
+    private buildAttributeList(node: HTMLElement, attributes: Set<string> = new Set<string>()): Set<string> {
+        const attr = node.attributes;
         if (attr){
             for (let i = 0; i < attr.length; i++) {
                 attributes.add(attr.item(i).name);
@@ -70,14 +77,14 @@ export class ParseEngine {
         }
 
         node.childNodes.forEach(child => {
-            this.buildAttributeList(child, attributes);
+            this.buildAttributeList(<HTMLElement>child, attributes);
         });
 
         return attributes;
     }
 
-    private static attributeParse(node: Node, data: Object, name: string, customParseFn?: (name: string, el: Element, attr: string) => void) {
-        (<HTMLElement>node).querySelectorAll('[' + name + ']').forEach(el => {
+    private attributeParse(el: HTMLElement, data: Object, name: string, customParseFn?: (name: string, el: Element, attr: string) => void) {
+        el.querySelectorAll('[' + name + ']').forEach(el => {
             const attr = el.getAttribute(name);
 
             if (customParseFn) {
@@ -85,7 +92,7 @@ export class ParseEngine {
             } else {
                 // Simple replace
                 const newAttribute = name.replace('v-', '');
-                el.setAttribute(newAttribute, ParseEngine.applyWithContext(attr, data));
+                el.setAttribute(newAttribute, this.applyWithContext(attr, data));
             }
             // Rename to data to make parseable
             el.setAttribute('data-' + name, attr);
@@ -93,7 +100,7 @@ export class ParseEngine {
         });
     }
 
-    private static attributeParseVif(node: Node, data: Object, name: string, customParseFn?: (name: string, el: Element, attr: string) => void) {
+    private attributeParseVif(node: HTMLElement, data: Object, name: string, customParseFn?: (name: string, el: Element, attr: string) => void) {
         this.attributeParse(node, data, name, (attrName, el, attr) => {
             // Match against (conditional) ? trueResult : falseResult
             const match = attr.match(/(?<=\()(.*?)(?=\)\s*\?).*?(?<=\?)\s?(.*)/);
@@ -111,13 +118,14 @@ export class ParseEngine {
                     customParseFn(name, el, result);
                 } else {
                     let newAttribute = name.replace('vif-', '');
-                    el.setAttribute(newAttribute, ParseEngine.applyWithContext(result, data));
+                    el.setAttribute(newAttribute, this.applyWithContext(result, data));
                 }
             }
         });
     }
 
-    static conditional(condition: string, context: Object): boolean {
+    /* Generic fn */
+    conditional(condition: string, context: Object): boolean {
         return function (condition) {
             // Someone grab the holy water, we're going in
             try {
@@ -128,7 +136,7 @@ export class ParseEngine {
         }.call(context, condition);
     }
 
-    private static applyWithContext(value: string, context: Object): string {
+    private applyWithContext(value: string, context: Object): string {
         return function(value) {
             try {
                 return eval(value);

@@ -6,11 +6,13 @@ export class ViviServiceFactory<T> {
 
     constructor(
         private constructor: new (...args) => Service,
-        prerequisitesArr: Array<ViviServiceFactory<Service>>
+        prerequisitesArr?: Array<ViviServiceFactory<Service>>
     ) {
-        prerequisitesArr.forEach(prereq => {
-            this.prerequisites.set(prereq.constructor.name, prereq);
-        });
+        if (prerequisitesArr) {
+            prerequisitesArr.forEach(prereq => {
+                this.prerequisites.set(prereq.constructor.name, prereq);
+            });
+        }
 
         this.create();
     }
