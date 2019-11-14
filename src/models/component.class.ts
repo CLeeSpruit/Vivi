@@ -5,6 +5,7 @@ import { getElements } from '../decorators/element.decorator';
 import { ModuleFactory, ViviComponentFactory } from 'factory';
 import { ParseEngineService } from '../services/parse-engine.service';
 import { FactoryService } from '../services/factory.service';
+import { GetElNameFromComponent } from '../helpers/get-el-name-from-component';
 
 export abstract class Component {
     id: string;
@@ -38,7 +39,7 @@ export abstract class Component {
         // Get template and style file
 
         // Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
-        this.componentName = this.constructor.name.replace('Component', '').replace(/\B(?=[A-Z])/, '-').toLowerCase();
+        this.componentName = GetElNameFromComponent(this.constructor.name);
         /*
             @todo Allow for components to grab the module folder / multiple modules
             @body Currently file structure is root/component-name/component-name.component.xyz. Allow for components to be in directories based off of the module

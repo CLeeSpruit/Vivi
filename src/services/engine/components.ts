@@ -1,6 +1,7 @@
 import { Component } from '../../models/component.class';
 import { FactoryService } from '../factory.service';
 import { ViviComponentFactory } from '../../factory';
+import { GetElNameFromComponent } from '../../helpers/get-el-name-from-component';
 
 export class ParseComponents {
     constructor(private factoryService: FactoryService) {
@@ -23,8 +24,8 @@ export class ParseComponents {
         const recipe = new Array<Component>();
         this.factoryService.module.getComponentRegistry().forEach(reg => {
             // Strip 'Component' off of name
-            const name = reg.slice(0, reg.lastIndexOf('Component'));
-            const els = node.querySelectorAll(name.toLowerCase());
+            const name = GetElNameFromComponent(reg);
+            const els = node.querySelectorAll(name);
             for (let i = 0; i < els.length; i++) {
                 const el = els.item(i) as HTMLElement;
                 const factory = this.factoryService.getFactoryByString(reg) as ViviComponentFactory<Component>;
