@@ -1,6 +1,6 @@
 {
     "name": "@cspruit/vivi",
-    "version": "2.9.0",
+    "version": "2.9.1",
     "description": "A lightweight component-focused framework",
     "main": "index.js",
     "scripts": {
