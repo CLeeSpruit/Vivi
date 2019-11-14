@@ -48,5 +48,13 @@ describe('Component Parse Engine', () => {
 
             expect(actual.length).toEqual(2);
         });
+
+        it('should not throw console error when loading chilren after parse', () => {
+            const errorSpy = spyOn(console, 'error');
+            const comp = mock.createMock({ template: '<mock></mock>'});
+
+            expect(errorSpy).not.toHaveBeenCalled();
+            expect(comp.children[0].element).toBeTruthy();
+        });
     });
 });

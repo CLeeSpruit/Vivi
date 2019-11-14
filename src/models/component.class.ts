@@ -15,7 +15,7 @@ export abstract class Component {
     element: HTMLElement;
     ogNode: HTMLElement;
     parsedNode: HTMLElement;
-    parent: HTMLElement;
+    parentElement: HTMLElement;
     children: Array<Component> = new Array<Component>();
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
 
@@ -33,7 +33,7 @@ export abstract class Component {
         this.engine = (<any>window).vivi.get(ParseEngineService);
 
         // Set default parent
-        this.parent = document.body;
+        this.parentElement = document.body;
 
         // Get template and style file
 
@@ -81,31 +81,34 @@ export abstract class Component {
         }
 
         // Load data into template
-        this.parsedNode = this.engine.parseElements(el, this.data)
-        this.children.push(...this.engine.parseComponents(el));
+        this.parsedNode = this.engine.parseElements(el, this.data);
+        this.children.push(...this.engine.parseComponents(this.parsedNode));
     }
 
-    append(parent?: HTMLElement, doNotLoad?: boolean) {
+    append(parentEl?: HTMLElement, replaceEl?: HTMLElement, doNotLoad?: boolean) {
         if (!this.ogNode) this.createNodes();
-        if (!parent) parent = document.body;
-        parent.appendChild(this.parsedNode);
-
-        // Run load all, which loads children, then the load hook
-        // Assign Element and class params
-        this.element = document.getElementById(this.id);
-        this.parent = parent;
+        if (!parentEl) parentEl = document.body;
+        
+        if (replaceEl) {
+            parentEl.replaceChild(this.parsedNode, replaceEl);
+        } else {
+            parentEl.appendChild(this.parsedNode);
+        }
+        this.parentElement = parentEl;
 
         // Opt out of loading if this is an ingredient or is a re-attachment
         if (doNotLoad) return;
 
+        // Run load all, which loads children, then the load hook
         this.loadAll();
     }
 
     loadAll() {
-        if (!this.element) {
-            console.error(`${this.componentName} needs to be appended before loading.`);
-            return;
-        }
+         // Assign Element and class params
+         this.element = document.getElementById(this.id);
+         if (!this.element) {
+             console.warn(`Error while appending ${this.componentName} to ${this.parentElement.tagName}. Element not was not created.`);
+         }
 
         this.children.forEach(ingredient => ingredient.loadAll());
 
@@ -126,14 +129,14 @@ export abstract class Component {
         // Remove 
         const oldEl = document.getElementById(this.id);
         const newEl = this.engine.parseElements(this.ogNode, this.data);
-        this.parent.replaceChild(newEl, oldEl);
+        this.parentElement.replaceChild(newEl, oldEl);
         this.parsedNode = newEl;
         this.element = document.getElementById(this.id);
     }
 
     detach() {
         this.element.remove();
-        this.parent = null;
+        this.parentElement = null;
     }
 
     /* Hooks */

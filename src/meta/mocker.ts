@@ -94,7 +94,7 @@ export class Mocker {
         }
 
         if (!options.doNotAppend) {
-            comp.append(null, options.doNotLoad);
+            comp.append(null, null, options.doNotLoad);
         }
         return comp;
     }

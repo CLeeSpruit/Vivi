@@ -26,10 +26,10 @@ export class ParseComponents {
             const name = reg.slice(0, reg.lastIndexOf('Component'));
             const els = node.querySelectorAll(name.toLowerCase());
             for (let i = 0; i < els.length; i++) {
-                const el = els.item(i);
+                const el = els.item(i) as HTMLElement;
                 const factory = this.factoryService.getFactoryByString(reg) as ViviComponentFactory<Component>;
-                const child = factory.create((<HTMLElement>el).dataset);
-                child.append(el.parentElement, true);
+                const child = factory.create((el).dataset);
+                child.append(el.parentElement, el, true);
                 recipe.push(child);
             }
         });

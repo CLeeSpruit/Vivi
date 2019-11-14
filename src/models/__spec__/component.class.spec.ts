@@ -66,7 +66,7 @@ describe('Class: Component', () => {
 
             component.append();
 
-            expect(component.parent).toEqual(document.body);
+            expect(component.parentElement).toEqual(document.body);
             expect(component.element).toBeTruthy();
         });
 
@@ -77,9 +77,14 @@ describe('Class: Component', () => {
 
             component.append(mockParent);
 
-            expect(component.parent).toEqual(mockParent);
+            expect(component.parentElement).toEqual(mockParent);
             const template = document.getElementById(component.id);
             expect(template.innerHTML).toEqual(component.template);
+        });
+
+        it('should replace existing node in template', () => {
+            const component = mock.createMock({ template: '<mock></mock>'});
+            expect(component.element.children.length).toEqual(1);
         });
 
         it('should automatically add elements and bind them', () => {
@@ -108,12 +113,20 @@ describe('Class: Component', () => {
 
             expect(component[testEl.propertyKey]).toBeTruthy();
         });
+
+        it('should run loadAll and load children', () => {
+            const errorSpy = spyOn(console, 'error');
+            const comp = mock.createMock({ template: '<mock></mock>'});
+            expect(errorSpy).not.toHaveBeenCalled();
+            expect(comp.children[0]).toBeTruthy();
+            expect(comp.children[0].element).toBeTruthy();
+        });
     });
 
     describe('loadall', () => {
-        it('should throw an error if component is not appended', () => {
+        it('should throw a warning if element is not found', () => {
             const comp = mock.createMock({ doNotAppend: true });
-            const errorSpy = spyOn(console, 'error');
+            const errorSpy = spyOn(console, 'warn');
             comp.loadAll();
 
             expect(errorSpy).toHaveBeenCalled();
@@ -139,7 +152,7 @@ describe('Class: Component', () => {
             component.detach();
 
             expect(component.element.isConnected).toBeFalsy();
-            expect(component.parent).toBeNull();
+            expect(component.parentElement).toBeNull();
         });
     });
 
