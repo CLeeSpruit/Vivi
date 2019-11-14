@@ -12,7 +12,7 @@ export interface ListenerOptions {
 export class ApplicationEventService extends Service {
     eventRegistry: Map<string, BehaviorSubject<ApplicationEvent>> = new Map<string, BehaviorSubject<ApplicationEvent>>();
 
-    sendEvent(eventName: string, data: any, closeAfterEvent?: boolean): void {
+    sendEvent(eventName: string, data?: any, closeAfterEvent?: boolean): void {
         const evt = <ApplicationEvent>{ data, closeOnComplete: closeAfterEvent };
 
         // Get event in registry

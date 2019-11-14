@@ -71,5 +71,15 @@ describe('ApplicationEventService', () => {
             service.sendEvent('test', null);
             expect(service.eventRegistry.size).toEqual(1);
         });
+
+        it('should handle sending no data to an event', (done) => {
+            const service = new ApplicationEventService();
+            service.createListener('test', (data) => {
+                expect(data).toBeFalsy();
+                done();
+            });
+
+            service.sendEvent('test');
+        });
     });
 });
