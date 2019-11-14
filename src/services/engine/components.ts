@@ -28,10 +28,12 @@ export class ParseComponents {
             const els = node.querySelectorAll(name);
             for (let i = 0; i < els.length; i++) {
                 const el = els.item(i) as HTMLElement;
-                const factory = this.factoryService.getFactoryByString(reg) as ViviComponentFactory<Component>;
-                const child = factory.create((el).dataset);
-                child.append(el.parentElement, el, true);
-                recipe.push(child);
+                if (!el.id) {
+                    const factory = this.factoryService.getFactoryByString(reg) as ViviComponentFactory<Component>;
+                    const child = factory.create((el).dataset);
+                    child.append(el.parentElement, el, true);
+                    recipe.push(child);
+                }
             }
         });
 
