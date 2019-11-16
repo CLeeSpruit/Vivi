@@ -1,6 +1,6 @@
 import { ParseElements } from './engine/elements';
 import { ParseComponents } from './engine/components';
-import { Service } from '../models';
+import { Service } from '../models/service.class';
 import { FactoryService } from './factory.service';
 
 export class ParseEngineService extends Service {

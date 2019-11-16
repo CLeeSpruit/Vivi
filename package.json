@@ -1,61 +1,67 @@
 {
-  "name": "@cspruit/vivi",
-  "version": "2.9.2",
-  "description": "A lightweight component-focused framework",
-  "main": "index.js",
-  "files": [
-    "dist/**/*"
-  ],
-  "scripts": {
-    "build": "npm run flush && webpack-cli",
-    "flush": "rm -r ./dist || true",
-    "nuke": "rm -r ./node_modules",
-    "test": "jest",
-    "watch": "webpack-cli -w",
-    "dist": "npm run build && tsc",
-    "prepare": "npm run dist",
-    "prepublishOnly": "npm test",
-    "postversion": "git push && git push --tags",
-    "commit": "git-cz",
-    "semantic-release": "semantic-release"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CassandraSpruit/Vivi.git"
-  },
-  "keywords": [
-    "framework",
-    "javascript",
-    "typescript"
-  ],
-  "author": "Cassandra Spruit",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/CassandraSpruit/Vivi/issues"
-  },
-  "homepage": "https://github.com/CassandraSpruit/Vivi#readme",
-  "devDependencies": {
-    "@types/jest": "^24.0.16",
-    "@types/node": "^12.6.8",
-    "codecov": "^3.6.1",
-    "cz-conventional-changelog": "^3.0.2",
-    "jest": "^24.8.0",
-    "semantic-release": "^15.13.30",
-    "ts-jest": "^24.0.2",
-    "ts-loader": "^6.0.4",
-    "tsconfig-paths-webpack-plugin": "^3.2.0",
-    "typescript": "^3.5.3",
-    "uuid": "^3.3.2",
-    "webpack": "^4.38.0",
-    "webpack-cli": "^3.3.6"
-  },
-  "dependencies": {
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.5.2"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  }
+    "name": "@cspruit/vivi",
+    "version": "2.9.2",
+    "description": "A lightweight component-focused framework",
+    "main": "index.js",
+    "files": [
+        "dist/**/*"
+    ],
+    "scripts": {
+        "build": "npm run flush && webpack-cli",
+        "flush": "rm -r ./dist || true",
+        "nuke": "rm -r ./node_modules",
+        "test": "jest",
+        "test:size": "npm run dist && size-limit",
+        "watch": "webpack-cli -w",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm test",
+        "postversion": "git push && git push --tags",
+        "semantic-release": "semantic-release",
+        "commit": "git-cz"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/CassandraSpruit/Vivi.git"
+    },
+    "keywords": [
+        "framework",
+        "javascript",
+        "typescript"
+    ],
+    "author": "Cassandra Spruit",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/CassandraSpruit/Vivi/issues"
+    },
+    "homepage": "https://github.com/CassandraSpruit/Vivi#readme",
+    "devDependencies": {
+        "@size-limit/preset-big-lib": "^2.2.1",
+        "@types/jest": "^24.0.16",
+        "@types/node": "^12.6.8",
+        "awesome-typescript-loader": "^5.2.1",
+        "codecov": "^3.6.1",
+        "cz-conventional-changelog": "^3.0.2",
+        "jest": "^24.8.0",
+        "semantic-release": "^15.13.30",
+        "ts-jest": "^24.0.2",
+        "ts-loader": "^6.0.4",
+        "typescript": "^3.5.3",
+        "uuid": "^3.3.2",
+        "webpack": "^4.38.0",
+        "webpack-cli": "^3.3.6"
+    },
+    "dependencies": {
+        "reflect-metadata": "^0.1.13",
+        "rxjs": "^6.5.2"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "size-limit": [
+        {
+            "path": "./dist/app.js"
+        }
+    ]
 }

@@ -4,9 +4,23 @@
         "target": "es6",
         "outDir": "./dist/",
         "baseUrl": "./src/",
-        "module":"commonjs",
+        "module":"ES2015",
         "sourceMap": true,
         "declaration": true,
-        "moduleResolution": "node"
-    }
+        "moduleResolution": "node",
+        "declarationMap": true,
+        "removeComments": true,
+        "esModuleInterop": true
+    },
+    "include": [
+        "typings.d.ts",
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "src/**/*.spec.ts",
+        "src/**/__mock__/*",
+        "src/**/__spec__/*",
+        "src/meta/*"
+    ]
 }

@@ -1,6 +1,7 @@
-import { ViviServiceFactory, ViviComponentFactory } from './';
-import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../models';
+import { Component, Service, ViviComponentConstructor, ViviServiceConstructor } from '../models';
 import { loadViviServices } from '../services/load-services.static';
+import { ViviComponentFactory } from './component-factory.class';
+import { ViviServiceFactory } from './service-factory.class';
 
 export interface ViviFactoryConstructor {
     serviceConstructors?: Array<ViviServiceConstructor<Service>>,

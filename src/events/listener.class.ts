@@ -1,4 +1,4 @@
-import { EventTypes } from './';
+import { EventTypes } from './event-types.static';
 
 export class Listener {
     constructor(

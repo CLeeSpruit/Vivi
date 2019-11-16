@@ -1,4 +1,4 @@
-import * as uuid from 'uuid';
+import v4 from 'uuid';
 import { ApplicationListener, Listener } from '../events';
 
 export abstract class Service {
@@ -6,7 +6,7 @@ export abstract class Service {
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
 
     constructor() {
-        this.id = uuid();
+        this.id = v4();
     }
 
     destroy() {
