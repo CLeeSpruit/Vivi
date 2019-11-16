@@ -2,6 +2,7 @@
 [![codecov](https://codecov.io/gh/CassandraSpruit/Vivi/branch/master/graph/badge.svg)](https://codecov.io/gh/CassandraSpruit/Vivi)
 [![npm](https://img.shields.io/npm/v/@cspruit/vivi)](https://www.npmjs.com/package/@cspruit/vivi)
 [![license](https://img.shields.io/github/license/CassandraSpruit/Vivi)](https://github.com/CassandraSpruit/Vivi/blob/master/LICENSE)
+[![Greenkeeper badge](https://badges.greenkeeper.io/CassandraSpruit/Vivi.svg)](https://greenkeeper.io/)
 
 # Vivi
 
