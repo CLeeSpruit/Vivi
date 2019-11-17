@@ -1,5 +1,7 @@
-import { Service } from 'models';
+import { Service } from 'models/service.class';
 
+// @todo Rename to ServiceFactory
+// @todo Use generic T for Typings
 export class ViviServiceFactory<T> {
     prerequisites: Map<string, ViviServiceFactory<Service>> = new Map<string, ViviServiceFactory<Service>>();
     instances: Map<string, Service> = new Map<string, Service>();

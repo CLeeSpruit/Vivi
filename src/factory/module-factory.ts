@@ -2,6 +2,7 @@ import { Component, Service, ViviComponentConstructor, ViviServiceConstructor } 
 import { loadViviServices } from '../services/load-services.static';
 import { ViviComponentFactory } from './component-factory.class';
 import { ViviServiceFactory } from './service-factory.class';
+import { NodeTreeService } from '../services/node-tree.service';
 
 export interface ViviFactoryConstructor {
     serviceConstructors?: Array<ViviServiceConstructor<Service>>,
@@ -26,41 +27,55 @@ export class ModuleFactory {
         }
 
         // Init Services
+        // @todo: Automatically load services in the services folder\
         module.serviceConstructors.forEach(serviceConstructor => {
             let prereqArr = [];
             if (serviceConstructor.prereqArr) {
                 prereqArr = serviceConstructor.prereqArr.map(prereq => {
-                    // TODO: Throw a specific warning to the user telling them about a missing service
+                    // @todo: Services - Throw a specific warning to the user telling them about a missing service
                     return this.services.get(prereq.name);
                 });
             }
             this.services.set(serviceConstructor.constructor.name, new ViviServiceFactory(serviceConstructor.constructor, prereqArr));
         });
 
+        // NodeTree is needed to inject into Factory
+        const nodeTree = this.get(NodeTreeService) as NodeTreeService;
+
         // Init Components
+        // @todo: Automatically load components in the components folder
         if (module.componentConstructors) {
             module.componentConstructors.forEach(constructor => {
                 let serviceArr = [];
                 if (constructor.services) {
                     serviceArr = constructor.services.map(service => {
-                        // TODO: Throw a specific warning to the user telling them about a missing service
+                        // @todo: Components - Throw a specific warning to the user telling them about a missing service
                         return this.services.get(service.name);
                     });
                 }
-                this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, serviceArr));
+                this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, serviceArr, nodeTree));
             });
         }
 
         // Mount root component
         if (module.rootComponent) {
-            const root = this.getFactory(module.rootComponent).create() as Component;
-            root.append();
+            this.setRoot(module.rootComponent);
         }
 
         // Initialize
         this.start();
     }
 
+    setRoot(root: new (...args) => Component) {
+        const rootComp = this.getFactory(root).create() as Component;
+        rootComp.append();
+        const nodeTree = this.get(NodeTreeService) as NodeTreeService;
+        nodeTree.setRoot(rootComp);
+    }
+
+    /*
+    @todo set Module Factor.get as generic
+    */
     get(constuctor: new (...args) => (Component | Service), id?: string): Component | Service {
         const name = constuctor.name;
         return this.getByString(name, id);

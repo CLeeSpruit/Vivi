@@ -1,6 +1,7 @@
-import { Component, ViviComponentConstructor } from '../models';
-import { ViviElementParams } from '../decorators';
-import { ModuleFactory, ViviComponentFactory } from '../factory';
+import { ViviElementParams } from '../decorators/element.decorator';
+import { ViviComponentFactory } from '../factory/component-factory.class';
+import { ModuleFactory } from '../factory/module-factory';
+import { Component } from '../models/component.class';
 import { MockComponent } from '../models/__mocks__/component.class';
 import { MockService } from '../models/__mocks__/service.class';
 import { loadViviServices } from '../services/load-services.static';

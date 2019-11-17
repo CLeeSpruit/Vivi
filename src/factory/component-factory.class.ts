@@ -1,21 +1,29 @@
 import { ViviServiceFactory } from './';
 import { Component, Service } from '../models';
+import { NodeTreeService } from '../services';
 
+// @todo Rename to ServiceFactory
+// @todo Use generic T for Typings or remove
 export class ViviComponentFactory<T> {
     private components: Map<string, Component> = new Map<string, Component>();
 
     constructor(
         private constructor: new (...args) => Component,
-        private services: Array<ViviServiceFactory<Service>> = new Array<ViviServiceFactory<Service>>()
+        private services: Array<ViviServiceFactory<Service>> = new Array<ViviServiceFactory<Service>>(),
+        private nodeTree?: NodeTreeService
     ) {
         //
     }
 
-    create(data?: Object): Component {
+    create(parent?: Component, data?: Object): Component {
+        // Create
         const component = new this.constructor(...this.services.map(service => service.get()));
         component.data = data;
 
+        // Record in map and tree
         this.components.set(component.id, component);
+        this.nodeTree.addComponent(parent, component);
+
         return component;
     }
 
@@ -38,6 +46,9 @@ export class ViviComponentFactory<T> {
 
         // Remove from the map
         this.components.delete(id);
+
+        // Remove from tree
+        this.nodeTree.removeComponent(component);
     }
 
     destroyAll() {
@@ -46,11 +57,11 @@ export class ViviComponentFactory<T> {
 
     get(id?: string): Component {
         if (id) {
-            // TODO: Throw error if id doesn't exist
+            // @todo: ComponentFactory - Throw error if id doesn't exist
             return this.components.get(id);
         } else {
-            // TODO: throw error (or warning) if this.components.length is 0
-            // TODO: Should this grab the last component instead?
+            // @todo: ComponentFactory - throw error (or warning) if this.components.length is 0
+            // @todo: ComponentFactory - Grab the last component created
             return Array.from(this.components.values())[0] || null;
         }
     }
