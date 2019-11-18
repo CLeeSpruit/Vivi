@@ -1,7 +1,7 @@
 import { ApplicationListener, Listener } from '../events';
 import { ApplicationEventService, ListenerOptions } from '../services/application-event.service';
 import { getElements } from '../decorators/element.decorator';
-import { ViviComponentFactory } from 'factory/component-factory.class';
+import { ComponentFactory } from 'factory/component-factory.class';
 import { ParseEngineService } from '../services/parse-engine.service';
 import { FactoryService } from '../services/factory.service';
 import { GetElNameFromComponent } from '../helpers/get-el-name-from-component';
@@ -162,7 +162,7 @@ export abstract class Component {
     }
 
     createChild(parentEl: HTMLElement, component: new (...args) => Component, data?: Object) {
-        const factory = this.factoryService.getFactory(component) as ViviComponentFactory<Component>;
+        const factory = this.factoryService.getFactory(component) as ComponentFactory;
         const comp = factory.create(this, data);
         comp.append(parentEl);
     }

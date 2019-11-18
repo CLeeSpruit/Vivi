@@ -3,7 +3,6 @@ import { Mocker } from '../mocker';
 import { ViviElementParams } from '../../decorators';
 import { EventTypes } from '../../events';
 import { NodeTreeService } from '../../services';
-import { ViviServiceFactory } from '../../factory';
 
 describe('Mocker', () => {
     it('should init', () => {

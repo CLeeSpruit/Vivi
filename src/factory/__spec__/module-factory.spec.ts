@@ -1,4 +1,4 @@
-import { ViviComponentFactory, ViviServiceFactory, ModuleFactory } from '../';
+import { ComponentFactory, ServiceFactory, ModuleFactory } from '../';
 import { MockComponent, MockChildComponent } from '../../models/__mocks__/component.class';
 import { MockService, MockWithPrereqService } from '../../models/__mocks__/service.class';
 
@@ -56,19 +56,19 @@ describe('Class: Module Factory', () => {
         it('get factory should return ViviComponent', () => {
             const actual = vivi.getFactory(MockComponent);
 
-            expect(actual instanceof ViviComponentFactory).toBeTruthy();
+            expect(actual instanceof ComponentFactory).toBeTruthy();
         });
 
         it('get factory should return service', () => {
             const actual = vivi.getFactory(MockService);
 
-            expect(actual instanceof ViviServiceFactory).toBeTruthy();
+            expect(actual instanceof ServiceFactory).toBeTruthy();
         });
 
         it('get factory can be searched by string', () => {
             const actual = vivi.getFactoryByString('MockComponent');
 
-            expect(actual instanceof ViviComponentFactory).toBeTruthy();
+            expect(actual instanceof ComponentFactory).toBeTruthy();
         });
 
         it('get factory should throw error if no service or component is found', () => {
@@ -84,7 +84,7 @@ describe('Class: Module Factory', () => {
 
         it('get should return component, if created', () => {
             // Create component
-            const factory = <ViviComponentFactory<MockComponent>>vivi.getFactory(MockComponent);
+            const factory = vivi.getFactory(MockComponent) as ComponentFactory;
             factory.create(null, null, true);
             const actual = vivi.get(MockComponent);
 
@@ -93,7 +93,7 @@ describe('Class: Module Factory', () => {
 
         it('get should return ViviService', () => {
             // Create service
-            const factory = <ViviServiceFactory<MockService>>vivi.getFactory(MockService);
+            const factory = vivi.getFactory(MockService) as ServiceFactory;
             factory.create();
 
             const actual = vivi.get(MockService);

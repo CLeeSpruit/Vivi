@@ -1,29 +1,27 @@
-import { ViviServiceFactory } from './';
+import { ServiceFactory } from './service-factory.class';
 import { Component, Service } from '../models';
 import { NodeTreeService } from '../services';
 
-// @todo Rename to ServiceFactory
-// @todo Use generic T for Typings or remove
-export class ViviComponentFactory<T> {
-    private components: Map<string, Component> = new Map<string, Component>();
+export class ComponentFactory<T extends Component = Component> {
+    private components: Map<string, T> = new Map<string, T>();
     private counter = 1;
 
     constructor(
-        private constructor: new (...args) => Component,
-        private services: Array<ViviServiceFactory<Service>> = new Array<ViviServiceFactory<Service>>(),
+        private constructor: new (...args) => T,
+        private services: Array<ServiceFactory> = new Array<ServiceFactory>(),
         private nodeTreeService?: NodeTreeService
     ) {
         //
     }
 
-    createRoot(nodeTreeService: NodeTreeService): Component {
+    createRoot(nodeTreeService: NodeTreeService): T {
         this.nodeTreeService = nodeTreeService;
         const comp = this.create(null, null, true);
         this.nodeTreeService.setRoot(comp);
         return comp;
     }
 
-    create(parent: Component, data?: Object, isRoot?: boolean): Component {
+    create(parent: Component, data?: Object, isRoot?: boolean): T {
         // Create
         const component = new this.constructor(...this.services.map(service => service.get()));
         component.setData(this.counter, data);
@@ -67,7 +65,7 @@ export class ViviComponentFactory<T> {
         this.components.forEach(comp => this.destroy(comp.id));
     }
 
-    get(id?: string): Component {
+    get(id?: string): T {
         if (id) {
             // @todo: ComponentFactory - Throw error if id doesn't exist
             return this.components.get(id);

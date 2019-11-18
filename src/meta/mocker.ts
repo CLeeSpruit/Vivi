@@ -1,5 +1,5 @@
 import { ViviElementParams } from '../decorators/element.decorator';
-import { ViviComponentFactory } from '../factory/component-factory.class';
+import { ComponentFactory } from '../factory/component-factory.class';
 import { ModuleFactory } from '../factory/module-factory';
 import { Component } from '../models/component.class';
 import { MockComponent } from '../models/__mocks__/component.class';
@@ -48,8 +48,8 @@ export class Mocker {
         this.rootComp = this.getFactory().get() as MockComponent;
     }
 
-    getFactory(): ViviComponentFactory<MockComponent> {
-        return <ViviComponentFactory<MockComponent>>this.module.getFactory(MockComponent);
+    getFactory(): ComponentFactory<MockComponent> {
+        return <ComponentFactory<MockComponent>>this.module.getFactory(MockComponent);
     }
 
     createMock(options?: ComponentMockOptions): Component {

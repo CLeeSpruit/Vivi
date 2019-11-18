@@ -1,13 +1,13 @@
-import { ViviServiceFactory } from '../';
+import { ServiceFactory } from '../';
 import { MockService, MockWithPrereqService } from '../../models/__mocks__/service.class';
 import { Mocker } from '../../meta/mocker';
 
 describe('ServiceFactory', () => {
     const mock = new Mocker();
-    let factory: ViviServiceFactory<MockService>;
+    let factory: ServiceFactory<MockService>;
 
     beforeEach(() => {
-        factory = mock.module.getFactory(MockService) as ViviServiceFactory<MockService>;
+        factory = mock.module.getFactory(MockService) as ServiceFactory<MockService>;
         factory.create();
     });
 
@@ -18,12 +18,12 @@ describe('ServiceFactory', () => {
 
     describe('init', () => {
         it('should init', () => {
-            const service = new ViviServiceFactory<MockService>(MockService);
+            const service = new ServiceFactory<MockService>(MockService);
             expect(service).toBeTruthy();
         });
 
         it('should set prereqs if provided', () => {
-            const prereqFactory = mock.module.getFactory(MockWithPrereqService) as ViviServiceFactory<MockWithPrereqService>;
+            const prereqFactory = mock.module.getFactory(MockWithPrereqService) as ServiceFactory<MockWithPrereqService>;
 
             expect(prereqFactory.prerequisites.size).toEqual(1);
         });

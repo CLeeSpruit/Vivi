@@ -1,13 +1,13 @@
-import { ViviServiceConstructor, Service } from '../models';
+import { ServiceConstructor } from '../models/service-constructor.interface';
 import { ApplicationEventService } from './application-event.service';
 import { FactoryService } from './factory.service';
-import { ParseEngineService } from './parse-engine.service';
 import { NodeTreeService } from './node-tree.service';
+import { ParseEngineService } from './parse-engine.service';
 
-export const loadViviServices: Array<ViviServiceConstructor<Service>> = [
+export const loadViviServices: Array<ServiceConstructor> = [
     // Tier 0
-    <ViviServiceConstructor<ApplicationEventService>>{ constructor: ApplicationEventService },
-    <ViviServiceConstructor<FactoryService>>{ constructor: FactoryService },
-    <ViviServiceConstructor<NodeTreeService>>{ constructor: NodeTreeService },
-    <ViviServiceConstructor<ParseEngineService>>{ constructor: ParseEngineService, prereqArr: [FactoryService] },
+    <ServiceConstructor<ApplicationEventService>>{ constructor: ApplicationEventService },
+    <ServiceConstructor<FactoryService>>{ constructor: FactoryService },
+    <ServiceConstructor<NodeTreeService>>{ constructor: NodeTreeService },
+    <ServiceConstructor<ParseEngineService>>{ constructor: ParseEngineService, prereqArr: [FactoryService] },
 ];
