@@ -5,16 +5,19 @@ export class NodeTree {
     children = new Array<NodeTree>();
 
     constructor(comp: Component) {
-        //
+        this.component = comp;
     }
 
-    addChild(comp: Component) {
-        this.children.push(new NodeTree(comp));
+    addChild(comp: Component): NodeTree {
+        const node = new NodeTree(comp);
+        this.children.push(node);
+
+        return node;
     }
 
     findChild(id: string, deepSearch?: boolean, returnNode?: boolean): Component | NodeTree {
         const child = this.children.find(child => {
-            deepSearch ? 
+            return deepSearch ? 
                 child.component.id === id || child.findChild(id, true) :
                 child.component.id === id
         });

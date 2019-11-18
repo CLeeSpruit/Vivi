@@ -11,12 +11,19 @@ export class ViviComponentFactory<T> {
     constructor(
         private constructor: new (...args) => Component,
         private services: Array<ViviServiceFactory<Service>> = new Array<ViviServiceFactory<Service>>(),
-        private nodeTree?: NodeTreeService
+        private nodeTreeService?: NodeTreeService
     ) {
         //
     }
 
-    create(parent?: Component, data?: Object): Component {
+    createRoot(nodeTreeService: NodeTreeService): Component {
+        this.nodeTreeService = nodeTreeService;
+        const comp = this.create(null, null, true);
+        this.nodeTreeService.setRoot(comp);
+        return comp;
+    }
+
+    create(parent: Component, data?: Object, isRoot?: boolean): Component {
         // Create
         const component = new this.constructor(...this.services.map(service => service.get()));
         component.setData(this.counter, data);
@@ -24,7 +31,10 @@ export class ViviComponentFactory<T> {
 
         // Record in map and tree
         this.components.set(component.id, component);
-        this.nodeTree.addComponent(parent, component);
+
+        if (!isRoot) {
+            this.nodeTreeService.addComponent(parent, component);
+        }
 
         return component;
     }
@@ -50,7 +60,7 @@ export class ViviComponentFactory<T> {
         this.components.delete(id);
 
         // Remove from tree
-        this.nodeTree.removeComponent(component);
+        this.nodeTreeService.removeComponent(component);
     }
 
     destroyAll() {
@@ -66,5 +76,9 @@ export class ViviComponentFactory<T> {
             // @todo: ComponentFactory - Grab the last component created
             return Array.from(this.components.values())[0] || null;
         }
+    }
+
+    setTree(nodeTree: NodeTreeService) {
+        
     }
 }

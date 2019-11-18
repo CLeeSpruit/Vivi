@@ -1,6 +1,7 @@
 import { ViviComponentFactory } from '../';
 import { MockComponent } from '../../models/__mocks__/component.class';
 import { Mocker } from '../../meta/mocker';
+import { NodeTreeService } from '../../services';
 
 describe('Component Factory', () => {
     const mock = new Mocker();
@@ -19,7 +20,7 @@ describe('Component Factory', () => {
         it('should create a new component and return that component', () => {
             const mock = new ViviComponentFactory<MockComponent>(MockComponent);
 
-            const component = mock.create();
+            const component = mock.create(null, null, true);
 
             expect(component).toBeTruthy();
             expect(component instanceof MockComponent).toBeTruthy();
@@ -30,6 +31,18 @@ describe('Component Factory', () => {
 
             expect(comp.mockService).toBeTruthy();
         });
+    });
+
+    describe('create root', () => {
+        it('should create component and set root in nodeTreeService', () => {
+            const mock = new ViviComponentFactory<MockComponent>(MockComponent);
+            const nodeTreeService = new NodeTreeService();
+            const rootSpy = spyOn(nodeTreeService, 'setRoot');
+
+            const comp = mock.createRoot(nodeTreeService);
+            expect(rootSpy).toHaveBeenCalled();
+            expect(comp).toBeTruthy();
+        });    
     });
 
     describe('get', () => {

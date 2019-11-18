@@ -1,4 +1,3 @@
-import { Component } from '../../models/component.class';
 import { MockComponent } from '../../models/__mocks__/component.class';
 import { Mocker } from '../mocker';
 import { ViviElementParams } from '../../decorators';
@@ -59,21 +58,21 @@ describe('Mocker', () => {
             expect(comp.style).toEqual(style);
         });
 
-        it('hasChild: true - should return component with children', () => {
-            const comp = mock.createMock({ hasChild: true });
+        // it('hasChild: true - should return component with children', () => {
+        //     const comp = mock.createMock({ hasChild: true });
 
-            expect(comp).toBeTruthy();
-            expect(comp.children.length).toBeGreaterThan(0);
-        });
+        //     expect(comp).toBeTruthy();
+        //     expect(comp.children.length).toBeGreaterThan(0);
+        // });
 
-        it('children - should return component with provided chilren', () => {
-            const children = [MockComponent];
-            const comp = mock.createMock({ children });
+        // it('children - should return component with provided chilren', () => {
+        //     const children = [MockComponent];
+        //     const comp = mock.createMock({ children });
 
-            expect(comp).toBeTruthy();
-            expect(comp.children.length).toEqual(1);
-            expect(comp.children[0]).toBeInstanceOf(Component);
-        });
+        //     expect(comp).toBeTruthy();
+        //     expect(comp.children.length).toEqual(1);
+        //     expect(comp.children[0]).toBeInstanceOf(Component);
+        // });
 
         it('hasData: true - should return component with default data object', () => {
             const comp = mock.createMock({ hasData: true });
@@ -134,8 +133,8 @@ describe('Mocker', () => {
             expect(comp).toBeTruthy();
             expect(comp.template).toEqual(template);
             expect(comp.style).toEqual(style);
-            expect(comp.children.length).toEqual(1);
-            expect(comp.children[0]).toBeInstanceOf(Component);
+            // expect(comp.children.length).toEqual(1);
+            // expect(comp.children[0]).toBeInstanceOf(Component);
             expect(comp.data).toEqual(data);
         });
 

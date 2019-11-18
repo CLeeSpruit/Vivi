@@ -23,6 +23,7 @@ export interface ComponentMockOptions {
 
 export class Mocker {
     module: ModuleFactory;
+    rootComp: MockComponent;
     readonly defaultComponents = [
         { constructor: MockComponent, services: [ MockService] }
     ];
@@ -38,10 +39,12 @@ export class Mocker {
         this.module = new ModuleFactory({
             componentConstructors: this.defaultComponents,
             serviceConstructors: [
-                { constructor: MockService },
-                ...loadViviServices
-            ]
+                { constructor: MockService }
+            ],
+            rootComponent: MockComponent
         });
+
+        this.rootComp = this.getFactory().get() as MockComponent;
     }
 
     getFactory(): ViviComponentFactory<MockComponent> {
@@ -49,7 +52,7 @@ export class Mocker {
     }
 
     createMock(options?: ComponentMockOptions): Component {
-        const comp = this.getFactory().create();
+        const comp = this.getFactory().create(this.rootComp);
 
         if (!options) {
             comp.append();

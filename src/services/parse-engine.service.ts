@@ -101,7 +101,6 @@ export class ParseEngineService extends Service {
                 }
             }
         });
-
     }
 
     private buildAttributeList(node: HTMLElement, attributes: Set<string> = new Set<string>()): Set<string> {

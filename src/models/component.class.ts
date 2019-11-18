@@ -30,6 +30,7 @@ export abstract class Component {
         this.engine = (<any>window).vivi.get(ParseEngineService);
 
         // Set default parent
+        // @todo Component - Append to the root component instead of the body
         this.parentElement = document.body;
 
         // Get template and style file

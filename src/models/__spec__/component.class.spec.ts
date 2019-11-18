@@ -113,14 +113,6 @@ describe('Class: Component', () => {
 
             expect(component[testEl.propertyKey]).toBeTruthy();
         });
-
-        it('should run loadAll and load children', () => {
-            const errorSpy = spyOn(console, 'error');
-            const comp = mock.createMock({ template: '<mock></mock>'});
-            expect(errorSpy).not.toHaveBeenCalled();
-            expect(comp.children[0]).toBeTruthy();
-            expect(comp.children[0].element).toBeTruthy();
-        });
     });
 
     describe('loadall', () => {
@@ -130,14 +122,6 @@ describe('Class: Component', () => {
             comp.loadAll();
 
             expect(errorSpy).toHaveBeenCalled();
-        });
-
-        it('children should be called', () => {
-            const comp = mock.createMock({ hasChild: true, doNotLoad: true });
-            const loadSpy = spyOn(comp.children[0], 'loadAll');
-            comp.append(); // Append calls loadAll
-
-            expect(loadSpy).toHaveBeenCalled();
         });
     });
 
@@ -215,24 +199,6 @@ describe('Class: Component', () => {
             component.redraw();
 
             expect(component).toBeTruthy();
-        });
-
-        it('should redraw on the same component does not do anything', () => {
-            const component = mock.createMock({
-                data: { name: 'test' },
-                template: `<span v-innerHTML="this.name"></span>`
-            });
-
-            component.append();
-
-            const before = document.getElementById(component.id);
-            const expectedParse = component.engine.parseElements(component.ogNode, component.data);
-            expect(before).toEqual(expectedParse);
-
-            component.redraw();
-
-            const after = document.getElementById(component.id);
-            expect(before).toEqual(after);
         });
 
         it('should redraw with new params', () => {

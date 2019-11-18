@@ -17,6 +17,7 @@ export class ModuleFactory {
     constructor(
         module: ViviFactoryConstructor
     ) {
+        // @todo Replace instances of window.vivi with an injected version
         window.vivi = this;
 
         // Append Vivi services - these should be before any custom services
@@ -66,11 +67,11 @@ export class ModuleFactory {
         this.start();
     }
 
-    setRoot(root: new (...args) => Component) {
-        const rootComp = this.getFactory(root).create() as Component;
-        rootComp.append();
+    setRoot(rootComponent: new (...args) => Component) {
+        const rootFactory = this.getFactory(rootComponent) as ViviComponentFactory<Component>;
         const nodeTree = this.get(NodeTreeService) as NodeTreeService;
-        nodeTree.setRoot(rootComp);
+        const rootComp = rootFactory.createRoot(nodeTree) as Component;
+        rootComp.append();
     }
 
     /*

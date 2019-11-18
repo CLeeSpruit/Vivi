@@ -15,7 +15,8 @@ describe('Class: Module Factory', () => {
             componentConstructors: [
                 <ViviComponentConstructor<Component>>{ constructor: MockChildComponent },
                 <ViviComponentConstructor<Component>>{ constructor: MockComponent, services: [MockService] }
-            ]
+            ],
+            rootComponent: MockComponent
         });
     }
 
@@ -80,7 +81,7 @@ describe('Class: Module Factory', () => {
         it('get should return component, if created', () => {
             // Create component
             const factory = <ViviComponentFactory<MockComponent>>vivi.getFactory(MockComponent);
-            factory.create();
+            factory.create(null, null, true);
             const actual = vivi.get(MockComponent);
 
             expect(actual instanceof MockComponent).toBeTruthy();
