@@ -54,8 +54,8 @@ export class ParseEngineService extends Service {
             // Parse v-each="this.children as SomeComponent"
             const match = attr.match(/(.*) as (\w*)/);
             if (match && match.length > 2) {
-                const key = match[0];
-                const componentName = GetElNameFromComponent(match[1]);
+                const key = match[1];
+                const componentName = match[2];
                 const arr = this.applyWithContext(key, data) as Array<any>;
                 if (arr.forEach) {
                     arr.forEach((item, index) => {

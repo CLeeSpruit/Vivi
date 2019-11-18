@@ -2,6 +2,8 @@ import { MockComponent } from '../../models/__mocks__/component.class';
 import { Mocker } from '../mocker';
 import { ViviElementParams } from '../../decorators';
 import { EventTypes } from '../../events';
+import { NodeTreeService } from '../../services';
+import { ViviServiceFactory } from '../../factory';
 
 describe('Mocker', () => {
     it('should init', () => {
@@ -58,21 +60,25 @@ describe('Mocker', () => {
             expect(comp.style).toEqual(style);
         });
 
-        // it('hasChild: true - should return component with children', () => {
-        //     const comp = mock.createMock({ hasChild: true });
+        it('hasChild: true - should return component with children', () => {
+            const comp = mock.createMock({ hasChild: true });
 
-        //     expect(comp).toBeTruthy();
-        //     expect(comp.children.length).toBeGreaterThan(0);
-        // });
+            expect(comp).toBeTruthy();
+            const nodeTreeService = mock.module.get(NodeTreeService) as NodeTreeService;
+            const node = nodeTreeService.getNode(comp);
+            expect(node.children.length).toBeGreaterThan(0);
+        });
 
-        // it('children - should return component with provided chilren', () => {
-        //     const children = [MockComponent];
-        //     const comp = mock.createMock({ children });
+        it('children - should return component with provided chilren', () => {
+            const children = [MockComponent];
+            const comp = mock.createMock({ children });
 
-        //     expect(comp).toBeTruthy();
-        //     expect(comp.children.length).toEqual(1);
-        //     expect(comp.children[0]).toBeInstanceOf(Component);
-        // });
+            expect(comp).toBeTruthy();
+            const nodeTreeService = mock.module.get(NodeTreeService) as NodeTreeService;
+            const node = nodeTreeService.getNode(comp);
+            expect(node.children.length).toEqual(children.length);
+            expect(node.children[0].component).toBeInstanceOf(MockComponent);
+        });
 
         it('hasData: true - should return component with default data object', () => {
             const comp = mock.createMock({ hasData: true });

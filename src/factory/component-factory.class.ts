@@ -77,8 +77,4 @@ export class ViviComponentFactory<T> {
             return Array.from(this.components.values())[0] || null;
         }
     }
-
-    setTree(nodeTree: NodeTreeService) {
-        
-    }
 }

@@ -72,14 +72,14 @@ describe('Parse Elements', () => {
         node.append(child);
         service.parse(node, data, comp);
 
-        return node;        
+        return node;
     }
 
     const testAttribute = (attr: string) => {
         const normalAttrName = attr.replace('v-', '');
         describe(attr, () => {
             it('should evaluate data objects', () => {
-                const data = { fluffy: 'bunny'};
+                const data = { fluffy: 'bunny' };
                 const value = 'this.fluffy';
                 const comp = mock.createMock();
                 const node = setup(attr, value, data);
@@ -100,7 +100,7 @@ describe('Parse Elements', () => {
                 const data = { fluffy: 'bunny' };
                 const value = `(this.fluffy === 'bunny') ? this.fluffy`;
                 const node = setup(attr, value, data);
-                
+
                 const actual = node.querySelector('div');
                 expect(actual.getAttribute(normalAttrName)).toEqual(data.fluffy);
             });
@@ -246,6 +246,54 @@ describe('Parse Elements', () => {
             const actual = node.querySelector('div');
 
             expect(actual).toBeFalsy();
+        });
+    });
+
+    describe('v-each nodes', () => {
+        it('should render a list of components and supply object as data', () => {
+            const data = {
+                puppies: [
+                    { breed: 'Collie' },
+                    { breed: 'Lab' },
+                    { breed: 'Shiba' },
+                    { breed: 'German Shepard' }
+                ]
+            };
+            const value = `this.puppies as MockComponent`;
+            const node = setup('v-each', value, data);
+            const actual = node.querySelector('div');
+
+            expect(actual.children.length).toEqual(data.puppies.length);
+            const id = actual.children.item(0).id;
+            const childComp = mock.getFactory().get(id);
+            expect(childComp.data).toEqual(data.puppies[0]);
+        });
+
+        it('should not render if value does not match proper syntax', () => {
+            const data = {
+                puppies: [
+                    { breed: 'Collie' },
+                    { breed: 'Lab' },
+                    { breed: 'Shiba' },
+                    { breed: 'German Shepard' }
+                ]
+            };
+            const value = `this.puppies`;
+            const node = setup('v-each', value, data);
+            const actual = node.querySelector('div');
+
+            expect(actual.children.length).toEqual(0);
+        });
+
+        it('should not render if data is not array', () => {
+            const data = {
+                puppies: 'are cute'
+            };
+            const value = `this.puppies as MockComponent`;
+            const node = setup('v-each', value, data);
+            const actual = node.querySelector('div');
+
+            expect(actual.children.length).toEqual(0);
         });
     });
 });

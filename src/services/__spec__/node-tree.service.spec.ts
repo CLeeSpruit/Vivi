@@ -86,6 +86,18 @@ describe('NodeTreeService', () => {
             expect(parentNode.children.length).toEqual(1);
         });
 
+        it('should add component to root if no parentNode is defined', () => {
+            const service = new NodeTreeService();
+            const rootComponent = mock.createMock();
+            service.setRoot(rootComponent);
+            const rootNode = service.getNode(rootComponent);
+
+            const child = mock.createMock();
+            service.addComponent(null, child);
+
+            expect(rootNode.children.length).toEqual(1);
+        });
+
         it('should throw error if root component has not been set', () => {
             const errorSpy = spyOn(console, 'error');
             const parent = mock.createMock();
