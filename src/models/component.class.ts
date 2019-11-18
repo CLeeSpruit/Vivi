@@ -1,4 +1,3 @@
-import v4 from 'uuid';
 import { ApplicationListener, Listener } from '../events';
 import { ApplicationEventService, ListenerOptions } from '../services/application-event.service';
 import { getElements } from '../decorators/element.decorator';
@@ -25,8 +24,6 @@ export abstract class Component {
     engine: ParseEngineService;
 
     constructor() {
-        this.id = v4();
-
         // Default Services
         this.appEvents = (<any>window).vivi.get(ApplicationEventService);
         this.factoryService = (<any>window.vivi.get(FactoryService));
@@ -59,6 +56,11 @@ export abstract class Component {
         }
     }
 
+    setData(id: number, data?: Object) {
+        this.data = data || {};
+        this.id = `${this.componentName}-${id}`;
+    }
+
     private createNodes() {
         // Create Node that is named after the component class
         const el = document.createElement(this.componentName);
@@ -88,7 +90,7 @@ export abstract class Component {
     append(parentEl?: HTMLElement, replaceEl?: HTMLElement, doNotLoad?: boolean) {
         if (!this.ogNode) this.createNodes();
         if (!parentEl) parentEl = document.body;
-        
+
         if (replaceEl) {
             parentEl.replaceChild(this.parsedNode, replaceEl);
         } else {

@@ -5,6 +5,7 @@ import { Service } from 'models/service.class';
 export class ViviServiceFactory<T> {
     prerequisites: Map<string, ViviServiceFactory<Service>> = new Map<string, ViviServiceFactory<Service>>();
     instances: Map<string, Service> = new Map<string, Service>();
+    private counter = 1;
 
     constructor(
         private constructor: new (...args) => Service,
@@ -21,6 +22,8 @@ export class ViviServiceFactory<T> {
 
     create(): Service {
         const service = new this.constructor(...Array.from(this.prerequisites.values()).map(pre => pre.get()));
+        service.setData(this.counter);
+        this.counter++;
         this.instances.set(service.id, service);
 
         return service;

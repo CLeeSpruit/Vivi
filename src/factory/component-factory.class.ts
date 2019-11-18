@@ -6,6 +6,7 @@ import { NodeTreeService } from '../services';
 // @todo Use generic T for Typings or remove
 export class ViviComponentFactory<T> {
     private components: Map<string, Component> = new Map<string, Component>();
+    private counter = 1;
 
     constructor(
         private constructor: new (...args) => Component,
@@ -18,7 +19,8 @@ export class ViviComponentFactory<T> {
     create(parent?: Component, data?: Object): Component {
         // Create
         const component = new this.constructor(...this.services.map(service => service.get()));
-        component.data = data;
+        component.setData(this.counter, data);
+        this.counter++;
 
         // Record in map and tree
         this.components.set(component.id, component);
