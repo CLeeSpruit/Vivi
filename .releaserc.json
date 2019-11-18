@@ -1,0 +1,31 @@
+{
+    "plugins": [
+        [
+            "@semantic-release/commit-analyzer",
+            {
+                "preset": "angular",
+                "releaseRules": [
+                    {
+                        "type": "refactor",
+                        "release": "patch"
+                    },
+                    {
+                        "type": "improvement",
+                        "release": "patch"
+                    },
+                    {
+                        "type":"build",
+                        "release": "patch"
+                    }
+                ],
+                "parserOpts": {
+                    "noteKeywords": [
+                        "BREAKING CHANGE",
+                        "BREAKING CHANGES"
+                    ]
+                }
+            }
+        ],
+        "@semantic-release/release-notes-generator"
+    ]
+}
