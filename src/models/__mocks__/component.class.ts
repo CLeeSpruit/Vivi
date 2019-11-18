@@ -6,3 +6,9 @@ export class MockComponent extends Component {
         super();
     }
 }
+
+export class MockChildComponent extends Component {
+    constructor() {
+        super();
+    }
+}

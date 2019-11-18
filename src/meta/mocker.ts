@@ -3,7 +3,7 @@ import { ViviComponentFactory } from '../factory/component-factory.class';
 import { ModuleFactory } from '../factory/module-factory';
 import { Component } from '../models/component.class';
 import { MockComponent } from '../models/__mocks__/component.class';
-import { MockService } from '../models/__mocks__/service.class';
+import { MockService, MockWithPrereqService } from '../models/__mocks__/service.class';
 import { loadViviServices } from '../services/load-services.static';
 
 export interface ComponentMockOptions {
@@ -39,7 +39,8 @@ export class Mocker {
         this.module = new ModuleFactory({
             componentConstructors: this.defaultComponents,
             serviceConstructors: [
-                { constructor: MockService }
+                { constructor: MockService },
+                { constructor: MockWithPrereqService, prereqArr: [ MockService ]}
             ],
             rootComponent: MockComponent
         });

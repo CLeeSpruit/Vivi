@@ -1,20 +1,24 @@
 import { ViviComponentFactory, ViviServiceFactory, ModuleFactory } from '../';
-import { Component, ViviComponentConstructor, ViviServiceConstructor, Service } from '../../models';
+import { MockComponent, MockChildComponent } from '../../models/__mocks__/component.class';
+import { MockService, MockWithPrereqService } from '../../models/__mocks__/service.class';
 
 describe('Class: Module Factory', () => {
     const minimumConstructor = () => {
-        return new ModuleFactory({});
+        return new ModuleFactory({
+            componentConstructors: [{constructor: MockComponent}],
+            rootComponent: MockComponent
+        });
     }
 
     const fullConstructor = () => {
         return new ModuleFactory({
             serviceConstructors: [
-                <ViviServiceConstructor<MockService>>{ constructor: MockService },
-                <ViviServiceConstructor<MockServicePrereq>>{ constructor: MockServicePrereq, prereqArr: [MockService] }
+                { constructor: MockService },
+                { constructor: MockWithPrereqService, prereqArr: [MockService] }
             ],
             componentConstructors: [
-                <ViviComponentConstructor<Component>>{ constructor: MockChildComponent },
-                <ViviComponentConstructor<Component>>{ constructor: MockComponent, services: [MockService] }
+                { constructor: MockChildComponent },
+                { constructor: MockComponent, services: [MockService] }
             ],
             rootComponent: MockComponent
         });
@@ -112,29 +116,3 @@ describe('Class: Module Factory', () => {
         });
     });
 });
-
-// Generic Component class used for testing in this file
-class MockComponent extends Component {
-    constructor(private mockService: MockService) {
-        super();
-    }
-}
-
-class MockChildComponent extends Component {
-    constructor() {
-        super();
-    }
-}
-
-// Generic Service used for testing in this file
-class MockService extends Service {
-    constructor() {
-        super();
-    }
-}
-
-class MockServicePrereq extends Service {
-    constructor(private mockService: MockService) {
-        super();
-    }
-}

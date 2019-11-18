@@ -45,4 +45,8 @@ export class ViviServiceFactory<T> {
         // Remove from the map
         this.instances.delete(id);
     }
+
+    destroyAll() {
+        this.instances.forEach(service => this.destroy(service.id));
+    }
 }

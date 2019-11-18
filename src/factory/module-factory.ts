@@ -6,8 +6,8 @@ import { NodeTreeService } from '../services/node-tree.service';
 
 export interface ViviFactoryConstructor {
     serviceConstructors?: Array<ViviServiceConstructor<Service>>,
-    componentConstructors?: Array<ViviComponentConstructor<Component>>,
-    rootComponent?: new (...args) => Component
+    componentConstructors: Array<ViviComponentConstructor<Component>>,
+    rootComponent: new (...args) => Component
 }
 
 export class ModuleFactory {
@@ -45,33 +45,24 @@ export class ModuleFactory {
 
         // Init Components
         // @todo: Automatically load components in the components folder
-        if (module.componentConstructors) {
-            module.componentConstructors.forEach(constructor => {
-                let serviceArr = [];
-                if (constructor.services) {
-                    serviceArr = constructor.services.map(service => {
-                        // @todo: Components - Throw a specific warning to the user telling them about a missing service
-                        return this.services.get(service.name);
-                    });
-                }
-                this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, serviceArr, nodeTree));
-            });
-        }
+        module.componentConstructors.forEach(constructor => {
+            let serviceArr = [];
+            if (constructor.services) {
+                serviceArr = constructor.services.map(service => {
+                    // @todo: Components - Throw a specific warning to the user telling them about a missing service
+                    return this.services.get(service.name);
+                });
+            }
+            this.components.set(constructor.constructor.name, new ViviComponentFactory(constructor.constructor, serviceArr, nodeTree));
+        });
 
         // Mount root component
-        if (module.rootComponent) {
-            this.setRoot(module.rootComponent);
-        }
+        const rootFactory = this.getFactory(module.rootComponent) as ViviComponentFactory<Component>;
+        const rootComp = rootFactory.createRoot(nodeTree) as Component;
+        rootComp.append();
 
         // Initialize
         this.start();
-    }
-
-    setRoot(rootComponent: new (...args) => Component) {
-        const rootFactory = this.getFactory(rootComponent) as ViviComponentFactory<Component>;
-        const nodeTree = this.get(NodeTreeService) as NodeTreeService;
-        const rootComp = rootFactory.createRoot(nodeTree) as Component;
-        rootComp.append();
     }
 
     /*

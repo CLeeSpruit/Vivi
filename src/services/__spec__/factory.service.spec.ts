@@ -2,14 +2,11 @@ import { FactoryService } from '../factory.service';
 import { ModuleFactory, ViviComponentFactory, ViviServiceFactory } from '../../factory';
 import { MockComponent } from '../../models/__mocks__/component.class';
 import { ApplicationEventService } from '../application-event.service';
+import { Mocker } from '../../meta/mocker';
 
 describe('Factory Service', () => {
-    let service: FactoryService;
-
-    beforeEach(() => {
-        const vivi = new ModuleFactory({ componentConstructors: [{ constructor: MockComponent }] });
-        service = vivi.get(FactoryService) as FactoryService;
-    });
+    const mock = new Mocker();
+    const service = mock.module.get(FactoryService) as FactoryService;
 
     it('should init', () => {
         expect(service).toBeTruthy();
