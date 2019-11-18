@@ -18,6 +18,10 @@ describe('Mocker', () => {
             mock = new Mocker();
         });
 
+        afterEach(() => {
+            mock.clearMocks();
+        });
+
         it('default - should return MockComponent', () => {
             const comp = mock.createMock();
 

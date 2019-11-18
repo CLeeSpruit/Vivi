@@ -3,6 +3,7 @@ import { Component, Service } from '../models';
 
 export class ViviComponentFactory<T> {
     private components: Map<string, Component> = new Map<string, Component>();
+    private counter = 1;
 
     constructor(
         private constructor: new (...args) => Component,
@@ -13,7 +14,8 @@ export class ViviComponentFactory<T> {
 
     create(data?: Object): Component {
         const component = new this.constructor(...this.services.map(service => service.get()));
-        component.data = data;
+        component.setData(this.counter, data);
+        this.counter++;
 
         this.components.set(component.id, component);
         return component;
