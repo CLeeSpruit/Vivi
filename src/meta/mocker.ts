@@ -1,8 +1,9 @@
-import { Component, ViviComponentConstructor } from '../models';
-import { ViviElementParams } from '../decorators';
-import { ModuleFactory, ViviComponentFactory } from '../factory';
+import { ViviElementParams } from '../decorators/element.decorator';
+import { ComponentFactory } from '../factory/component-factory.class';
+import { ModuleFactory } from '../factory/module-factory';
+import { Component } from '../models/component.class';
 import { MockComponent } from '../models/__mocks__/component.class';
-import { MockService } from '../models/__mocks__/service.class';
+import { MockService, MockWithPrereqService } from '../models/__mocks__/service.class';
 import { loadViviServices } from '../services/load-services.static';
 
 export interface ComponentMockOptions {
@@ -22,6 +23,7 @@ export interface ComponentMockOptions {
 
 export class Mocker {
     module: ModuleFactory;
+    rootComp: MockComponent;
     readonly defaultComponents = [
         { constructor: MockComponent, services: [ MockService] }
     ];
@@ -38,17 +40,20 @@ export class Mocker {
             componentConstructors: this.defaultComponents,
             serviceConstructors: [
                 { constructor: MockService },
-                ...loadViviServices
-            ]
+                { constructor: MockWithPrereqService, prereqArr: [ MockService ]}
+            ],
+            rootComponent: MockComponent
         });
+
+        this.rootComp = this.getFactory().get() as MockComponent;
     }
 
-    getFactory(): ViviComponentFactory<MockComponent> {
-        return <ViviComponentFactory<MockComponent>>this.module.getFactory(MockComponent);
+    getFactory(): ComponentFactory<MockComponent> {
+        return <ComponentFactory<MockComponent>>this.module.getFactory(MockComponent);
     }
 
     createMock(options?: ComponentMockOptions): Component {
-        const comp = this.getFactory().create();
+        const comp = this.getFactory().create(this.rootComp);
 
         if (!options) {
             comp.append();

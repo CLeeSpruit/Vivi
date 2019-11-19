@@ -1,23 +1,39 @@
-import { ViviServiceFactory } from './';
+import { ServiceFactory } from './service-factory.class';
 import { Component, Service } from '../models';
+import { NodeTreeService } from '../services';
 
-export class ViviComponentFactory<T> {
-    private components: Map<string, Component> = new Map<string, Component>();
+export class ComponentFactory<T extends Component = Component> {
+    private components: Map<string, T> = new Map<string, T>();
     private counter = 1;
 
     constructor(
-        private constructor: new (...args) => Component,
-        private services: Array<ViviServiceFactory<Service>> = new Array<ViviServiceFactory<Service>>()
+        private constructor: new (...args) => T,
+        private services: Array<ServiceFactory> = new Array<ServiceFactory>(),
+        private nodeTreeService?: NodeTreeService
     ) {
         //
     }
 
-    create(data?: Object): Component {
+    createRoot(nodeTreeService: NodeTreeService): T {
+        this.nodeTreeService = nodeTreeService;
+        const comp = this.create(null, null, true);
+        this.nodeTreeService.setRoot(comp);
+        return comp;
+    }
+
+    create(parent: Component, data?: Object, isRoot?: boolean): T {
+        // Create
         const component = new this.constructor(...this.services.map(service => service.get()));
         component.setData(this.counter, data);
         this.counter++;
 
+        // Record in map and tree
         this.components.set(component.id, component);
+
+        if (!isRoot) {
+            this.nodeTreeService.addComponent(parent, component);
+        }
+
         return component;
     }
 
@@ -40,19 +56,22 @@ export class ViviComponentFactory<T> {
 
         // Remove from the map
         this.components.delete(id);
+
+        // Remove from tree
+        this.nodeTreeService.removeComponent(component);
     }
 
     destroyAll() {
         this.components.forEach(comp => this.destroy(comp.id));
     }
 
-    get(id?: string): Component {
+    get(id?: string): T {
         if (id) {
-            // TODO: Throw error if id doesn't exist
+            // @todo: ComponentFactory - Throw error if id doesn't exist
             return this.components.get(id);
         } else {
-            // TODO: throw error (or warning) if this.components.length is 0
-            // TODO: Should this grab the last component instead?
+            // @todo: ComponentFactory - throw error (or warning) if this.components.length is 0
+            // @todo: ComponentFactory - Grab the last component created
             return Array.from(this.components.values())[0] || null;
         }
     }

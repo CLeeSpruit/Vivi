@@ -1,32 +1,36 @@
-import { ModuleFactory, ViviServiceFactory } from '../';
+import { ServiceFactory } from '../';
 import { MockService, MockWithPrereqService } from '../../models/__mocks__/service.class';
+import { Mocker } from '../../meta/mocker';
 
 describe('ServiceFactory', () => {
-    const basicMock = () => { return new ViviServiceFactory<MockService>(MockService) };
-    const mockModule = () => {
-        return new ModuleFactory({
-            serviceConstructors: [
-                { constructor: MockService },
-                { constructor: MockWithPrereqService, prereqArr: [MockService] }
-            ]
-        });
-    };
+    const mock = new Mocker();
+    let factory: ServiceFactory<MockService>;
 
-    it('should init', () => {
-        expect(basicMock()).toBeTruthy();
+    beforeEach(() => {
+        factory = mock.module.getFactory(MockService) as ServiceFactory<MockService>;
+        factory.create();
     });
 
-    it('should set prereqs if provided', () => {
-        const vivi = mockModule();
+    afterEach(() => {
+        mock.clearMocks();
+        factory.destroyAll();
+    });
 
-        const prereqFactory = vivi.getFactory(MockWithPrereqService) as ViviServiceFactory<MockWithPrereqService>;
+    describe('init', () => {
+        it('should init', () => {
+            const service = new ServiceFactory<MockService>(MockService);
+            expect(service).toBeTruthy();
+        });
 
-        expect(prereqFactory.prerequisites.size).toEqual(1);
+        it('should set prereqs if provided', () => {
+            const prereqFactory = mock.module.getFactory(MockWithPrereqService) as ServiceFactory<MockWithPrereqService>;
+
+            expect(prereqFactory.prerequisites.size).toEqual(1);
+        });
     });
 
     describe('create', () => {
         it('should create a new instance of a service', () => {
-            const factory = basicMock();
             const service = factory.create();
 
             expect(service).toBeTruthy();
@@ -34,9 +38,8 @@ describe('ServiceFactory', () => {
         });
     });
 
-    describe('get' , () => {
+    describe('get', () => {
         it('should return service if id is provided', () => {
-            const factory = basicMock();
             const service = factory.create();
 
             const actual = factory.get(service.id);
@@ -45,7 +48,6 @@ describe('ServiceFactory', () => {
         });
 
         it('should return the first service if no id is provided', () => {
-            const factory = basicMock();
             const toBeRemoved = factory.get();
             factory.destroy(toBeRemoved.id);
 
@@ -56,20 +58,23 @@ describe('ServiceFactory', () => {
 
     describe('destroy', () => {
         it('should trigger service destroy', () => {
-            const factory = basicMock();
-            const service = factory.get();
+            const service = factory.create();
             const destroySpy = spyOn(service, 'destroy');
+            const sizeBefore = factory.instances.size;
 
             factory.destroy(service.id);
 
             expect(destroySpy).toHaveBeenCalledTimes(1);
+            expect(factory.instances.size).toEqual(sizeBefore - 1);
         });
+    });
 
-        it('should remove from the map', () => {
-            const factory = basicMock();
-            const toBeRemoved = factory.get();
-            factory.destroy(toBeRemoved.id);
+    describe('destroy all', () => {
+        it('should remove all instances', () => {
+            factory.create();
+            factory.create();
 
+            factory.destroyAll();
             expect(factory.instances.size).toEqual(0);
         });
     });

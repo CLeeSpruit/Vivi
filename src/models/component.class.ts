@@ -1,7 +1,7 @@
 import { ApplicationListener, Listener } from '../events';
 import { ApplicationEventService, ListenerOptions } from '../services/application-event.service';
 import { getElements } from '../decorators/element.decorator';
-import { ModuleFactory, ViviComponentFactory } from 'factory';
+import { ComponentFactory } from 'factory/component-factory.class';
 import { ParseEngineService } from '../services/parse-engine.service';
 import { FactoryService } from '../services/factory.service';
 import { GetElNameFromComponent } from '../helpers/get-el-name-from-component';
@@ -16,7 +16,6 @@ export abstract class Component {
     ogNode: HTMLElement;
     parsedNode: HTMLElement;
     parentElement: HTMLElement;
-    children: Array<Component> = new Array<Component>();
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
 
     // Default Services
@@ -31,6 +30,7 @@ export abstract class Component {
         this.engine = (<any>window).vivi.get(ParseEngineService);
 
         // Set default parent
+        // @todo Component - Append to the root component instead of the body
         this.parentElement = document.body;
 
         // Get template and style file
@@ -84,8 +84,8 @@ export abstract class Component {
         }
 
         // Load data into template
-        this.parsedNode = this.engine.parseElements(el, this.data);
-        this.children.push(...this.engine.parseComponents(this.parsedNode));
+        this.engine.parse(el, this.data, this);
+        this.parsedNode = el;
     }
 
     append(parentEl?: HTMLElement, replaceEl?: HTMLElement, doNotLoad?: boolean) {
@@ -112,9 +112,6 @@ export abstract class Component {
         if (!this.element) {
             console.warn(`Error while appending ${this.componentName} to ${this.parentElement.tagName}. Element not was not created.`);
         }
-
-        this.children.forEach(ingredient => ingredient.loadAll());
-
         // Load in decorated elements
         const els = getElements(this);
         els.forEach(el => {
@@ -131,13 +128,15 @@ export abstract class Component {
     redraw() {
         // Remove 
         const oldEl = document.getElementById(this.id);
-        const newEl = this.engine.parseElements(this.ogNode, this.data);
+        const newEl = this.ogNode.cloneNode(true) as HTMLElement;
+        this.engine.parse(newEl, this.data, this);
         this.parentElement.replaceChild(newEl, oldEl);
         this.parsedNode = newEl;
         this.element = document.getElementById(this.id);
     }
 
     detach() {
+        // @todo Component - Move detach logic to the factory and record in the nodeTree
         this.element.remove();
         this.parentElement = null;
     }
@@ -151,9 +150,6 @@ export abstract class Component {
         this.listeners.forEach(listener => {
             listener.remove();
         });
-        this.children.forEach(child => {
-            child.destroy();
-        });
     }
 
     /* Actions */
@@ -166,9 +162,8 @@ export abstract class Component {
     }
 
     createChild(parentEl: HTMLElement, component: new (...args) => Component, data?: Object) {
-        const factory = (<ModuleFactory>window.vivi).getFactory(component) as ViviComponentFactory<Component>;
-        const comp = factory.create(data);
+        const factory = this.factoryService.getFactory(component) as ComponentFactory;
+        const comp = factory.create(this, data);
         comp.append(parentEl);
-        this.children.push(comp);
     }
 }
