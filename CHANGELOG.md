@@ -1,3 +1,10 @@
+## [4.1.4](https://github.com/CassandraSpruit/Vivi/compare/v4.1.3...v4.1.4) (2019-11-20)
+
+
+### Bug Fixes
+
+* **webpack:** added source map back in ([963acd1](https://github.com/CassandraSpruit/Vivi/commit/963acd10068635c78080e207f1ad678724d33cd5))
+
 ## [4.1.3](https://github.com/CassandraSpruit/Vivi/compare/v4.1.2...v4.1.3) (2019-11-20)
 
 

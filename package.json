@@ -1,6 +1,6 @@
 {
     "name": "@cspruit/vivi",
-    "version": "4.1.3",
+    "version": "4.1.4",
     "description": "A lightweight component-focused framework",
     "main": "dist/vivi.js",
     "files": [
