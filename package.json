@@ -39,6 +39,8 @@
     },
     "homepage": "https://github.com/CassandraSpruit/Vivi#readme",
     "devDependencies": {
+        "@semantic-release/changelog": "^3.0.5",
+        "@semantic-release/git": "^7.0.18",
         "@size-limit/preset-big-lib": "^2.2.1",
         "@types/jest": "^24.0.16",
         "@types/node": "^12.6.8",
