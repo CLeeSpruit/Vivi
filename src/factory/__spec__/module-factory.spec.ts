@@ -1,7 +1,6 @@
-import { ComponentFactory, ServiceFactory, ModuleFactory } from '../';
-import { MockComponent, MockChildComponent } from '../../models/__mocks__/component.class';
+import { ComponentFactory, ModuleFactory, ServiceFactory } from '../';
+import { MockChildComponent, MockComponent } from '../../models/__mocks__/component.class';
 import { MockService, MockWithPrereqService } from '../../models/__mocks__/service.class';
-import { Service } from '../../models';
 
 describe('Class: Module Factory', () => {
     const minimumConstructor = () => {
@@ -78,8 +77,10 @@ describe('Class: Module Factory', () => {
             expect(actual instanceof ServiceFactory).toBeTruthy();
         });
 
-        it('get factory should throw error if no service or component is found', () => {
-            expect(() => { vivi.getFactoryByString('test'); }).toThrowError('No service or component for test');
+        it('get should throw error if no service or component is found', () => {
+            const errorSpy = spyOn(console, 'error');
+            vivi.getFactoryByString('Bad Component Name');
+            expect(errorSpy).toHaveBeenCalled();
         });
     });
 
@@ -106,11 +107,6 @@ describe('Class: Module Factory', () => {
             const actual = vivi.get(MockService);
 
             expect(actual instanceof MockService).toBeTruthy();
-        });
-        
-        it('get should throw error if no service or component is found', () => {
-            class ServiceIsBad extends Service {};
-            expect(() => { vivi.get(ServiceIsBad) }).toThrowError('No service or component for ServiceIsBad');
         });
     });
 

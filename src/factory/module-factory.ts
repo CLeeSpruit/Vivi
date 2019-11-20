@@ -68,15 +68,7 @@ export class ModuleFactory {
     get<T extends Component>(constuctor: new (...args) => T, id?: string): T;
     get<T extends Service>(constuctor: new (...args) => T, id?: string): T;
     get(constuctor: new (...args) => Component | Service, id?: string): Component | Service {
-        const name = constuctor.name;
-        const matches = name.match(/(.*)(Component|Service)$/);
-        if (matches && matches[2] && matches[2] === 'Service') {
-            return this.services.get(name).get(id);
-        }
-        if (matches && matches[2] && matches[2] === 'Component') {
-            return this.components.get(name).get(id);
-        }        
-        throw 'No service or component for ' + name;
+        return this.getFactory(constuctor).get();
     }
 
     getFactory<T extends Component = Component>(constructor: new (...args) => T): ComponentFactory<T>;
@@ -94,7 +86,8 @@ export class ModuleFactory {
         if (matches && matches[2] && matches[2] === 'Component') {
             return this.components.get(name);
         }
-        throw 'No service or component for ' + name;
+        console.error('No service factory or component factory found for ' + name);
+        console.trace();
     }
 
     getComponentRegistry(): Array<string> {
