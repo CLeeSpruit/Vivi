@@ -4,7 +4,7 @@ import { ModuleFactory } from '../factory/module-factory';
 import { Component } from '../models/component.class';
 import { MockComponent } from '../models/__mocks__/component.class';
 import { MockService, MockWithPrereqService } from '../models/__mocks__/service.class';
-import { loadViviServices } from '../services/load-services.static';
+import { NodeTreeService } from '../services';
 
 export interface ComponentMockOptions {
     hasTemplate?: boolean;
@@ -52,13 +52,8 @@ export class Mocker {
         return <ComponentFactory<MockComponent>>this.module.getFactory(MockComponent);
     }
 
-    createMock(options?: ComponentMockOptions): Component {
+    createMock(options: ComponentMockOptions = {}): Component {
         const comp = this.getFactory().create(this.rootComp);
-
-        if (!options) {
-            comp.append();
-            return comp;
-        }
 
         if (options.template || options.hasTemplate) {
             comp.template = options.template ? options.template : this.defaultTemplate;
@@ -72,16 +67,6 @@ export class Mocker {
             const styleEl = document.createElement('style');
             styleEl.innerHTML = comp.style;
             document.head.appendChild(styleEl);
-        }
-
-        if (options.children || options.hasChild) {
-            if (options.children) {
-                options.children.forEach(child => {
-                    comp.createChild(comp.element, child);
-                });
-            } else {
-                comp.createChild(comp.element, MockComponent);
-            }
         }
 
         if (options.data || options.hasData) {
@@ -99,8 +84,26 @@ export class Mocker {
         }
 
         if (!options.doNotAppend) {
-            comp.append(null, null, options.doNotLoad);
+            comp.append(this.rootComp.element, null);
+
+            if(!options.doNotLoad) {
+                // Get node
+                const nodeTree = this.module.get(NodeTreeService) as NodeTreeService;
+                nodeTree.loadComponent(comp);
+            }
         }
+
+        // Application needs to be loaded before children can be added
+        if (options.children || options.hasChild) {
+            if (options.children) {
+                options.children.forEach(child => {
+                    comp.createChild(comp.element, child);
+                });
+            } else {
+                comp.createChild(comp.element, MockComponent);
+            }
+        }
+
         return comp;
     }
 

@@ -58,8 +58,8 @@ export class ModuleFactory {
 
         // Mount root component
         const rootFactory = this.getFactory(module.rootComponent) as ComponentFactory;
-        const rootComp = rootFactory.createRoot(nodeTree);
-        rootComp.append();
+        // @todo Add ability to make root component append to a user-specified node
+        rootFactory.createRoot(nodeTree);
 
         // Initialize
         this.start();

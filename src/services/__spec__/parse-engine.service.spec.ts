@@ -8,11 +8,6 @@ describe('Parse Elements', () => {
 
     afterEach(() => {
         mock.clearMocks();
-
-        // Clear the document
-        for (let i = 0; i < document.body.children.length; i++) {
-            document.body.children.item(i).remove();
-        }
     });
 
     it('should work', () => {

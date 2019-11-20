@@ -1,5 +1,6 @@
 import { NodeTreeService } from '../node-tree.service';
 import { Mocker } from '../../meta/mocker';
+import { NodeTree } from '../../models/node-tree';
 
 describe('NodeTreeService', () => {
     const mock = new Mocker();
@@ -110,7 +111,7 @@ describe('NodeTreeService', () => {
         });
 
         it('should throw warning if parent does not exist in tree', () => {
-            const warningSpy = spyOn(console, 'error');
+            const errorSpy = spyOn(console, 'error');
             const service = new NodeTreeService();
             const rootComponent = mock.createMock();
             const strangerDanger = mock.createMock();
@@ -119,7 +120,62 @@ describe('NodeTreeService', () => {
 
             service.addComponent(strangerDanger, child);
 
-            expect(warningSpy).toHaveBeenCalledTimes(1);
+            expect(errorSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('addNodeToComponent', () => {
+        it('should return error and do nothing if parent does not exist', () => {
+            const errorSpy = spyOn(console, 'error');
+            const service = new NodeTreeService();
+            const rootComponent = mock.createMock();
+            const strangerDanger = mock.createMock();
+            const child = mock.createMock();
+            const childNode = new NodeTree(child);
+            service.setRoot(rootComponent);
+
+            service.addNodeToComponent(strangerDanger, childNode);
+
+            expect(errorSpy).toHaveBeenCalled();
+        });
+
+        it('should add the node the parent node', () => {
+            const service = new NodeTreeService();
+            const rootComponent = mock.createMock();
+            const child = mock.createMock();
+            const childNode = new NodeTree(child);
+            service.setRoot(rootComponent);
+            const lengthBefore = service.applicationTree.children.length;
+
+            service.addNodeToComponent(rootComponent, childNode);
+
+            expect(service.applicationTree.children.length).toEqual(lengthBefore + 1);
+        });
+    });
+
+    describe('loadComponent', () => {
+        it('should load node tree', () => {
+            const service = new NodeTreeService();
+            const rootComponent = mock.createMock();
+            service.setRoot(rootComponent);
+            const rootNode = service.getNode(rootComponent);
+            const loadSpy = spyOn(rootNode, 'load');
+
+            service.loadComponent(rootComponent);
+
+            expect(loadSpy).toHaveBeenCalled();
+        });
+
+        it('should throw error if node cannot be found', () => {
+            const service = new NodeTreeService();
+            const rootComponent = mock.createMock();
+            const someComp = mock.createMock();
+            service.setRoot(rootComponent);
+            const errorSpy = spyOn(console, 'error');
+
+            service.loadComponent(someComp);
+
+            expect(errorSpy).toHaveBeenCalled();
         });
     });
 
@@ -150,27 +206,29 @@ describe('NodeTreeService', () => {
 
             expect(destroySpy).toHaveBeenCalled();
         });
+    });
 
-        it('should throw warning if the node does not exist in tree', () => {
+    describe('detachComponent', () => {
+        it('should remove the node and return it', () => {
             const service = new NodeTreeService();
             const rootComponent = mock.createMock();
+            const child = mock.createMock();
             service.setRoot(rootComponent);
-            const randoComponent = mock.createMock();
-            const warningSpy = spyOn(console, 'error');
-            
-            service.removeComponent(randoComponent);
-
-            expect(warningSpy).toHaveBeenCalledTimes(1);
+            const addedNode = service.addComponent(rootComponent, child);
+            const detachedNode = service.detachComponent(child);
+            expect(addedNode).toEqual(detachedNode);
+            expect(service.applicationTree.children.length).toEqual(0);
         });
 
-        it('should still throw warning if the node is not in tree and no root is set', () => {
+        it('should throw an error if component is not in tree', () => {
             const service = new NodeTreeService();
-            const randoComponent = mock.createMock();
-            const warningSpy = spyOn(console, 'error');
-            
-            service.removeComponent(randoComponent);
-
-            expect(warningSpy).toHaveBeenCalledTimes(1);
+            const rootComponent = mock.createMock();
+            const child = mock.createMock();
+            const errorSpy = spyOn(console, 'error');
+            service.setRoot(rootComponent);
+            const detachedNode = service.detachComponent(child);
+            expect(detachedNode).toBeFalsy();
+            expect(errorSpy).toHaveBeenCalled();
         });
     });
 });

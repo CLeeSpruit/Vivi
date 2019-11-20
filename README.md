@@ -6,18 +6,20 @@
 
 # Vivi
 
-A lightweight component-focused Javascript framework. Vivi is currently still in it's early stages, so breaking changes are more common. This package uses semantic versioning, so major breaking changes is generally reserved for major versions.
+A lightweight component-focused Javascript framework. Vivi is currently still in it's early stages, so breaking changes are more common. This package uses semantic versioning, so breaking changes will result major version updates.
 
 ---
 
-## v3 Update:
-Milestone for v3 has started! Things to look forward to:
-- Dynamic loading for child components from the template
+## Announcements
+### Versioning
+Vivi is moving over to true automated semantic releases, so future update announcements and milestones will be groups of major feature updates and fixes.
+
+### Node Tree Milestone Update (Previously v3):
+Node tree milestone is complete and has been released! Some of the new changes:
+- Dynamic loading for child components from the template, like adding a list of components based off an array
 - Easier loading for child components from the component class
 - Lots of component and template-related bugfixes! Yay!
 - Smaller package size!
-
-Check out progress on the [milestones page](https://github.com/CassandraSpruit/Vivi/milestones).
 
 ---
 ## Installation and Gettings Started
@@ -32,9 +34,8 @@ Check out the [Issues](https://github.com/CassandraSpruit/Vivi/issues) page. In 
 ### How to Contribute
 1. Fork this repository
 2. Create a branch: ```git checkout -b <branch_name>```
-    - There's no standard for branch names, but if it's connected to an issue try starting with i(issue-number)_branch-name. Ex: i17_My-cool-branch-name
-3. Make your changes and commit them: ```git commit -m '<commit_message>'```
-    - It's not enforced, but please remeber to write unit tests, if applicable.
+3. Make your changes and commit using : ```npm run commit```
+    - Please remeber to write tests, if applicable.
     - You can run tests by running ```npm run test```. Or if you have jest installed, you can run it for specific files.
     - Note: There seems to be a bug with running code coverage along with debugging in VS Code. You can turn off coverage in the jest.config.js file by commenting "collectCoverage: true" out or setting it to false.
 4. Push to the original branch: ```git push origin https://github.com/CassandraSpruit/Vivi.git```

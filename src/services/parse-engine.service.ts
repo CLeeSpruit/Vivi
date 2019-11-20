@@ -60,8 +60,7 @@ export class ParseEngineService extends Service {
                 if (arr.forEach) {
                     arr.forEach((item, index) => {
                         const factory = this.factoryService.getFactoryByString(componentName);
-                        const newComponent = factory.create(comp, item) as Component;
-                        newComponent.append(el, null, true);
+                        factory.create(comp, item, { parentEl: el, doNotLoad: true });
                     });
                 }
             }
@@ -96,8 +95,7 @@ export class ParseEngineService extends Service {
                 const el = els.item(i) as HTMLElement;
                 if (!el.id) {
                     const factory = this.factoryService.getFactoryByString(reg);
-                    const child = factory.create(comp, (el).dataset) as Component;
-                    child.append(el.parentElement, el, true);
+                    factory.create(comp, (el).dataset, { parentEl: el.parentElement, replaceEl: el, doNotLoad: true});
                 }
             }
         });

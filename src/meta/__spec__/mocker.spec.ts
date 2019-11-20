@@ -146,7 +146,8 @@ describe('Mocker', () => {
         });
 
         it('doNotLoad - should not automatically load component if true', () => {
-            const loadSpy = spyOn(MockComponent.prototype, 'loadAll');
+            const nodeTreeService = mock.module.get(NodeTreeService) as NodeTreeService;
+            const loadSpy = spyOn(nodeTreeService, 'loadComponent');
             mock.createMock({ doNotLoad: true });
 
             expect(loadSpy).not.toHaveBeenCalled();
@@ -165,13 +166,13 @@ describe('Mocker', () => {
             mock.clearMocks();
         });
 
-        it('should clear all existsing mocks', () => {
+        it('should clear all existsing mocks except the root component', () => {
             const mock = new Mocker();
             mock.createMock();
             mock.createMock();
             mock.clearMocks();
 
-            expect(mock.getFactory().get()).toBeFalsy();
+            expect(mock.getFactory().get()).toEqual(mock.rootComp);
         });
     });
 });

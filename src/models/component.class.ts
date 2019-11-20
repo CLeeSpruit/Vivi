@@ -13,9 +13,7 @@ export abstract class Component {
     style: string;
     data: Object;
     element: HTMLElement;
-    ogNode: HTMLElement;
     parsedNode: HTMLElement;
-    parentElement: HTMLElement;
     listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
 
     // Default Services
@@ -28,10 +26,6 @@ export abstract class Component {
         this.appEvents = (<any>window).vivi.get(ApplicationEventService);
         this.factoryService = (<any>window.vivi.get(FactoryService));
         this.engine = (<any>window).vivi.get(ParseEngineService);
-
-        // Set default parent
-        // @todo Component - Append to the root component instead of the body
-        this.parentElement = document.body;
 
         // Get template and style file
 
@@ -62,13 +56,15 @@ export abstract class Component {
         this.id = `${this.componentName}-${id}`;
     }
 
-    private createNodes() {
+    private getUnparsedNode(): HTMLElement {
         // Create Node that is named after the component class
         const el = document.createElement(this.componentName);
         el.id = this.id;
         el.innerHTML = this.template;
-        this.ogNode = <HTMLElement>el.cloneNode(true);
+        return el;
+    }
 
+    private createNodes() {
         /*
             @todo: Add dynamic styling
             @body: Move this into the parse engine
@@ -84,33 +80,29 @@ export abstract class Component {
         }
 
         // Load data into template
-        this.engine.parse(el, this.data, this);
-        this.parsedNode = el;
+        this.parsedNode = this.getUnparsedNode();
+        this.engine.parse(this.parsedNode, this.data, this);
     }
 
-    append(parentEl?: HTMLElement, replaceEl?: HTMLElement, doNotLoad?: boolean) {
-        if (!this.ogNode) this.createNodes();
-        if (!parentEl) parentEl = document.body;
+    append(parentEl: HTMLElement, replaceEl?: HTMLElement) {
+        if (!parentEl) {
+            console.error(`Error while appending ${this.id}. Parent element does not exist.`);
+            return;
+        }
+        if (!this.parsedNode) this.createNodes();
 
         if (replaceEl) {
             parentEl.replaceChild(this.parsedNode, replaceEl);
         } else {
             parentEl.appendChild(this.parsedNode);
         }
-        this.parentElement = parentEl;
-
-        // Opt out of loading if this is an ingredient or is a re-attachment
-        if (doNotLoad) return;
-
-        // Run load all, which loads children, then the load hook
-        this.loadAll();
     }
 
-    loadAll() {
+    startLoad() {
         // Assign Element and class params
         this.element = document.getElementById(this.id);
         if (!this.element) {
-            console.warn(`Error while appending ${this.componentName} to ${this.parentElement.tagName}. Element not was not created.`);
+            console.warn(`Error while loading ${this.id}. Element not was not created.`);
         }
         // Load in decorated elements
         const els = getElements(this);
@@ -128,17 +120,16 @@ export abstract class Component {
     redraw() {
         // Remove 
         const oldEl = document.getElementById(this.id);
-        const newEl = this.ogNode.cloneNode(true) as HTMLElement;
+        const newEl = this.getUnparsedNode();
+        const parentEl = oldEl.parentElement;
         this.engine.parse(newEl, this.data, this);
-        this.parentElement.replaceChild(newEl, oldEl);
+        parentEl.replaceChild(newEl, oldEl);
         this.parsedNode = newEl;
         this.element = document.getElementById(this.id);
     }
 
     detach() {
-        // @todo Component - Move detach logic to the factory and record in the nodeTree
         this.element.remove();
-        this.parentElement = null;
     }
 
     /* Hooks */
@@ -150,6 +141,9 @@ export abstract class Component {
         this.listeners.forEach(listener => {
             listener.remove();
         });
+        if (this.element) {
+            this.element.remove();
+        }
     }
 
     /* Actions */
@@ -163,7 +157,6 @@ export abstract class Component {
 
     createChild(parentEl: HTMLElement, component: new (...args) => Component, data?: Object) {
         const factory = this.factoryService.getFactory(component) as ComponentFactory;
-        const comp = factory.create(this, data);
-        comp.append(parentEl);
+        factory.create(this, data, { parentEl });
     }
 }

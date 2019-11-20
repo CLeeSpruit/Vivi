@@ -42,17 +42,21 @@ describe('ServiceFactory', () => {
         it('should return service if id is provided', () => {
             const service = factory.create();
 
-            const actual = factory.get(service.id);
-
-            expect(actual).toBeTruthy();
+            expect(factory.get(service.id)).toBeTruthy();
         });
 
-        it('should return the first service if no id is provided', () => {
+        it('should return null if no id is provided and no services have been created', () => {
             const toBeRemoved = factory.get();
             factory.destroy(toBeRemoved.id);
 
-            const actual = factory.get();
-            expect(actual).toBeNull();
+            expect(factory.get()).toBeNull();
+        });
+
+        it('should return latest service created if no ide is provided', () => {
+            const serviceA = factory.create();
+            const serviceB = factory.create();
+
+            expect(factory.get()).toEqual(serviceB);
         });
     });
 

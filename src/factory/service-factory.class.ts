@@ -31,7 +31,7 @@ export class ServiceFactory<T extends Service = Service> {
         if (id) {
             return this.instances.get(id);
         } else {
-            return Array.from(this.instances.values())[0] || null;
+            return Array.from(this.instances.values())[this.instances.size - 1] || null;
         }
     }
 

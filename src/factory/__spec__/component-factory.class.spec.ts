@@ -20,7 +20,7 @@ describe('Component Factory', () => {
         it('should create a new component and return that component', () => {
             const mock = new ComponentFactory<MockComponent>(MockComponent);
 
-            const component = mock.create(null, null, true);
+            const component = mock.create(null, null, { isRoot: true });
 
             expect(component).toBeTruthy();
             expect(component instanceof MockComponent).toBeTruthy();
@@ -37,12 +37,13 @@ describe('Component Factory', () => {
         it('should create component and set root in nodeTreeService', () => {
             const mock = new ComponentFactory<MockComponent>(MockComponent);
             const nodeTreeService = new NodeTreeService();
-            const rootSpy = spyOn(nodeTreeService, 'setRoot');
+            const rootSpy = spyOn(nodeTreeService, 'setRoot').and.callThrough();
 
-            const comp = mock.createRoot(nodeTreeService);
+            mock.createRoot(nodeTreeService);
+            const comp = mock.get();
             expect(rootSpy).toHaveBeenCalled();
             expect(comp).toBeTruthy();
-        });    
+        });
     });
 
     describe('get', () => {
@@ -54,15 +55,35 @@ describe('Component Factory', () => {
             expect(mock.getFactory().get(componentB.id)).toEqual(componentB);
         });
 
-        it('get should return first component created if no id is provided', () => {
+        it('get should return latest component created if no id is provided', () => {
             const componentA = mock.createMock();
             const componentB = mock.createMock();
 
-            expect(mock.getFactory().get()).toEqual(componentA);
+            expect(mock.getFactory().get()).toEqual(componentB);
         });
 
         it('get should return null if no id is provided and no components have been created', () => {
-            expect(mock.getFactory().get()).toEqual(null);
+            const mockFactory = new ComponentFactory(MockComponent);
+            expect(mockFactory.get()).toEqual(null);
+        });
+    });
+
+    describe('detach', () => {
+        it('should throw error and do nothing if the component does not exist', () => {
+            const errorSpy = spyOn(console, 'error');
+            const actual = mock.getFactory().detach('blah');
+
+            expect(errorSpy).toHaveBeenCalled();
+            expect(actual).toBeFalsy();
+        });
+
+        it('should detach and return node tree', () => {
+            const comp = mock.createMock();
+
+            const actual = mock.getFactory().detach(comp.id);
+
+            expect(actual).toBeTruthy();
+            expect(actual.component.element.isConnected).toBeFalsy();
         });
     });
 
@@ -70,7 +91,7 @@ describe('Component Factory', () => {
         it('should trigger component.destroy', () => {
             const comp = mock.createMock();
             const destroySpy = spyOn(comp, 'destroy');
-            comp.append();
+            comp.append(document.body);
 
             mock.getFactory().destroy(comp.id);
 
@@ -79,7 +100,7 @@ describe('Component Factory', () => {
 
         it('should remove from the DOM', () => {
             const comp = mock.createMock();
-            comp.append();
+            comp.append(document.body);
 
             mock.getFactory().destroy(comp.id);
 
@@ -89,12 +110,13 @@ describe('Component Factory', () => {
 
         it('should remove from the factory map', () => {
             const comp = mock.createMock();
-            comp.append();
+            expect(mock.getFactory().get(comp.id)).toBeTruthy();
 
             mock.getFactory().destroy(comp.id);
 
-            const actual = mock.getFactory().get(comp.id);
-            expect(actual).toBeFalsy();
+            const errorSpy = spyOn(console, 'error');
+            expect(mock.getFactory().get(comp.id)).toBeFalsy();
+            expect(errorSpy).toHaveBeenCalledTimes(1);
         });
 
         it('should throw error if component does not exist', () => {

@@ -5,7 +5,7 @@ import { MockService, MockWithPrereqService } from '../../models/__mocks__/servi
 describe('Class: Module Factory', () => {
     const minimumConstructor = () => {
         return new ModuleFactory({
-            componentConstructors: [{constructor: MockComponent}],
+            componentConstructors: [{ constructor: MockComponent }],
             rootComponent: MockComponent
         });
     }
@@ -85,7 +85,7 @@ describe('Class: Module Factory', () => {
         it('get should return component, if created', () => {
             // Create component
             const factory = vivi.getFactory(MockComponent) as ComponentFactory;
-            factory.create(null, null, true);
+            factory.create(null, null, { isRoot: true });
             const actual = vivi.get(MockComponent);
 
             expect(actual instanceof MockComponent).toBeTruthy();
