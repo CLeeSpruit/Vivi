@@ -1,11 +1,10 @@
-import { ApplicationListener, Listener } from '../events';
-import { ApplicationEventService, ListenerOptions } from '../services/application-event.service';
 import { getElements } from '../decorators/element.decorator';
-import { ComponentFactory } from 'factory/component-factory.class';
-import { ParseEngineService } from '../services/parse-engine.service';
-import { FactoryService } from '../services/factory.service';
+import { ApplicationListener, Listener } from '../events';
 import { GetElNameFromComponent } from '../helpers/get-el-name-from-component';
 import { NodeTreeService } from '../services';
+import { ApplicationEventService, ListenerOptions } from '../services/application-event.service';
+import { FactoryService } from '../services/factory.service';
+import { ParseEngineService } from '../services/parse-engine.service';
 
 export abstract class Component {
     id: string;
@@ -158,8 +157,8 @@ export abstract class Component {
         this.listeners.push(this.appEvents.createListener(eventName, cb.bind(this), options));
     }
 
-    createChild(parentEl: HTMLElement, component: new (...args) => Component, data?: Object) {
+    createChild<T extends Component = Component>(parentEl: HTMLElement, component: new (...args) => T, data?: Object): T {
         const factory = this.factoryService.getFactory(component);
-        factory.create(this, data, { parentEl });
+        return factory.create(this, data, { parentEl });
     }
 }

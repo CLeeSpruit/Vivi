@@ -1,5 +1,6 @@
 import { Listener, EventTypes } from '../../events';
 import { Mocker } from '../../meta/mocker';
+import { MockComponent } from '../__mocks__/component.class';
 
 describe('Class: Component', () => {
     const mock = new Mocker();
@@ -204,6 +205,16 @@ describe('Class: Component', () => {
             const actual = componentEl.querySelector('span');
 
             expect(actual.innerHTML).toEqual(newName);
+        });
+    });
+
+    describe('createChild', () => {
+        it('should create and return component', () => {
+            const comp = mock.createMock();
+
+            const child = comp.createChild(comp.element, MockComponent);
+
+            expect(child).toBeTruthy();
         });
     });
 });

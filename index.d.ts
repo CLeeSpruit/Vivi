@@ -131,7 +131,7 @@ export declare abstract class Component {
     destroy(): void;
     listen(el: HTMLElement, eventType: string, cb: Function, options?: AddEventListenerOptions): void;
     appListen(eventName: string, cb: Function, options?: ListenerOptions): void;
-    createChild(parentEl: HTMLElement, component: new (...args: any[]) => Component, data?: Object): void;
+    createChild<T extends Component = Component>(parentEl: HTMLElement, component: new (...args) => T, data?: Object): T;
 }
 
 export declare class NodeTree {
