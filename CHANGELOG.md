@@ -1,3 +1,10 @@
+## [4.1.5](https://github.com/CassandraSpruit/Vivi/compare/v4.1.4...v4.1.5) (2019-11-20)
+
+
+### Bug Fixes
+
+* **component:** nodeTreeService added to Component class ([#88](https://github.com/CassandraSpruit/Vivi/issues/88)) ([99772b0](https://github.com/CassandraSpruit/Vivi/commit/99772b0b6b1f6a3236fc17b7b658ca9eeb142000)), closes [#85](https://github.com/CassandraSpruit/Vivi/issues/85)
+
 ## [4.1.4](https://github.com/CassandraSpruit/Vivi/compare/v4.1.3...v4.1.4) (2019-11-20)
 
 
