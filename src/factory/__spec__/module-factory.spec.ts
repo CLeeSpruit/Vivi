@@ -1,6 +1,7 @@
 import { ComponentFactory, ServiceFactory, ModuleFactory } from '../';
 import { MockComponent, MockChildComponent } from '../../models/__mocks__/component.class';
 import { MockService, MockWithPrereqService } from '../../models/__mocks__/service.class';
+import { Service } from '../../models';
 
 describe('Class: Module Factory', () => {
     const minimumConstructor = () => {
@@ -53,22 +54,28 @@ describe('Class: Module Factory', () => {
             vivi = fullConstructor();
         });
 
-        it('get factory should return ViviComponent', () => {
+        it('get factory should return componentFactory', () => {
             const actual = vivi.getFactory(MockComponent);
 
             expect(actual instanceof ComponentFactory).toBeTruthy();
         });
 
-        it('get factory should return service', () => {
+        it('get factory should return serviceFactory', () => {
             const actual = vivi.getFactory(MockService);
 
             expect(actual instanceof ServiceFactory).toBeTruthy();
         });
 
-        it('get factory can be searched by string', () => {
+        it('get factory can return compoent searched by string', () => {
             const actual = vivi.getFactoryByString('MockComponent');
 
             expect(actual instanceof ComponentFactory).toBeTruthy();
+        });
+
+        it('get factory can return service searched by string', () => {
+            const actual = vivi.getFactoryByString('MockService');
+
+            expect(actual instanceof ServiceFactory).toBeTruthy();
         });
 
         it('get factory should throw error if no service or component is found', () => {
@@ -84,25 +91,26 @@ describe('Class: Module Factory', () => {
 
         it('get should return component, if created', () => {
             // Create component
-            const factory = vivi.getFactory(MockComponent) as ComponentFactory;
+            const factory = vivi.getFactory(MockComponent);
             factory.create(null, null, { isRoot: true });
             const actual = vivi.get(MockComponent);
 
             expect(actual instanceof MockComponent).toBeTruthy();
         });
 
-        it('get should return ViviService', () => {
+        it('get should return service, if created', () => {
             // Create service
-            const factory = vivi.getFactory(MockService) as ServiceFactory;
+            const factory = vivi.getFactory(MockService);
             factory.create();
 
             const actual = vivi.get(MockService);
 
             expect(actual instanceof MockService).toBeTruthy();
         });
-
+        
         it('get should throw error if no service or component is found', () => {
-            expect(() => { vivi.getByString('test'); }).toThrowError('No service or component for test');
+            class ServiceIsBad extends Service {};
+            expect(() => { vivi.get(ServiceIsBad) }).toThrowError('No service or component for ServiceIsBad');
         });
     });
 

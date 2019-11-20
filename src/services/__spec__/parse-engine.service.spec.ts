@@ -4,7 +4,7 @@ import { attributeList } from '../../meta/attribute-list';
 
 describe('Parse Elements', () => {
     const mock = new Mocker();
-    const service = mock.module.get(ParseEngineService) as ParseEngineService;
+    const service = mock.module.get(ParseEngineService);
 
     afterEach(() => {
         mock.clearMocks();

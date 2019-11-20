@@ -11,14 +11,14 @@ describe('Component Factory', () => {
     });
 
     it('should init', () => {
-        const mock = new ComponentFactory<MockComponent>(MockComponent);
+        const mock = new ComponentFactory(MockComponent);
 
         expect(mock).toBeTruthy();
     });
 
     describe('create', () => {
         it('should create a new component and return that component', () => {
-            const mock = new ComponentFactory<MockComponent>(MockComponent);
+            const mock = new ComponentFactory(MockComponent);
 
             const component = mock.create(null, null, { isRoot: true });
 
@@ -27,7 +27,7 @@ describe('Component Factory', () => {
         });
 
         it('should create with services', () => {
-            const comp = mock.createMock() as MockComponent;
+            const comp = mock.createMock();
 
             expect(comp.mockService).toBeTruthy();
         });
@@ -35,7 +35,7 @@ describe('Component Factory', () => {
 
     describe('create root', () => {
         it('should create component and set root in nodeTreeService', () => {
-            const mock = new ComponentFactory<MockComponent>(MockComponent);
+            const mock = new ComponentFactory(MockComponent);
             const nodeTreeService = new NodeTreeService();
             const rootSpy = spyOn(nodeTreeService, 'setRoot').and.callThrough();
 

@@ -156,7 +156,7 @@ export abstract class Component {
     }
 
     createChild(parentEl: HTMLElement, component: new (...args) => Component, data?: Object) {
-        const factory = this.factoryService.getFactory(component) as ComponentFactory;
+        const factory = this.factoryService.getFactory(component);
         factory.create(this, data, { parentEl });
     }
 }

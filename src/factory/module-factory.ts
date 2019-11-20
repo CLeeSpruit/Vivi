@@ -41,7 +41,7 @@ export class ModuleFactory {
         });
 
         // NodeTree is needed to inject into Factory
-        const nodeTree = this.get(NodeTreeService) as NodeTreeService;
+        const nodeTree = this.get(NodeTreeService);
 
         // Init Components
         // @todo: Automatically load components in the components folder
@@ -57,7 +57,7 @@ export class ModuleFactory {
         });
 
         // Mount root component
-        const rootFactory = this.getFactory(module.rootComponent) as ComponentFactory;
+        const rootFactory = this.getFactory<Component>(module.rootComponent);
         // @todo Add ability to make root component append to a user-specified node
         rootFactory.createRoot(nodeTree);
 
@@ -65,26 +65,22 @@ export class ModuleFactory {
         this.start();
     }
 
-    /*
-    @todo set Module Factor.get as generic
-    */
-    get(constuctor: new (...args) => (Component | Service), id?: string): Component | Service {
+    get<T extends Component>(constuctor: new (...args) => T, id?: string): T;
+    get<T extends Service>(constuctor: new (...args) => T, id?: string): T;
+    get(constuctor: new (...args) => Component | Service, id?: string): Component | Service {
         const name = constuctor.name;
-        return this.getByString(name, id);
-    }
-
-    // Exposed for Debugging only
-    getByString(name: string, id?: string): Component | Service {
         const matches = name.match(/(.*)(Component|Service)$/);
         if (matches && matches[2] && matches[2] === 'Service') {
             return this.services.get(name).get(id);
         }
         if (matches && matches[2] && matches[2] === 'Component') {
             return this.components.get(name).get(id);
-        }
+        }        
         throw 'No service or component for ' + name;
     }
 
+    getFactory<T extends Component = Component>(constructor: new (...args) => T): ComponentFactory<T>;
+    getFactory<T extends Service = Service>(constructor: new (...args) => T): ServiceFactory<T>;
     getFactory(constructor: new (...args) => (Component | Service)): ComponentFactory | ServiceFactory {
         const name = constructor.name;
         return this.getFactoryByString(name);

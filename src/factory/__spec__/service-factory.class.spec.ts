@@ -7,7 +7,7 @@ describe('ServiceFactory', () => {
     let factory: ServiceFactory<MockService>;
 
     beforeEach(() => {
-        factory = mock.module.getFactory(MockService) as ServiceFactory<MockService>;
+        factory = mock.module.getFactory(MockService);
         factory.create();
     });
 
@@ -23,7 +23,7 @@ describe('ServiceFactory', () => {
         });
 
         it('should set prereqs if provided', () => {
-            const prereqFactory = mock.module.getFactory(MockWithPrereqService) as ServiceFactory<MockWithPrereqService>;
+            const prereqFactory = mock.module.getFactory(MockWithPrereqService);
 
             expect(prereqFactory.prerequisites.size).toEqual(1);
         });

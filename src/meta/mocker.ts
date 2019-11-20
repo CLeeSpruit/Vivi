@@ -45,14 +45,14 @@ export class Mocker {
             rootComponent: MockComponent
         });
 
-        this.rootComp = this.getFactory().get() as MockComponent;
+        this.rootComp = this.getFactory().get();
     }
 
     getFactory(): ComponentFactory<MockComponent> {
-        return <ComponentFactory<MockComponent>>this.module.getFactory(MockComponent);
+        return this.module.getFactory(MockComponent);
     }
 
-    createMock(options: ComponentMockOptions = {}): Component {
+    createMock(options: ComponentMockOptions = {}): MockComponent {
         const comp = this.getFactory().create(this.rootComp);
 
         if (options.template || options.hasTemplate) {
@@ -88,7 +88,7 @@ export class Mocker {
 
             if(!options.doNotLoad) {
                 // Get node
-                const nodeTree = this.module.get(NodeTreeService) as NodeTreeService;
+                const nodeTree = this.module.get(NodeTreeService);
                 nodeTree.loadComponent(comp);
             }
         }
