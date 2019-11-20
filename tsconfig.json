@@ -21,6 +21,7 @@
         "src/**/*.spec.ts",
         "src/**/__mock__/*",
         "src/**/__spec__/*",
-        "src/meta/*"
+        "src/meta/*",
+        "test-environment"
     ]
 }

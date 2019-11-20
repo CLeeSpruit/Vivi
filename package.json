@@ -9,7 +9,7 @@
     ],
     "scripts": {
         "build": "npm run flush && webpack-cli",
-        "build:test-env": "npm run dist && cd test-environment && npm run build && cd ../",
+        "build:test-env": "cd test-environment && npm run build && cd ../",
         "flush": "rm -r ./dist || true",
         "nuke": "rm -r ./node_modules",
         "test": "jest",

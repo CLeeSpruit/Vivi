@@ -8,6 +8,10 @@
         "moduleResolution": "node",
         "sourceMap": true
     },
+    "include": [
+        "../typings.d.ts",
+        "src/**/*"
+    ],
     "exclude": [
         "node_modules",
         "../dist"

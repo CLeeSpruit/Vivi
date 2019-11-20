@@ -1,4 +1,4 @@
-import { ModuleFactory } from '../../dist';
+import { ModuleFactory } from '../../src/factory/module-factory';
 import { ContainerComponent } from './container/container.component';
 import { ChildComponent } from './child/child.component';
 import { ChildWithParamsComponent } from './child-with-params/child-with-params.component';

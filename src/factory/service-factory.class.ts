@@ -1,4 +1,4 @@
-import { Service } from 'models/service.class';
+import { Service } from '../models/service.class';
 
 export class ServiceFactory<T extends Service = Service> {
     prerequisites: Map<string, ServiceFactory> = new Map<string, ServiceFactory>();

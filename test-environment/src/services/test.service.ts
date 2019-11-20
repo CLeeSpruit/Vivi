@@ -1,4 +1,4 @@
-import { Service } from '../../../dist';
+import { Service } from '../../../src/models/service.class';
 
 export class TestService extends Service {
     //
