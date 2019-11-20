@@ -2,7 +2,7 @@ const path = require('path');
 
 const config = {
     entry: {
-        app: './src/index.ts',
+        vivi: './src/index.ts',
     },
     target: 'node',
     node: {
@@ -24,7 +24,9 @@ const config = {
         }]
     },
     output: {
-        filename: '[name].js'
+        filename: 'vivi.js',
+        library: 'vivi',
+        libraryTarget: 'umd'
     },
     mode: 'production',
     resolve: {

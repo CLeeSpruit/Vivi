@@ -2,14 +2,14 @@
     "name": "@cspruit/vivi",
     "version": "4.1.1",
     "description": "A lightweight component-focused framework",
-    "main": "index.js",
+    "main": "dist/vivi.js",
     "files": [
-        "dist/**/*"
+        "dist/**/*",
+        "index.d.ts"
     ],
     "scripts": {
         "build": "npm run flush && webpack-cli",
         "build:test-env": "npm run dist && cd test-environment && npm run build && cd ../",
-        "dist": "npm run build && tsc",
         "flush": "rm -r ./dist || true",
         "nuke": "rm -r ./node_modules",
         "test": "jest",
@@ -62,7 +62,7 @@
     },
     "size-limit": [
         {
-            "path": "./dist/app.js"
+            "path": "./dist/vivi.js"
         }
     ]
 }

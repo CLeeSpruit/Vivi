@@ -24,7 +24,7 @@ export class NodeTree {
     findChild(id: string, deepSearch?: boolean, returnNode?: boolean): Component | NodeTree {
         const child = this.children.find(child => {
             return deepSearch ? 
-                child.component.id === id || child.findChild(id, true) :
+                child.component.id === id || !!child.findChild(id, true) :
                 child.component.id === id
         });
         if (returnNode) return child;
@@ -33,7 +33,7 @@ export class NodeTree {
 
     findParentOf(id: string): NodeTree {
         if (this.hasChild(id)) return this;
-        return this.children.find(child => child.findParentOf(id));
+        return this.children.find(child => !!child.findParentOf(id));
     }
 
     hasChild(id: string): boolean {
