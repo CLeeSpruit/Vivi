@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/CassandraSpruit/Vivi/compare/v4.1.1...v4.1.2) (2019-11-20)
+
+
+### Bug Fixes
+
+* **travis:** release should run dist not build ([fb30d50](https://github.com/CassandraSpruit/Vivi/commit/fb30d50511a876306c38819f3c078d526cea9cfb))
+
 ## [4.1.1](https://github.com/CassandraSpruit/Vivi/compare/v4.1.0...v4.1.1) (2019-11-20)
 
 
