@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/CassandraSpruit/Vivi/compare/v4.1.2...v4.1.3) (2019-11-20)
+
+
+### Bug Fixes
+
+* **webpack:** changing webpack config to better handle library ([4ed9761](https://github.com/CassandraSpruit/Vivi/commit/4ed976138251920adfcd5893a2293e7c255c90af))
+
 ## [4.1.2](https://github.com/CassandraSpruit/Vivi/compare/v4.1.1...v4.1.2) (2019-11-20)
 
 
