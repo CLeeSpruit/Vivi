@@ -17,9 +17,6 @@
         "test:test-env-full": "npm run build:test-env && npm run test:test-env",
         "test:size": "npm run dist && size-limit",
         "watch": "webpack-cli -w",
-        "prepare": "npm run dist",
-        "prepublishOnly": "npm test",
-        "postversion": "git push && git push --tags",
         "semantic-release": "semantic-release",
         "commit": "git-cz"
     },
