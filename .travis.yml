@@ -7,4 +7,4 @@ script:
   - npm run test
   - codecov -f coverage/*.json
 after_success:
-  - npx run semantic-release
+  - npm run semantic-release
