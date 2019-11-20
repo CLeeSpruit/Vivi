@@ -118,6 +118,7 @@ export declare abstract class Component {
     factoryService: FactoryService;
     appEvents: ApplicationEventService;
     engine: ParseEngineService;
+    nodeTreeService: NodeTreeService;
     constructor();
     setData(id: number, data?: Object): void;
     private getUnparsedNode;

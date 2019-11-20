@@ -5,6 +5,7 @@ import { ComponentFactory } from 'factory/component-factory.class';
 import { ParseEngineService } from '../services/parse-engine.service';
 import { FactoryService } from '../services/factory.service';
 import { GetElNameFromComponent } from '../helpers/get-el-name-from-component';
+import { NodeTreeService } from '../services';
 
 export abstract class Component {
     id: string;
@@ -20,12 +21,14 @@ export abstract class Component {
     factoryService: FactoryService;
     appEvents: ApplicationEventService;
     engine: ParseEngineService;
+    nodeTreeService: NodeTreeService;
 
     constructor() {
         // Default Services
-        this.appEvents = (<any>window).vivi.get(ApplicationEventService);
         this.factoryService = (<any>window.vivi.get(FactoryService));
-        this.engine = (<any>window).vivi.get(ParseEngineService);
+        this.appEvents = this.factoryService.getFactory(ApplicationEventService).get();
+        this.engine = this.factoryService.getFactory(ParseEngineService).get();
+        this.nodeTreeService = this.factoryService.getFactory(NodeTreeService).get();
 
         // Get template and style file
 
