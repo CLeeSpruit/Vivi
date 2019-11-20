@@ -1,3 +1,10 @@
+## [4.1.7](https://github.com/CassandraSpruit/Vivi/compare/v4.1.6...v4.1.7) (2019-11-20)
+
+
+### Bug Fixes
+
+* **module:** get throws console error + trace, not error message on error ([#91](https://github.com/CassandraSpruit/Vivi/issues/91)) ([d869fc2](https://github.com/CassandraSpruit/Vivi/commit/d869fc23abef229bd060e46192b2a442e2fc4d94)), closes [#90](https://github.com/CassandraSpruit/Vivi/issues/90)
+
 ## [4.1.6](https://github.com/CassandraSpruit/Vivi/compare/v4.1.5...v4.1.6) (2019-11-20)
 
 ## [4.1.5](https://github.com/CassandraSpruit/Vivi/compare/v4.1.4...v4.1.5) (2019-11-20)
