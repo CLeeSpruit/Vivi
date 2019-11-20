@@ -28,6 +28,7 @@ const config = {
         library: 'vivi',
         libraryTarget: 'umd'
     },
+    devtool: 'source-map',
     mode: 'production',
     resolve: {
         modules: [
