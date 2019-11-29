@@ -12,7 +12,7 @@
         "build:test-env": "cd test-environment && npm run build && cd ../",
         "flush": "rm -r ./dist || true",
         "nuke": "rm -r ./node_modules",
-        "test": "jest",
+        "test": "ava",
         "test:test-env": "cd test-environment && npm run test && cd ../",
         "test:test-env-full": "npm run build:test-env && npm run test:test-env",
         "test:size": "npm run dist && size-limit",
@@ -26,8 +26,7 @@
     },
     "keywords": [
         "framework",
-        "javascript",
-        "typescript"
+        "javascript"
     ],
     "author": "Cassandra Spruit",
     "license": "GPL-3.0-or-later",
@@ -36,33 +35,26 @@
     },
     "homepage": "https://github.com/CassandraSpruit/Vivi#readme",
     "devDependencies": {
+        "@babel/core": "^7.7.4",
+        "@babel/plugin-proposal-class-properties": "^7.7.4",
+        "@babel/plugin-proposal-decorators": "^7.7.4",
+        "@babel/preset-env": "^7.7.4",
         "@semantic-release/changelog": "^3.0.6",
         "@semantic-release/git": "^7.0.18",
-        "@size-limit/preset-big-lib": "^2.2.1",
-        "@types/jest": "^24.0.23",
-        "@types/node": "^12.12.14",
-        "awesome-typescript-loader": "^5.2.1",
+        "ava": "^2.4.0",
+        "babel-loader": "^8.0.6",
         "codecov": "^3.6.1",
         "cz-conventional-changelog": "^3.0.2",
-        "jest": "^24.8.0",
         "semantic-release": "^15.13.31",
-        "ts-jest": "~24.1.0",
-        "typescript": "^3.5.3",
-        "webpack": "^4.38.0",
-        "webpack-cli": "^3.3.6"
+        "webpack": "4.41.2",
+        "webpack-cli": "3.3.10"
     },
     "dependencies": {
-        "reflect-metadata": "^0.1.13",
         "rxjs": "^6.5.3"
     },
     "config": {
         "commitizen": {
             "path": "./node_modules/cz-conventional-changelog"
         }
-    },
-    "size-limit": [
-        {
-            "path": "./dist/vivi.js"
-        }
-    ]
+    }
 }

@@ -4,24 +4,19 @@ const config = {
     entry: {
         vivi: './src/index.ts',
     },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader'
+            }
+        ]
+    },
     target: 'node',
     node: {
         __dirname: true,
         __filename: true
-    },
-    module: {
-        rules: [{
-            test: /\.ts$/,
-            use: [{
-                loader: 'awesome-typescript-loader',
-                options: {
-                    transpileOnly: true,
-                    context: __dirname,
-                    configFile: 'tsconfig.json'
-                }
-            }],
-            exclude: /node_modules/,
-        }]
     },
     output: {
         filename: 'vivi.js',
