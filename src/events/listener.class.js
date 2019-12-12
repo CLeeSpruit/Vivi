@@ -1,19 +1,16 @@
-import { EventTypes } from './event-types.static';
+const EventTypes = require('./event-types.static');
 
-export class Listener {
-    constructor(
-        private type: string,
-        private element: HTMLElement,
-        private callback: (event: Event | FocusEvent | MouseEvent | KeyboardEvent) => any,
-        private options?: boolean | AddEventListenerOptions
-    ) {
-        /* Custom Event Types */
+class Listener {
+    constructor(type, element, callback, options) {
+        this.type = type;
+        this.element = element;
+        this.callback = callback;
+        this.options = options;
 
-        // Enter
         if (type === EventTypes.enter) {
             this.type = EventTypes.keypress;
             const ogFn = this.callback;
-            this.callback = (event: KeyboardEvent) => {
+            this.callback = (event) => {
                 if (event.key === 'Enter') {
                     ogFn(event);
                 }
@@ -27,7 +24,7 @@ export class Listener {
         if (type === EventTypes.scrollDown) {
             this.type = EventTypes.wheel;
             const ogFn = this.callback;
-            this.callback = (event: WheelEvent) => {
+            this.callback = (event) => {
                 if (event.deltaY > 0) {
                     ogFn(event);
                 }
@@ -37,7 +34,7 @@ export class Listener {
         if (type === EventTypes.scrollUp) {
             this.type = EventTypes.wheel;
             const ogFn = this.callback;
-            this.callback = (event: WheelEvent) => {
+            this.callback = (event) => {
                 if (event.deltaY < 0) {
                     ogFn(event);
                 }
@@ -45,7 +42,6 @@ export class Listener {
         }
 
         // Others
-        
         if (this.element) this.add();
     }
 
@@ -59,3 +55,4 @@ export class Listener {
         this.element.removeEventListener(this.type, this.callback, this.options);
     }
 }
+exports.Listener = Listener;
