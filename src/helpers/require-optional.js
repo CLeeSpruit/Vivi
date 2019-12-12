@@ -1,4 +1,4 @@
-export function RequireOptional(path: string) {
+export function RequireOptional(path) {
     try {
         return require(path);
     } catch (e) {

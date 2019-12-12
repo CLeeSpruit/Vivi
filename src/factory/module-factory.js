@@ -1,22 +1,8 @@
-import { Component, ComponentConstructor, Service, ServiceConstructor } from '../models';
-import { loadViviServices } from '../services/load-services.static';
-import { NodeTreeService } from '../services/node-tree.service';
-import { ComponentFactory } from './component-factory.class';
-import { ServiceFactory } from './service-factory.class';
+class ModuleFactory {
+    services = new Map();
+    components = new Map();
 
-export interface ViviFactoryConstructor {
-    serviceConstructors?: Array<ServiceConstructor>,
-    componentConstructors: Array<ComponentConstructor>,
-    rootComponent: new (...args) => Component
-}
-
-export class ModuleFactory {
-    services: Map<string, ServiceFactory> = new Map<string, ServiceFactory>();
-    components: Map<string, ComponentFactory> = new Map<string, ComponentFactory>();
-
-    constructor(
-        module: ViviFactoryConstructor
-    ) {
+    constructor(module) {
         // @todo Replace instances of window.vivi with an injected version
         window.vivi = this;
 
@@ -57,7 +43,7 @@ export class ModuleFactory {
         });
 
         // Mount root component
-        const rootFactory = this.getFactory<Component>(module.rootComponent);
+        const rootFactory = this.getFactory(module.rootComponent);
         // @todo Add ability to make root component append to a user-specified node
         rootFactory.createRoot(nodeTree);
 
@@ -65,20 +51,16 @@ export class ModuleFactory {
         this.start();
     }
 
-    get<T extends Component>(constuctor: new (...args) => T, id?: string): T;
-    get<T extends Service>(constuctor: new (...args) => T, id?: string): T;
-    get(constuctor: new (...args) => Component | Service, id?: string): Component | Service {
+    get(constuctor, id) {
         return this.getFactory(constuctor).get();
     }
 
-    getFactory<T extends Component = Component>(constructor: new (...args) => T): ComponentFactory<T>;
-    getFactory<T extends Service = Service>(constructor: new (...args) => T): ServiceFactory<T>;
-    getFactory(constructor: new (...args) => (Component | Service)): ComponentFactory | ServiceFactory {
+    getFactory(constructor) {
         const name = constructor.name;
         return this.getFactoryByString(name);
     }
 
-    getFactoryByString(name: string): ComponentFactory | ServiceFactory {
+    getFactoryByString(name) {
         const matches = name.match(/(.*)(Component|Service)$/);
         if (matches && matches[2] && matches[2] === 'Service') {
             return this.services.get(name);
@@ -90,7 +72,7 @@ export class ModuleFactory {
         console.trace();
     }
 
-    getComponentRegistry(): Array<string> {
+    getComponentRegistry() {
         return Array.from(this.components.keys());
     }
 
@@ -98,3 +80,4 @@ export class ModuleFactory {
         // Placeholder
     }
 }
+exports.default = ModuleFactory;

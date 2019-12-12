@@ -1,27 +1,25 @@
-import { Component } from './component.class';
-
 export class NodeTree {
-    component: Component;
-    children = new Array<NodeTree>();
+    component;
+    children = new Array();
 
-    constructor(comp: Component) {
+    constructor(comp) {
         this.component = comp;
     }
 
-    addChild(comp: Component): NodeTree {
+    addChild(comp) {
         const node = new NodeTree(comp);
         this.children.push(node);
 
         return node;
     }
 
-    removeChild(comp: Component): NodeTree {
+    removeChild(comp) {
         const foundIndex = this.children.findIndex(child => child.component.id === comp.id);
         if (foundIndex === -1) return;
         return this.children.splice(foundIndex, 1)[0];
     }
 
-    findChild(id: string, deepSearch?: boolean, returnNode?: boolean): Component | NodeTree {
+    findChild(id, deepSearch, returnNode) {
         const child = this.children.find(child => {
             return deepSearch ? 
                 child.component.id === id || !!child.findChild(id, true) :
@@ -31,12 +29,12 @@ export class NodeTree {
         return child ? child.component : null;
     }
 
-    findParentOf(id: string): NodeTree {
+    findParentOf(id) {
         if (this.hasChild(id)) return this;
         return this.children.find(child => !!child.findParentOf(id));
     }
 
-    hasChild(id: string): boolean {
+    hasChild(id) {
         return !!this.children.find(child => child.component.id === id);
     }
 

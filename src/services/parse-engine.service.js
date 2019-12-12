@@ -1,10 +1,5 @@
-import { GetElNameFromComponent } from '../helpers/get-el-name-from-component';
-import { Component } from '../models/component.class';
-import { Service } from '../models/service.class';
-import { FactoryService } from './factory.service';
-
 export class ParseEngineService extends Service {
-    private readonly attributeBlackList = [
+    attributeBlackList = [
         'v-class',
         'v-each',
         'v-if',
@@ -13,11 +8,11 @@ export class ParseEngineService extends Service {
         'vif-class'
     ];
 
-    constructor(private factoryService: FactoryService) {
+    constructor(factoryService) {
         super();
     }
 
-    parse(node: HTMLElement, data: Object, comp: Component): void {
+    parse(node, data, comp) {
         // Get a list of all unique attributes
         const attributes = this.buildAttributeList(node);
         attributes.forEach(attr => {
@@ -56,7 +51,7 @@ export class ParseEngineService extends Service {
             if (match && match.length > 2) {
                 const key = match[1];
                 const componentName = match[2];
-                const arr = this.applyWithContext(key, data) as Array<any>;
+                const arr = this.applyWithContext(key, data);
                 if (arr.forEach) {
                     arr.forEach((item, index) => {
                         const factory = this.factoryService.getFactoryByString(componentName);
@@ -92,7 +87,7 @@ export class ParseEngineService extends Service {
             const name = GetElNameFromComponent(reg);
             const els = node.querySelectorAll(name);
             for (let i = 0; i < els.length; i++) {
-                const el = els.item(i) as HTMLElement;
+                const el = els.item(i);
                 if (!el.id) {
                     const factory = this.factoryService.getFactoryByString(reg);
                     factory.create(comp, (el).dataset, { parentEl: el.parentElement, replaceEl: el, doNotLoad: true});
@@ -101,7 +96,7 @@ export class ParseEngineService extends Service {
         });
     }
 
-    private buildAttributeList(node: HTMLElement, attributes: Set<string> = new Set<string>()): Set<string> {
+    buildAttributeList(node, attributes = new Set()) {
         const attr = node.attributes;
         if (attr) {
             for (let i = 0; i < attr.length; i++) {
@@ -110,18 +105,18 @@ export class ParseEngineService extends Service {
         }
 
         node.childNodes.forEach(child => {
-            this.buildAttributeList(<HTMLElement>child, attributes);
+            this.buildAttributeList(child, attributes);
         });
 
         return attributes;
     }
 
-    private attributeParse(el: HTMLElement, data: Object, name: string, customParseFn?: (name: string, el: HTMLElement, attr: string) => void) {
+    attributeParse(el, data, name, customParseFn) {
         el.querySelectorAll('[' + name + ']').forEach(el => {
             const attr = el.getAttribute(name);
 
             if (customParseFn) {
-                customParseFn(name, el as HTMLElement, attr);
+                customParseFn(name, el, attr);
             } else {
                 // Simple replace
                 const newAttribute = name.replace('v-', '');
@@ -133,7 +128,7 @@ export class ParseEngineService extends Service {
         });
     }
 
-    private attributeParseVif(node: HTMLElement, data: Object, name: string, customParseFn?: (name: string, el: HTMLElement, attr: string) => void) {
+    attributeParseVif(node, data, name, customParseFn) {
         this.attributeParse(node, data, name, (attrName, el, attr) => {
             // Match against (conditional) ? trueResult : falseResult
             const match = attr.match(/(?<=\()(.*?)(?=\)\s*\?).*?(?<=\?)\s?(.*)/);
@@ -158,7 +153,7 @@ export class ParseEngineService extends Service {
     }
 
     /* Generic fn */
-    conditional(condition: string, context: Object): boolean {
+    conditional(condition, context) {
         return function (condition) {
             // Someone grab the holy water, we're going in
             try {
@@ -169,7 +164,7 @@ export class ParseEngineService extends Service {
         }.call(context, condition);
     }
 
-    private applyWithContext(value: string, context: Object) {
+    applyWithContext(value, context) {
         return function (value) {
             try {
                 return eval(value);

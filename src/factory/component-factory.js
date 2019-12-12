@@ -1,37 +1,37 @@
-import { ServiceFactory } from './service-factory.class';
-import { Component, Service } from '../models';
-import { NodeTreeService } from '../services';
-import { NodeTree } from '../models/node-tree';
-
-export class ComponentFactory<T extends Component = Component> {
-    private components: Map<string, T> = new Map<string, T>();
-    private counter = 1;
+class ComponentFactory {
+    components = new Map();
+    counter = 1;
+    componentConstructor;
+    services;
+    nodeTreeService;
 
     constructor(
-        private constructor: new (...args) => T,
-        private services: Array<ServiceFactory> = new Array<ServiceFactory>(),
-        private nodeTreeService?: NodeTreeService
+        constructor,
+        services,
+        nodeTreeService
     ) {
-        //
+        this.componentConstructor = constructor;
+        this.services = services || new Array();
+        this.nodeTreeService = nodeTreeService;
     }
 
-    createRoot(nodeTreeService: NodeTreeService) {
+    createRoot(nodeTreeService) {
         this.nodeTreeService = nodeTreeService;
         const comp = this.create(null, null, { parentEl: document.body, doNotLoad: true, isRoot: true });
         this.nodeTreeService.setRoot(comp);
         this.nodeTreeService.applicationTree.load();
     }
 
-    create(parent: Component, data?: Object, options?: { parentEl?: HTMLElement, replaceEl?: HTMLElement, doNotLoad?: boolean, isRoot?: boolean }): T {
+    create(parent, data, options) {
         // Create
-        const component = new this.constructor(...this.services.map(service => service.get()));
+        const component = new this.component(...this.services.map(service => service.get()));
         component.setData(this.counter, data);
         this.counter++;
 
         // Record in map and tree
         this.components.set(component.id, component);
 
-        let node: NodeTree;
+        let node;
         if (!options || !options.isRoot) {
             node = this.nodeTreeService.addComponent(parent, component);
         }
@@ -46,8 +46,8 @@ export class ComponentFactory<T extends Component = Component> {
 
         return component;
     }
-
-    detach(id: string): NodeTree {
+    
+    detach(id) {
         const comp = this.get(id);
         if (!comp) return;
 
@@ -55,7 +55,7 @@ export class ComponentFactory<T extends Component = Component> {
         return this.nodeTreeService.detachComponent(comp);
     }
 
-    destroy(id: string) {
+    destroy(id) {
         const component = this.get(id);
         if (!component) return;
 
@@ -76,7 +76,7 @@ export class ComponentFactory<T extends Component = Component> {
         this.components.forEach(comp => this.destroy(comp.id));
     }
 
-    get(id?: string): T {
+    get(id) {
         if (id) {
             const comp = this.components.get(id);
             if (!comp) {
@@ -90,3 +90,4 @@ export class ComponentFactory<T extends Component = Component> {
         }
     }
 }
+exports.default = ComponentFactory;

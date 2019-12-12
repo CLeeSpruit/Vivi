@@ -1,36 +1,15 @@
-import { ViviElementParams } from '../decorators/element.decorator';
-import { ComponentFactory } from '../factory/component-factory.class';
 import { ModuleFactory } from '../factory/module-factory';
-import { Component } from '../models/component.class';
-import { MockComponent } from '../models/__mocks__/component.class';
-import { MockService, MockWithPrereqService } from '../models/__mocks__/service.class';
-import { NodeTreeService } from '../services';
-
-export interface ComponentMockOptions {
-    hasTemplate?: boolean;
-    template?: string;
-    hasStyle?: boolean;
-    style?: string;
-    hasChild?: boolean;
-    children?: Array<new (...args) => Component>;
-    hasData?: boolean;
-    data?: Object;
-    hasElements?: boolean;
-    elements?: Array<ViviElementParams>;
-    doNotLoad?: boolean;
-    doNotAppend?: boolean;
-}
 
 export class Mocker {
-    module: ModuleFactory;
-    rootComp: MockComponent;
-    readonly defaultComponents = [
+    module;
+    rootComp;
+    defaultComponents = [
         { constructor: MockComponent, services: [ MockService] }
     ];
-    readonly defaultTemplate = '<span class="test">Test</span>';
-    readonly defaultStyle = '* { color: red }';
-    readonly defaultData = { name: 'test' };
-    readonly defaultElement = <ViviElementParams>{
+    defaultTemplate = '<span class="test">Test</span>';
+    defaultStyle = '* { color: red }';
+    defaultData = { name: 'test' };
+    defaultElement =  {
         selector: 'span.test',
         propertyKey: 'test'
     };
@@ -48,11 +27,11 @@ export class Mocker {
         this.rootComp = this.getFactory().get();
     }
 
-    getFactory(): ComponentFactory<MockComponent> {
+    getFactory() {
         return this.module.getFactory(MockComponent);
     }
 
-    createMock(options: ComponentMockOptions = {}): MockComponent {
+    createMock(options) {
         const comp = this.getFactory().create(this.rootComp);
 
         if (options.template || options.hasTemplate) {

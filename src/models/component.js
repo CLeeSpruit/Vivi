@@ -1,30 +1,24 @@
-import { getElements } from '../decorators/element.decorator';
-import { ApplicationListener, Listener } from '../events';
-import { GetElNameFromComponent } from '../helpers/get-el-name-from-component';
-import { NodeTreeService } from '../services';
-import { ApplicationEventService, ListenerOptions } from '../services/application-event.service';
-import { FactoryService } from '../services/factory.service';
-import { ParseEngineService } from '../services/parse-engine.service';
+import { Listener } from '../events/listener';
 
-export abstract class Component {
-    id: string;
-    componentName: string;
-    template: string;
-    style: string;
-    data: Object;
-    element: HTMLElement;
-    parsedNode: HTMLElement;
-    listeners: Array<Listener | ApplicationListener> = new Array<Listener | ApplicationListener>();
+export class Component {
+    id;
+    componentName;
+    template;
+    style;
+    data;
+    element;
+    parsedNode;
+    listeners = new Array();
 
     // Default Services
-    factoryService: FactoryService;
-    appEvents: ApplicationEventService;
-    engine: ParseEngineService;
-    nodeTreeService: NodeTreeService;
+    factoryService;
+    appEvents;
+    engine;
+    nodeTreeService;
 
     constructor() {
         // Default Services
-        this.factoryService = (<any>window.vivi.get(FactoryService));
+        this.factoryService = (window.vivi.get(FactoryService));
         this.appEvents = this.factoryService.getFactory(ApplicationEventService).get();
         this.engine = this.factoryService.getFactory(ParseEngineService).get();
         this.nodeTreeService = this.factoryService.getFactory(NodeTreeService).get();
@@ -53,12 +47,12 @@ export abstract class Component {
         }
     }
 
-    setData(id: number, data?: Object) {
+    setData(id, data) {
         this.data = data || {};
         this.id = `${this.componentName}-${id}`;
     }
 
-    private getUnparsedNode(): HTMLElement {
+    getUnparsedNode() {
         // Create Node that is named after the component class
         const el = document.createElement(this.componentName);
         el.id = this.id;
@@ -66,7 +60,7 @@ export abstract class Component {
         return el;
     }
 
-    private createNodes() {
+    createNodes() {
         /*
             @todo: Add dynamic styling
             @body: Move this into the parse engine
@@ -86,7 +80,7 @@ export abstract class Component {
         this.engine.parse(this.parsedNode, this.data, this);
     }
 
-    append(parentEl: HTMLElement, replaceEl?: HTMLElement) {
+    append(parentEl, replaceEl) {
         if (!parentEl) {
             console.error(`Error while appending ${this.id}. Parent element does not exist.`);
             return;
@@ -149,15 +143,15 @@ export abstract class Component {
     }
 
     /* Actions */
-    listen(el: HTMLElement, eventType: string, cb: Function, options?: AddEventListenerOptions) {
+    listen(el, eventType, cb, options) {
         this.listeners.push(new Listener(eventType, el, cb.bind(this), options));
     }
 
-    appListen(eventName: string, cb: Function, options?: ListenerOptions) {
+    appListen(eventName, cb, options) {
         this.listeners.push(this.appEvents.createListener(eventName, cb.bind(this), options));
     }
 
-    createChild<T extends Component = Component>(parentEl: HTMLElement, component: new (...args) => T, data?: Object): T {
+    createChild(parentEl, component, data) {
         const factory = this.factoryService.getFactory(component);
         return factory.create(this, data, { parentEl });
     }

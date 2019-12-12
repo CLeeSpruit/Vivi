@@ -1,23 +1,21 @@
-import { Service } from '../models/service.class';
-import { Component } from '../models/component.class';
 import { NodeTree } from '../models/node-tree';
 
 export class NodeTreeService extends Service {
-    applicationTree: NodeTree;
+    applicationTree;
 
-    setRoot(rootComponent: Component) {
+    setRoot(rootComponent) {
         this.applicationTree = new NodeTree(rootComponent);
     }
 
-    getNode(comp: Component): NodeTree {
+    getNode(comp) {
         if (!this.applicationTree) { return; }
         if (comp.id === this.applicationTree.component.id) {
             return this.applicationTree;
         }
-        return this.applicationTree.findChild(comp.id, true, true) as NodeTree;
+        return this.applicationTree.findChild(comp.id, true, true);
     }
 
-    addNodeToComponent(parentComp: Component, childNode: NodeTree) {
+    addNodeToComponent(parentComp, childNode) {
         const parentNode = this.getNode(parentComp);
         if (!parentNode) {
             console.error(`Adding child node:${childNode.component.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`);
@@ -27,7 +25,7 @@ export class NodeTreeService extends Service {
         parentNode.children.push(childNode);
     }
 
-    loadComponent(comp: Component): void {
+    loadComponent(comp) {
         const node = this.getNode(comp);
         if (!node) {
             console.error(`Error loading node: ${comp.componentName}. Could not find node in tree.`);
@@ -36,13 +34,13 @@ export class NodeTreeService extends Service {
         node.load();
     }
 
-    addComponent(parentComp: Component, childComp: Component): NodeTree {
+    addComponent(parentComp, childComp) {
         if (!this.applicationTree && parentComp) {
             console.error(`Error adding child node: ${childComp.componentName}. No root component has been set yet.`);
             return;
         }
 
-        let parentNode: NodeTree;
+        let parentNode;
         if (!parentComp) {
             parentNode = this.applicationTree;
             // @todo Make Errors, Warnings, Info configurable
@@ -58,14 +56,14 @@ export class NodeTreeService extends Service {
         return parentNode.addChild(childComp);
     }
 
-    removeComponent(comp: Component) {
+    removeComponent(comp) {
         const node = this.getNode(comp);
 
         if (!node) return;
         node.destroy();
     }
 
-    detachComponent(comp: Component): NodeTree {
+    detachComponent(comp) {
         const parent = this.applicationTree.findParentOf(comp.id);
         if (!parent) {
             console.error(`Error detaching node: ${comp.id}. Node not found in tree`);

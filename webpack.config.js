@@ -2,7 +2,7 @@ const path = require('path');
 
 const config = {
     entry: {
-        vivi: './src/index.ts',
+        vivi: './src/index.js',
     },
     module: {
         rules: [

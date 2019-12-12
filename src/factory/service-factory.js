@@ -1,14 +1,9 @@
-import { Service } from '../models/service.class';
+class ServiceFactory {
+    prerequisites = new Map();
+    instances = new Map();
+    counter = 1;
 
-export class ServiceFactory<T extends Service = Service> {
-    prerequisites: Map<string, ServiceFactory> = new Map<string, ServiceFactory>();
-    instances: Map<string, T> = new Map<string, T>();
-    private counter = 1;
-
-    constructor(
-        private constructor: new (...args) => T,
-        prerequisitesArr?: Array<ServiceFactory>
-    ) {
+    constructor(constructor, prerequisitesArr) {
         if (prerequisitesArr) {
             prerequisitesArr.forEach(prereq => {
                 this.prerequisites.set(prereq.constructor.name, prereq);
@@ -18,7 +13,7 @@ export class ServiceFactory<T extends Service = Service> {
         this.create();
     }
 
-    create(): T {
+    create() {
         const service = new this.constructor(...Array.from(this.prerequisites.values()).map(pre => pre.get()));
         service.setData(this.counter);
         this.counter++;
@@ -27,7 +22,7 @@ export class ServiceFactory<T extends Service = Service> {
         return service;
     }
 
-    get(id?: string): T {
+    get(id) {
         if (id) {
             return this.instances.get(id);
         } else {
@@ -35,7 +30,7 @@ export class ServiceFactory<T extends Service = Service> {
         }
     }
 
-    destroy(id: string) {
+    destroy(id) {
         const service = this.get(id);
         // Run cleanup
         service.destroy();
@@ -48,3 +43,4 @@ export class ServiceFactory<T extends Service = Service> {
         this.instances.forEach(service => this.destroy(service.id));
     }
 }
+exports.default = ServiceFactory;

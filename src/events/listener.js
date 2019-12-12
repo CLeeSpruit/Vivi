@@ -1,4 +1,4 @@
-const EventTypes = require('./event-types.static');
+const EventTypes = require('./event-types');
 
 class Listener {
     constructor(type, element, callback, options) {
@@ -55,4 +55,4 @@ class Listener {
         this.element.removeEventListener(this.type, this.callback, this.options);
     }
 }
-exports.Listener = Listener;
+exports.default = Listener;
