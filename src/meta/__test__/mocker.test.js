@@ -1,6 +1,6 @@
 import test from 'ava';
-import { Mocker } from '../mocker';
+import {Mocker} from '../mocker';
 
 test('should init', t => {
-    t.assert(new Mocker());
+	t.assert(new Mocker());
 });

@@ -1,13 +1,13 @@
-import { Service } from '../service';
+import {Service} from '../service';
 
 export class MockService extends Service {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 }
 
 export class MockWithPrereqService extends Service {
-    constructor(mockService) {
-        super();
-    }
+	constructor(mockService) {
+		super();
+	}
 }
