@@ -1,4 +1,4 @@
-import {Listener} from '../events/listener';
+import {listen} from '@cspruit/zephyr';
 import {FactoryService} from '../services/factory.service';
 import {ApplicationEventService} from '../services/application-event.service';
 import {ParseEngineService} from '../services/parse-engine.service';
@@ -8,8 +8,6 @@ import {getElements} from '../decorators/element.decorator';
 
 export class Component {
 	constructor() {
-		this.listeners = [];
-
 		// Default Services
 		this.factoryService = (window.vivi.get(FactoryService));
 		this.appEvents = this.factoryService.getFactory(ApplicationEventService).get();
@@ -131,21 +129,18 @@ export class Component {
 	}
 
 	destroy() {
-		this.listeners.forEach(listener => {
-			listener.remove();
-		});
 		if (this.element) {
 			this.element.remove();
 		}
 	}
 
 	/* Actions */
-	listen(el, eventType, cb, options) {
-		this.listeners.push(new Listener(eventType, el, cb.bind(this), options));
+	listen(el, eventType, cb) {
+		listen(eventType, cb.bind(this));
 	}
 
-	appListen(eventName, cb, options) {
-		this.listeners.push(this.appEvents.createListener(eventName, cb.bind(this), options));
+	appListen(eventName, cb) {
+		this.appEvents.createListener(eventName, cb.bind(this));
 	}
 
 	createChild(parentEl, component, data) {

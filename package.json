@@ -51,7 +51,7 @@
         "xo": "^0.25.3"
     },
     "dependencies": {
-        "rxjs": "^6.5.3"
+        "@cspruit/zephyr": "^1.0.2"
     },
     "config": {
         "commitizen": {
