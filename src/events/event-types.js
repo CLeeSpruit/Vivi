@@ -1,4 +1,4 @@
-class EventTypes {
+export class EventTypes {
     static enter = 'enter';
     static click = 'click';
     static keypress = 'keypress';
@@ -9,4 +9,3 @@ class EventTypes {
     static scrollUp = 'scroll-up';
     static wheel = 'wheel';
 }
-exports.EventTypes = EventTypes;

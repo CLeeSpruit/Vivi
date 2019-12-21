@@ -1,4 +1,9 @@
-class ModuleFactory {
+import {loadViviServices} from '../services/load-services.static';
+import {ServiceFactory} from './service-factory';
+import {ComponentFactory} from './component-factory';
+import {NodeTreeService} from '../services/node-tree.service';
+
+export class ModuleFactory {
     services = new Map();
     components = new Map();
 
@@ -8,9 +13,9 @@ class ModuleFactory {
 
         // Append Vivi services - these should be before any custom services
         if (!module.serviceConstructors) {
-            module.serviceConstructors = loadViviServices;
+            module.serviceConstructors = loadViviServices();
         } else {
-            module.serviceConstructors.unshift(...loadViviServices);
+            module.serviceConstructors = [...loadViviServices(), ...module.serviceConstructors];
         }
 
         // Init Services
@@ -80,4 +85,3 @@ class ModuleFactory {
         // Placeholder
     }
 }
-exports.default = ModuleFactory;

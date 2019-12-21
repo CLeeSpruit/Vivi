@@ -1,4 +1,5 @@
-import { NodeTree } from '../models/node-tree';
+import {NodeTree} from '../models/node-tree';
+import {Service} from '../models/service';
 
 export class NodeTreeService extends Service {
     applicationTree;

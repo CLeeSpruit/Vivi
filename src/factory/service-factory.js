@@ -1,9 +1,11 @@
-class ServiceFactory {
+export class ServiceFactory {
     prerequisites = new Map();
     instances = new Map();
     counter = 1;
+    serviceConstructor;
 
     constructor(constructor, prerequisitesArr) {
+        this.serviceConstructor = constructor;
         if (prerequisitesArr) {
             prerequisitesArr.forEach(prereq => {
                 this.prerequisites.set(prereq.constructor.name, prereq);
@@ -14,7 +16,7 @@ class ServiceFactory {
     }
 
     create() {
-        const service = new this.constructor(...Array.from(this.prerequisites.values()).map(pre => pre.get()));
+        const service = new this.serviceConstructor(...Array.from(this.prerequisites.values()).map(pre => pre.get()));
         service.setData(this.counter);
         this.counter++;
         this.instances.set(service.id, service);
@@ -43,4 +45,3 @@ class ServiceFactory {
         this.instances.forEach(service => this.destroy(service.id));
     }
 }
-exports.default = ServiceFactory;

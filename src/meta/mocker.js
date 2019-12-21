@@ -1,4 +1,6 @@
-import { ModuleFactory } from '../factory/module-factory';
+import {ModuleFactory} from '../factory/module-factory';
+import {MockComponent} from '../models/__mocks__/component.mock';
+import { MockService, MockWithPrereqService } from '../models/__mocks__/service.mock';
 
 export class Mocker {
     module;

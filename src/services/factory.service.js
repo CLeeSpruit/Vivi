@@ -1,3 +1,5 @@
+import {Service} from '../models/service';
+
 export class FactoryService extends Service {
     module;
 

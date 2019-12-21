@@ -1,5 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationListener } from '../events/application-listener';
+import {ApplicationListener} from '../events/application-listener';
+import {Service} from '../models/service';
 
 export class ApplicationEventService extends Service {
     eventRegistry = new Map();

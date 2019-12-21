@@ -1,6 +1,6 @@
-const EventTypes = require('./event-types');
+import {EventTypes} from './event-types';
 
-class Listener {
+export class Listener {
     constructor(type, element, callback, options) {
         this.type = type;
         this.element = element;
@@ -55,4 +55,3 @@ class Listener {
         this.element.removeEventListener(this.type, this.callback, this.options);
     }
 }
-exports.default = Listener;

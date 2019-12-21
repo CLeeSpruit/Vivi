@@ -1,4 +1,4 @@
-class ApplicationListener {
+export class ApplicationListener {
     subscription;
 
     constructor(
@@ -30,4 +30,3 @@ class ApplicationListener {
         this.subscription.unsubscribe();
     }
 }
-exports.default = ApplicationListener;

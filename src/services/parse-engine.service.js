@@ -1,4 +1,8 @@
+import {Service} from '../models/service';
+import {GetElNameFromComponent} from '../helpers/get-el-name-from-component';
+
 export class ParseEngineService extends Service {
+    factoryService;
     attributeBlackList = [
         'v-class',
         'v-each',
@@ -10,6 +14,7 @@ export class ParseEngineService extends Service {
 
     constructor(factoryService) {
         super();
+        this.factoryService = factoryService;
     }
 
     parse(node, data, comp) {

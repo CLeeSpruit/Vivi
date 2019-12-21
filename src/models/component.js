@@ -1,4 +1,9 @@
-import { Listener } from '../events/listener';
+import {Listener} from '../events/listener';
+import {FactoryService} from '../services/factory.service';
+import {ApplicationEventService} from '../services/application-event.service';
+import {ParseEngineService} from '../services/parse-engine.service';
+import {NodeTreeService} from '../services/node-tree.service';
+import {GetElNameFromComponent} from '../helpers/get-el-name-from-component';
 
 export class Component {
     id;

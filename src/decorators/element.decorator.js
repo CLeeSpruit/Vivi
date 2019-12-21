@@ -1,6 +1,6 @@
 const elementMetadataKey = 'ViviElement';
 
-function ViviElement(params) {
+export function ViviElement(params) {
     return function (target, propertyKey) {
         let props = Reflect.get(target, elementMetadataKey);
         const objParams = { ...params, propertyKey };
@@ -12,9 +12,7 @@ function ViviElement(params) {
         }
     }
 }
-exports.ViviElement = ViviElement;
 
-function getElements(origin) {
+export function getElements(origin) {
     return Reflect.get(origin, elementMetadataKey) || new Array();
 }
-exports.getElements = getElements;

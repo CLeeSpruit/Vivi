@@ -1,4 +1,4 @@
-class ComponentFactory {
+export class ComponentFactory {
     components = new Map();
     counter = 1;
     componentConstructor;
@@ -24,7 +24,7 @@ class ComponentFactory {
 
     create(parent, data, options) {
         // Create
-        const component = new this.component(...this.services.map(service => service.get()));
+        const component = new this.componentConstructor(...this.services.map(service => service.get()));
         component.setData(this.counter, data);
         this.counter++;
 
@@ -90,4 +90,3 @@ class ComponentFactory {
         }
     }
 }
-exports.default = ComponentFactory;

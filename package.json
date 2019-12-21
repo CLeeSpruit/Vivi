@@ -11,6 +11,7 @@
         "build": "npm run flush && webpack-cli",
         "build:test-env": "cd test-environment && npm run build && cd ../",
         "flush": "rm -r ./dist || true",
+        "lint": "xo",
         "nuke": "rm -r ./node_modules",
         "test": "ava",
         "test:test-env": "cd test-environment && npm run test && cd ../",
@@ -47,7 +48,8 @@
         "cz-conventional-changelog": "^3.0.2",
         "semantic-release": "^15.13.31",
         "webpack": "4.41.2",
-        "webpack-cli": "3.3.10"
+        "webpack-cli": "3.3.10",
+        "xo": "^0.25.3"
     },
     "dependencies": {
         "rxjs": "^6.5.3"
