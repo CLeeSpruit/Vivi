@@ -1,51 +1,58 @@
 export class NodeTree {
-    component;
-    children = new Array();
+	constructor(comp) {
+		this.children = [];
+		this.component = comp;
+	}
 
-    constructor(comp) {
-        this.component = comp;
-    }
+	addChild(comp) {
+		const node = new NodeTree(comp);
+		this.children.push(node);
 
-    addChild(comp) {
-        const node = new NodeTree(comp);
-        this.children.push(node);
+		return node;
+	}
 
-        return node;
-    }
+	removeChild(comp) {
+		const foundIndex = this.children.findIndex(child => child.component.id === comp.id);
+		if (foundIndex === -1) {
+			return;
+		}
 
-    removeChild(comp) {
-        const foundIndex = this.children.findIndex(child => child.component.id === comp.id);
-        if (foundIndex === -1) return;
-        return this.children.splice(foundIndex, 1)[0];
-    }
+		return this.children.splice(foundIndex, 1)[0];
+	}
 
-    findChild(id, deepSearch, returnNode) {
-        const child = this.children.find(child => {
-            return deepSearch ? 
-                child.component.id === id || !!child.findChild(id, true) :
-                child.component.id === id
-        });
-        if (returnNode) return child;
-        return child ? child.component : null;
-    }
+	findChild(id, deepSearch, returnNode) {
+		const child = this.children.find(child => {
+			return deepSearch ?
+				child.component.id === id || Boolean(child.findChild(id, true)) :
+				child.component.id === id;
+		});
+		if (returnNode) {
+			return child;
+		}
 
-    findParentOf(id) {
-        if (this.hasChild(id)) return this;
-        return this.children.find(child => !!child.findParentOf(id));
-    }
+		return child ? child.component : null;
+	}
 
-    hasChild(id) {
-        return !!this.children.find(child => child.component.id === id);
-    }
+	findParentOf(id) {
+		if (this.hasChild(id)) {
+			return this;
+		}
 
-    load() {
-        this.component.startLoad();
-        this.children.forEach(child => child.load());
-    }
+		return this.children.find(child => Boolean(child.findParentOf(id)));
+	}
 
-    destroy() {
-        this.children.forEach(child => child.destroy());
-        this.children = [];
-        this.component.destroy();
-    }
+	hasChild(id) {
+		return Boolean(this.children.find(child => child.component.id === id));
+	}
+
+	load() {
+		this.component.startLoad();
+		this.children.forEach(child => child.load());
+	}
+
+	destroy() {
+		this.children.forEach(child => child.destroy());
+		this.children = [];
+		this.component.destroy();
+	}
 }

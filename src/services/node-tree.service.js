@@ -2,76 +2,83 @@ import {NodeTree} from '../models/node-tree';
 import {Service} from '../models/service';
 
 export class NodeTreeService extends Service {
-    applicationTree;
+	setRoot(rootComponent) {
+		this.applicationTree = new NodeTree(rootComponent);
+	}
 
-    setRoot(rootComponent) {
-        this.applicationTree = new NodeTree(rootComponent);
-    }
+	getNode(comp) {
+		if (!this.applicationTree) {
+			return;
+		}
 
-    getNode(comp) {
-        if (!this.applicationTree) { return; }
-        if (comp.id === this.applicationTree.component.id) {
-            return this.applicationTree;
-        }
-        return this.applicationTree.findChild(comp.id, true, true);
-    }
+		if (comp.id === this.applicationTree.component.id) {
+			return this.applicationTree;
+		}
 
-    addNodeToComponent(parentComp, childNode) {
-        const parentNode = this.getNode(parentComp);
-        if (!parentNode) {
-            console.error(`Adding child node:${childNode.component.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`);
-            return;
-        }
+		return this.applicationTree.findChild(comp.id, true, true);
+	}
 
-        parentNode.children.push(childNode);
-    }
+	addNodeToComponent(parentComp, childNode) {
+		const parentNode = this.getNode(parentComp);
+		if (!parentNode) {
+			console.error(`Adding child node:${childNode.component.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`);
+			return;
+		}
 
-    loadComponent(comp) {
-        const node = this.getNode(comp);
-        if (!node) {
-            console.error(`Error loading node: ${comp.componentName}. Could not find node in tree.`);
-            return;
-        }
-        node.load();
-    }
+		parentNode.children.push(childNode);
+	}
 
-    addComponent(parentComp, childComp) {
-        if (!this.applicationTree && parentComp) {
-            console.error(`Error adding child node: ${childComp.componentName}. No root component has been set yet.`);
-            return;
-        }
+	loadComponent(comp) {
+		const node = this.getNode(comp);
+		if (!node) {
+			console.error(`Error loading node: ${comp.componentName}. Could not find node in tree.`);
+			return;
+		}
 
-        let parentNode;
-        if (!parentComp) {
-            parentNode = this.applicationTree;
-            // @todo Make Errors, Warnings, Info configurable
-            // console.info(`No parent provided for ${childComp.componentName}. Appending to root.`);
-        } else {
-            parentNode = this.getNode(parentComp);
-            if (!parentNode) {
-                console.error(`Adding child node:${childComp.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`);
-                return;
-            }
-        }
+		node.load();
+	}
 
-        return parentNode.addChild(childComp);
-    }
+	addComponent(parentComp, childComp) {
+		if (!this.applicationTree && parentComp) {
+			console.error(`Error adding child node: ${childComp.componentName}. No root component has been set yet.`);
+			return;
+		}
 
-    removeComponent(comp) {
-        const node = this.getNode(comp);
+		let parentNode;
+		if (parentComp) {
+			parentNode = this.getNode(parentComp);
+			if (!parentNode) {
+				console.error(`Adding child node:${childComp.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`);
+				return;
+			}
+		} else {
+			parentNode = this.applicationTree;
+			// @todo Make Errors, Warnings, Info configurable
+			// console.info(`No parent provided for ${childComp.componentName}. Appending to root.`);
+		}
 
-        if (!node) return;
-        node.destroy();
-    }
+		return parentNode.addChild(childComp);
+	}
 
-    detachComponent(comp) {
-        const parent = this.applicationTree.findParentOf(comp.id);
-        if (!parent) {
-            console.error(`Error detaching node: ${comp.id}. Node not found in tree`);
-            return;
-        }
-        comp.detach();
+	removeComponent(comp) {
+		const node = this.getNode(comp);
 
-        return parent.removeChild(comp);
-    } 
+		if (!node) {
+			return;
+		}
+
+		node.destroy();
+	}
+
+	detachComponent(comp) {
+		const parent = this.applicationTree.findParentOf(comp.id);
+		if (!parent) {
+			console.error(`Error detaching node: ${comp.id}. Node not found in tree`);
+			return;
+		}
+
+		comp.detach();
+
+		return parent.removeChild(comp);
+	}
 }

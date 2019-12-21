@@ -14,5 +14,5 @@ export function ViviElement(params) {
 }
 
 export function getElements(origin) {
-	return Reflect.get(origin, elementMetadataKey) || new Array();
+	return Reflect.get(origin, elementMetadataKey) || [];
 }

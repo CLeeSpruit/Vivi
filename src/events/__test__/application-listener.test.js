@@ -9,7 +9,7 @@ test('should init', t => {
 
 test('should emit callback when subscription is updated', t => {
 	const subject = new Subject();
-	const actual = new ApplicationListener('', () => {
+	new ApplicationListener('', () => {
 		t.pass();
 	}, subject.asObservable());
 	subject.next();

@@ -1,14 +1,15 @@
 export class Service {
-    id;
-    listeners = new Array();
+	constructor() {
+		this.listeners = [];
+	}
 
-    setData(id) {
-        this.id = `${this.constructor.name}-${id}`;
-    }
+	setData(id) {
+		this.id = `${this.constructor.name}-${id}`;
+	}
 
-    destroy() {
-        this.listeners.forEach(listener => {
-            listener.remove();
-        });
-    }
+	destroy() {
+		this.listeners.forEach(listener => {
+			listener.remove();
+		});
+	}
 }

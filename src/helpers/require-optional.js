@@ -1,4 +1,4 @@
-export function RequireOptional(path) {
+export function requireOptional(path) {
 	try {
 		return require(path);
 	} catch (error) {

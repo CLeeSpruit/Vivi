@@ -1,20 +1,20 @@
 import test from 'ava';
-import {GetElNameFromComponent} from '../get-el-name-from-component';
+import {getElNameFromComponent} from '../get-el-name-from-component';
 
 test('Should get a simple component name', t => {
-	const actual = GetElNameFromComponent('MockComponent');
+	const actual = getElNameFromComponent('MockComponent');
 
 	t.assert(actual === 'mock');
 });
 
 test('should get complex component name', t => {
-	const actual = GetElNameFromComponent('MyCoolComponent');
+	const actual = getElNameFromComponent('MyCoolComponent');
 
 	t.assert(actual === 'my-cool');
 });
 
 test('should get multiword complex component name', t => {
-	const actual = GetElNameFromComponent('MyReallyReallyCoolComponent');
+	const actual = getElNameFromComponent('MyReallyReallyCoolComponent');
 
 	t.assert(actual === 'my-really-really-cool');
 });
