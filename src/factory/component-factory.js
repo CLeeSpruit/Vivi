@@ -1,16 +1,28 @@
-export class ComponentFactory {
+import {Factory} from './factory';
+
+export class ComponentFactory extends Factory {
+	/**
+	 *Creates an instance of ComponentFactory.
+	 * @param {Function} constructorFn
+	 * @param {Array<Service>} services
+	 * @param {NodeTreeService} nodeTreeService
+	 * @memberof ComponentFactory
+	 */
 	constructor(
-		constructor,
+		constructorFn,
 		services,
 		nodeTreeService
 	) {
-		this.components = new Map();
-		this.counter = 1;
-		this.componentConstructor = constructor;
-		this.services = services || [];
+		super(constructorFn, services);
 		this.nodeTreeService = nodeTreeService;
 	}
 
+	/**
+	 *Sets the root component
+	 *
+	 * @param {NodeTreeService} nodeTreeService
+	 * @memberof ComponentFactory
+	 */
 	createRoot(nodeTreeService) {
 		this.nodeTreeService = nodeTreeService;
 		const comp = this.create(null, null, {parentEl: document.body, doNotLoad: true, isRoot: true});
@@ -18,15 +30,19 @@ export class ComponentFactory {
 		this.nodeTreeService.applicationTree.load();
 	}
 
+	/**
+	 *Creates a component
+	 *
+	 * @param {Component} parent
+	 * @param {*} data
+	 * @param {*} options
+	 * @returns Component
+	 * @memberof ComponentFactory
+	 */
 	create(parent, data, options) {
-		// Create
-		const component = new this.componentConstructor(...this.services.map(service => service.get())); // eslint-disable-line new-cap
-		component.setData(this.counter, data);
-		this.counter++;
+		const component = super.create(data);
 
-		// Record in map and tree
-		this.components.set(component.id, component);
-
+		// Set nodes
 		let node;
 		if (!options || !options.isRoot) {
 			node = this.nodeTreeService.addComponent(parent, component);
@@ -43,6 +59,13 @@ export class ComponentFactory {
 		return component;
 	}
 
+	/**
+	 *Detaches component from the node tree
+	 *
+	 * @param {*} id
+	 * @returns
+	 * @memberof ComponentFactory
+	 */
 	detach(id) {
 		const comp = this.get(id);
 		if (!comp) {
@@ -53,6 +76,13 @@ export class ComponentFactory {
 		return this.nodeTreeService.detachComponent(comp);
 	}
 
+	/**
+	 *Destroys and removes the component
+	 *
+	 * @param {*} id
+	 * @returns
+	 * @memberof ComponentFactory
+	 */
 	destroy(id) {
 		const component = this.get(id);
 		if (!component) {
@@ -68,26 +98,6 @@ export class ComponentFactory {
 		// Remove from tree and DOM
 		this.nodeTreeService.removeComponent(component);
 
-		// Remove from the map
-		this.components.delete(id);
-	}
-
-	destroyAll() {
-		this.components.forEach(comp => this.destroy(comp.id));
-	}
-
-	get(id) {
-		if (id) {
-			const comp = this.components.get(id);
-			if (!comp) {
-				console.error(`${this.constructor.name}: No component found with id: ${id}`);
-				return;
-			}
-
-			return comp;
-		}
-
-		// @todo: ComponentFactory - throw error (or warning) if this.components.length is 0
-		return [...this.components.values()][this.components.size - 1] || null;
+		super.destroy(id);
 	}
 }

@@ -1,6 +1,6 @@
 import {Service} from '../models/service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
-
+import {conditional, applyWithContext} from '../helpers/eval';
 export class ParseEngineService extends Service {
 	constructor(factoryService) {
 		super();
@@ -35,7 +35,7 @@ export class ParseEngineService extends Service {
 			const list = attr.split(' ');
 			const parsed = list.map(li => {
 				// Allow for data and non-data strings
-				return this.applyWithContext(li, data);
+				return applyWithContext(li, data);
 			});
 			el.classList.add(...parsed);
 		});
@@ -43,7 +43,7 @@ export class ParseEngineService extends Service {
 		// InnerHTML (not actually an attribute, but a property)
 		this.attributeParse(node, data, 'v-innerHTML', (name, el, attr) => {
 			// Simple replace
-			el.innerHTML = this.applyWithContext(attr, data);
+			el.innerHTML = applyWithContext(attr, data);
 		});
 
 		// V-each
@@ -53,7 +53,7 @@ export class ParseEngineService extends Service {
 			if (match && match.length > 2) {
 				const key = match[1];
 				const componentName = match[2];
-				const arr = this.applyWithContext(key, data);
+				const arr = applyWithContext(key, data);
 				if (arr.forEach) {
 					arr.forEach(item => {
 						const factory = this.factoryService.getFactoryByString(componentName);
@@ -65,7 +65,7 @@ export class ParseEngineService extends Service {
 
 		// V-if
 		this.attributeParse(node, data, 'v-if', (name, el, attr) => {
-			if (!this.conditional(attr, data)) {
+			if (!conditional(attr, data)) {
 				el.remove();
 			}
 		});
@@ -74,13 +74,13 @@ export class ParseEngineService extends Service {
 			const list = attr.split(' ');
 			const parsed = list.map(li => {
 				// Allow for data and non-data strings
-				return this.applyWithContext(li, data);
+				return applyWithContext(li, data);
 			});
 			el.classList.add(...parsed);
 		});
 
 		this.attributeParseVif(node, data, 'vif-innerHTML', (name, el, attr) => {
-			el.innerHTML = this.applyWithContext(attr, data);
+			el.innerHTML = applyWithContext(attr, data);
 		});
 
 		// Parsing Elements
@@ -122,7 +122,7 @@ export class ParseEngineService extends Service {
 			} else {
 				// Simple replace
 				const newAttribute = name.replace('v-', '');
-				el.setAttribute(newAttribute, this.applyWithContext(attr, data));
+				el.setAttribute(newAttribute, applyWithContext(attr, data));
 			}
 
 			// Rename to data to make parseable
@@ -139,9 +139,9 @@ export class ParseEngineService extends Service {
 				const ternary = attr.match(/(?<=\()(.*?)(?=\)\s*\?).*?(?<=\?)\s?(.*?)\s?:\s?(.*)/);
 				let result = null;
 				if (ternary && ternary.length > 3) {
-					result = this.conditional(match[1], data) ? ternary[2] : ternary[3];
+					result = conditional(match[1], data) ? ternary[2] : ternary[3];
 				} else {
-					result = this.conditional(match[1], data) ? match[2] || null : null;
+					result = conditional(match[1], data) ? match[2] || null : null;
 				}
 
 				// Do not bother setting if there's no result
@@ -153,31 +153,9 @@ export class ParseEngineService extends Service {
 					customParseFn(name, el, result);
 				} else {
 					const newAttribute = name.replace('vif-', '');
-					el.setAttribute(newAttribute, this.applyWithContext(result, data));
+					el.setAttribute(newAttribute, applyWithContext(result, data));
 				}
 			}
 		});
-	}
-
-	/* Generic fn */
-	conditional(condition, context) {
-		return (function (condition) {
-			// Someone grab the holy water, we're going in
-			try {
-				return eval(condition); // eslint-disable-line no-eval
-			} catch {
-				return false;
-			}
-		}).call(context, condition);
-	}
-
-	applyWithContext(value, context) {
-		return (function (value) {
-			try {
-				return eval(value); // eslint-disable-line no-eval
-			} catch {
-				return value;
-			}
-		}).call(context, value);
 	}
 }

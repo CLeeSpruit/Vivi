@@ -3,7 +3,19 @@ import {NodeTreeService} from '../services/node-tree.service';
 import {ServiceFactory} from './service-factory';
 import {ComponentFactory} from './component-factory';
 
+/**
+ * Module Factory - Initial Constructor for the Vivi Framework
+ *
+ * @export
+ * @class ModuleFactory
+ */
 export class ModuleFactory {
+	/**
+	 * Creates an instance of ModuleFactory.
+	 *
+	 * @param {{componentConstructors: Array<Component>, serviceConstructors: Array<Service>, rootComponent: Component}} module
+	 * @memberof ModuleFactory
+	 */
 	constructor(module) {
 		this.services = new Map();
 		this.components = new Map();
@@ -18,7 +30,7 @@ export class ModuleFactory {
 		}
 
 		// Init Services
-		// @todo: Automatically load services in the services folder\
+		// @todo: Automatically load services in the services folder
 		module.serviceConstructors.forEach(serviceConstructor => {
 			let prereqArr = [];
 			if (serviceConstructor.prereqArr) {
@@ -57,15 +69,36 @@ export class ModuleFactory {
 		this.start();
 	}
 
-	get(constuctor) {
-		return this.getFactory(constuctor).get();
+	/**
+	 * Fetches a service or component from the constructor. If an id is not specified, it'll grab the last instance of that service or component.
+	 *
+	 * @param {Service | Component} constructor
+	 * @returns If an id is specified, that component/service instance. Otherwise the last created instance of that service/component
+	 * @memberof ModuleFactory
+	 */
+	get(constructor, id) {
+		return this.getFactory(constructor).get(id);
 	}
 
+	/**
+	 * Fetches a service factory or component factory from the service or component constructor
+	 *
+	 * @param {Service | Component} constructor
+	 * @returns If found, ServiceFactory or ComponentFactory of component/service
+	 * @memberof ModuleFactory
+	 */
 	getFactory(constructor) {
 		const {name} = constructor;
 		return this.getFactoryByString(name);
 	}
 
+	/**
+	 * Fetches a service factory or component factory from a string
+	 *
+	 * @param {string} name - Name of the component. Ex: 'MyCoolComponent'
+	 * @returns If found, ServiceFactory or ComponentFactory of component/service
+	 * @memberof ModuleFactory
+	 */
 	getFactoryByString(name) {
 		const matches = name.match(/(.*)(Component|Service)$/);
 		if (matches && matches[2] && matches[2] === 'Service') {
@@ -80,11 +113,20 @@ export class ModuleFactory {
 		console.trace();
 	}
 
+	/**
+	 * Returns all component names registered in an array
+	 *
+	 * @returns {Array<string>}
+	 * @memberof ModuleFactory
+	 */
 	getComponentRegistry() {
 		return [...this.components.keys()];
 	}
 
-	start() {
-		// Placeholder
-	}
+	/**
+	 * Placeholder event loop for any code to be run immediately after Vivi has finished initalizing
+	 *
+	 * @memberof ModuleFactory
+	 */
+	start() {}
 }

@@ -4,6 +4,10 @@ import {MockService, MockWithPrereqService} from '../models/__mocks__/service.mo
 import {NodeTreeService} from '../services/node-tree.service';
 
 export class Mocker {
+	/**
+	 *Creates an instance of Mocker.
+	 * @memberof Mocker
+	 */
 	constructor() {
 		this.defaultComponents = [
 			{constructor: MockComponent, services: [MockService]}
@@ -27,10 +31,23 @@ export class Mocker {
 		this.rootComp = this.getFactory().get();
 	}
 
+	/**
+	 *Returns ComponentFactory of MockComponent
+	 *
+	 * @returns
+	 * @memberof Mocker
+	 */
 	getFactory() {
 		return this.module.getFactory(MockComponent);
 	}
 
+	/**
+	 *Creates a mock of MockComponent with optional parameters
+	 *
+	 * @param {*} options
+	 * @returns {Component}
+	 * @memberof Mocker
+	 */
 	createMock(options) {
 		const comp = this.getFactory().create(this.rootComp);
 
@@ -52,17 +69,17 @@ export class Mocker {
 			comp.data = options.data ? options.data : this.defaultData;
 		}
 
-		if (options.hasElements || options.elements) {
-			if (options.elements) {
-				Reflect.defineMetadata('ViviElement', options.elements, comp);
-				options.elements.forEach(element => {
-					comp[element.handlerFnName] = () => { };
-				});
-			} else {
-				Reflect.defineMetadata('ViviElement', [this.defaultElement], comp);
-				comp.template = this.defaultTemplate;
-			}
-		}
+		// if (options.hasElements || options.elements) {
+		// 	if (options.elements) {
+		// 		Reflect.defineMetadata('ViviElement', options.elements, comp);
+		// 		options.elements.forEach(element => {
+		// 			comp[element.handlerFnName] = () => { };
+		// 		});
+		// 	} else {
+		// 		Reflect.defineMetadata('ViviElement', [this.defaultElement], comp);
+		// 		comp.template = this.defaultTemplate;
+		// 	}
+		// }
 
 		if (!options.doNotAppend) {
 			comp.append(this.rootComp.element, null);

@@ -2,10 +2,23 @@ import {NodeTree} from '../models/node-tree';
 import {Service} from '../models/service';
 
 export class NodeTreeService extends Service {
+	/**
+	 *Sets the root component of the application
+	 *
+	 * @param {Component} rootComponent
+	 * @memberof NodeTreeService
+	 */
 	setRoot(rootComponent) {
 		this.applicationTree = new NodeTree(rootComponent);
 	}
 
+	/**
+	 *Returns NodeTree of component
+	 *
+	 * @param {Component} comp
+	 * @returns {NodeTree}
+	 * @memberof NodeTreeService
+	 */
 	getNode(comp) {
 		if (!this.applicationTree) {
 			return;
@@ -18,6 +31,14 @@ export class NodeTreeService extends Service {
 		return this.applicationTree.findChild(comp.id, true, true);
 	}
 
+	/**
+	 *Adds NodeTree to a Component
+	 *
+	 * @param {Component} parentComp
+	 * @param {NodeTree} childNode
+	 * @returns
+	 * @memberof NodeTreeService
+	 */
 	addNodeToComponent(parentComp, childNode) {
 		const parentNode = this.getNode(parentComp);
 		if (!parentNode) {
@@ -28,6 +49,13 @@ export class NodeTreeService extends Service {
 		parentNode.children.push(childNode);
 	}
 
+	/**
+	 *Runs the load hook for node and it's chilren
+	 *
+	 * @param {Component} comp
+	 * @returns
+	 * @memberof NodeTreeService
+	 */
 	loadComponent(comp) {
 		const node = this.getNode(comp);
 		if (!node) {
@@ -38,6 +66,14 @@ export class NodeTreeService extends Service {
 		node.load();
 	}
 
+	/**
+	 *Add component to parent component. If no parentNode is declared, child is added to application tree.
+	 *
+	 * @param {Component} parentComp
+	 * @param {Component} childComp
+	 * @returns {NodeTree}
+	 * @memberof NodeTreeService
+	 */
 	addComponent(parentComp, childComp) {
 		if (!this.applicationTree && parentComp) {
 			console.error(`Error adding child node: ${childComp.componentName}. No root component has been set yet.`);
@@ -60,6 +96,13 @@ export class NodeTreeService extends Service {
 		return parentNode.addChild(childComp);
 	}
 
+	/**
+	 *Triggers node destroy
+	 *
+	 * @param {Component} comp
+	 * @returns
+	 * @memberof NodeTreeService
+	 */
 	removeComponent(comp) {
 		const node = this.getNode(comp);
 
@@ -70,6 +113,13 @@ export class NodeTreeService extends Service {
 		node.destroy();
 	}
 
+	/**
+	 *Detaches the component from the DOM
+	 *
+	 * @param {*} comp
+	 * @returns {NodeTree}
+	 * @memberof NodeTreeService
+	 */
 	detachComponent(comp) {
 		const parent = this.applicationTree.findParentOf(comp.id);
 		if (!parent) {

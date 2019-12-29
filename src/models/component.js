@@ -7,6 +7,10 @@ import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {getElements} from '../decorators/element.decorator';
 
 export class Component {
+	/**
+	 *Creates an instance of Component.
+	 * @memberof Component
+	 */
 	constructor() {
 		// Default Services
 		this.factoryService = (window.vivi.get(FactoryService));
@@ -38,11 +42,24 @@ export class Component {
 		}
 	}
 
+	/**
+	 *Initializes id and data
+	 *
+	 * @param {string} id
+	 * @param {*} [data]
+	 * @memberof Component
+	 */
 	setData(id, data) {
 		this.data = data || {};
 		this.id = `${this.componentName}-${id}`;
 	}
 
+	/**
+	 *Retreives raw template element without any parsing
+	 *
+	 * @returns {HTMLElement}
+	 * @memberof Component
+	 */
 	getUnparsedNode() {
 		// Create Node that is named after the component class
 		const el = document.createElement(this.componentName);
@@ -51,6 +68,11 @@ export class Component {
 		return el;
 	}
 
+	/**
+	 *Creates child nodes based off of template
+	 *
+	 * @memberof Component
+	 */
 	createNodes() {
 		/*
             @todo: Add dynamic styling
@@ -71,6 +93,14 @@ export class Component {
 		this.engine.parse(this.parsedNode, this.data, this);
 	}
 
+	/**
+	 *Appends component to an element
+	 *
+	 * @param {HTMLElement} parentEl
+	 * @param {HTMLElement} replaceEl
+	 * @returns
+	 * @memberof Component
+	 */
 	append(parentEl, replaceEl) {
 		if (!parentEl) {
 			console.error(`Error while appending ${this.id}. Parent element does not exist.`);
@@ -88,6 +118,11 @@ export class Component {
 		}
 	}
 
+	/**
+	 *Begins the load hook
+	 *
+	 * @memberof Component
+	 */
 	startLoad() {
 		// Assign Element and class params
 		this.element = document.querySelector(this.id);
@@ -108,6 +143,11 @@ export class Component {
 		this.load();
 	}
 
+	/**
+	 *Runs the component through the parse engine
+	 *
+	 * @memberof Component
+	 */
 	redraw() {
 		// Remove
 		const oldEl = document.querySelector(this.id);
@@ -119,30 +159,69 @@ export class Component {
 		this.element = document.querySelector(this.id);
 	}
 
+	/**
+	 *Removes Component from DOM
+	 *
+	 * @memberof Component
+	 */
 	detach() {
-		this.element.remove();
-	}
-
-	/* Hooks */
-	load() {
-		// Placeholder hook for inherited classes
-	}
-
-	destroy() {
 		if (this.element) {
 			this.element.remove();
 		}
 	}
 
-	/* Actions */
-	listen(el, eventType, cb) {
-		listen(eventType, cb.bind(this));
+	/* Hooks */
+	/**
+	 *Hook to run code immediate after the component is loaded into the DOM
+	 *
+	 * @memberof Component
+	 */
+	load() {
+		// Placeholder hook for inherited classes
 	}
 
+	/**
+	 *Removes component from DOM
+	 *
+	 * @memberof Component
+	 */
+	destroy() {
+		this.detach();
+	}
+
+	/* Actions */
+	/**
+	 *Creates an element listener
+	 *
+	 * @param {HTMLElement} el
+	 * @param {string} eventType
+	 * @param {Function} cb
+	 * @memberof Component
+	 */
+	listen(el, eventType, cb) {
+		listen(el, eventType, cb.bind(this));
+	}
+
+	/**
+	 *Creates a listener that waits for an application event to fire to trigger callback
+	 *
+	 * @param {string} eventName
+	 * @param {Function} cb
+	 * @memberof Component
+	 */
 	appListen(eventName, cb) {
 		this.appEvents.createListener(eventName, cb.bind(this));
 	}
 
+	/**
+	 *Creates a child component attached to an element
+	 *
+	 * @param {HTMLElement} parentEl
+	 * @param {Function} component - Component constructor function
+	 * @param {*} data - parameters to create component
+	 * @returns {Component}
+	 * @memberof Component
+	 */
 	createChild(parentEl, component, data) {
 		const factory = this.factoryService.getFactory(component);
 		return factory.create(this, data, {parentEl});
