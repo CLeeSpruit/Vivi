@@ -125,7 +125,7 @@ export class Component {
 	 */
 	startLoad() {
 		// Assign Element and class params
-		this.element = document.querySelector(this.id);
+		this.element = document.querySelector('#' + this.id);
 		if (!this.element) {
 			console.warn(`Error while loading ${this.id}. Element not was not created.`);
 		}
@@ -150,13 +150,13 @@ export class Component {
 	 */
 	redraw() {
 		// Remove
-		const oldEl = document.querySelector(this.id);
+		const oldEl = document.querySelector('#' + this.id);
 		const newEl = this.getUnparsedNode();
 		const parentEl = oldEl.parentElement;
 		this.engine.parse(newEl, this.data, this);
 		parentEl.replaceChild(newEl, oldEl);
 		this.parsedNode = newEl;
-		this.element = document.querySelector(this.id);
+		this.element = document.querySelector('#' + this.id);
 	}
 
 	/**

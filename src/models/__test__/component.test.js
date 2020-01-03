@@ -58,7 +58,7 @@ test('append should append to parent', t => {
 	component.append(mockParent);
 
 	t.assert(mockParent.children.length);
-	const template = document.querySelector(component.id);
+	const template = document.querySelector('#' + component.id);
 	t.is(template.innerHTML, component.template);
 });
 
@@ -122,7 +122,7 @@ test('should redraw with new params', t => {
 
 	component.redraw();
 
-	const componentEl = document.querySelector(component.id);
+	const componentEl = document.querySelector('#' + component.id);
 	const actual = componentEl.querySelector('span');
 
 	t.deepEqual(actual.innerHTML, newName);
