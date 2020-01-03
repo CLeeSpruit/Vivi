@@ -19,7 +19,7 @@ const config = {
 		__filename: true
 	},
 	output: {
-		filename: 'vivi.js',
+		filename: 'vivi.min.js',
 		library: 'vivi',
 		libraryTarget: 'umd'
 	},
@@ -34,4 +34,14 @@ const config = {
 	}
 };
 
-module.exports = [config];
+const devConfig = {
+	...config,
+	output: {
+		filename: 'vivi.js',
+		library: 'vivi',
+		libraryTarget: 'umd'
+	},
+	mode: 'development'
+};
+
+module.exports = [config, devConfig];
