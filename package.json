@@ -9,7 +9,6 @@
     ],
     "scripts": {
         "build": "npm run flush && webpack-cli",
-        "build:test-env": "cd test-environment && npm run build && cd ../",
         "flush": "rm -r ./dist || true",
         "lint": "xo",
         "lint-fix": "xo --fix",
