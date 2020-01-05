@@ -44,9 +44,9 @@
         "browser-env": "^3.3.0",
         "codecov": "^3.6.1",
         "cz-conventional-changelog": "^3.0.2",
-        "nyc": "^14.1.1",
+        "nyc": "^15.0.0",
         "semantic-release": "^15.13.31",
-        "webpack": "4.41.2",
+        "webpack": "4.41.5",
         "webpack-cli": "3.3.10",
         "xo": "^0.25.3"
     },
