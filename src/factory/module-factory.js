@@ -1,4 +1,4 @@
-import {mapFilter, mapToArray} from '../helpers/array-like-map';
+import {mapFilter, mapToArray} from '@cspruit/array-like-map';
 import {loadViviServices} from '../services/load-services.static';
 import {NodeTreeService} from '../services/node-tree.service';
 import {FactoryService} from '../services/factory.service';

@@ -51,6 +51,7 @@
         "xo": "^0.25.3"
     },
     "dependencies": {
+        "@cspruit/array-like-map": "^1.0.0",
         "@cspruit/zephyr": "^1.0.2"
     },
     "config": {
