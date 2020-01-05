@@ -1,7 +1,9 @@
+import {mapFilter, mapToArray} from '../helpers/array-like-map';
 import {loadViviServices} from '../services/load-services.static';
 import {NodeTreeService} from '../services/node-tree.service';
 import {ServiceFactory} from './service-factory';
 import {ComponentFactory} from './component-factory';
+import {Factory} from './factory';
 
 /**
  * Module Factory - Initial Constructor for the Vivi Framework
@@ -17,8 +19,7 @@ export class ModuleFactory {
 	 * @memberof ModuleFactory
 	 */
 	constructor(module) {
-		this.services = new Map();
-		this.components = new Map();
+		this.instances = new Map();
 		// @todo Replace instances of window.vivi with an injected version
 		window.vivi = this;
 
@@ -36,7 +37,7 @@ export class ModuleFactory {
 			if (serviceConstructor.prereqArr) {
 				prereqArr = serviceConstructor.prereqArr.map(prereq => {
 					// @todo: Services - Throw a specific warning to the user telling them about a missing service
-					return this.services.get(prereq.name);
+					return this.instances.get(prereq.name);
 				});
 			}
 
@@ -53,11 +54,11 @@ export class ModuleFactory {
 			if (constructor.services) {
 				serviceArr = constructor.services.map(service => {
 					// @todo: Components - Throw a specific warning to the user telling them about a missing service
-					return this.services.get(service.name);
+					return this.instances.get(service.name);
 				});
 			}
 
-			this.components.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, serviceArr, nodeTree));
+			this.instances.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, serviceArr, nodeTree));
 		});
 
 		// Mount root component
@@ -67,6 +68,29 @@ export class ModuleFactory {
 
 		// Initialize
 		this.start();
+	}
+
+	/**
+	 *Creates a Component or Service factory
+	 *
+	 * @param {Service|Component} constructor
+	 * @returns {ServiceFactory|ComponentFactory|Factory}
+	 * @memberof ModuleFactory
+	 */
+	createFactory(constructor) {
+		let factory;
+		const matches = name.match(/(.*)(Component|Service)$/);
+		if (matches && matches[2] && matches[2] === 'Service') {
+			factory = new ServiceFactory(constructor);
+		} else if (matches && matches[2] && matches[2] === 'Component') {
+			factory = new ComponentFactory(constructor, this.get(NodeTreeService));
+		} else {
+			factory = new Factory();
+		}
+
+		this.instances.set(constructor.name, factory);
+
+		return factory;
 	}
 
 	/**
@@ -88,7 +112,7 @@ export class ModuleFactory {
 	 * @memberof ModuleFactory
 	 */
 	getFactory(constructor) {
-		const {name} = constructor;
+		const name = constructor;
 		return this.getFactoryByString(name);
 	}
 
@@ -100,13 +124,9 @@ export class ModuleFactory {
 	 * @memberof ModuleFactory
 	 */
 	getFactoryByString(name) {
-		const matches = name.match(/(.*)(Component|Service)$/);
-		if (matches && matches[2] && matches[2] === 'Service') {
-			return this.services.get(name);
-		}
-
-		if (matches && matches[2] && matches[2] === 'Component') {
-			return this.components.get(name);
+		const instance = this.instances.get(name);
+		if (instance) {
+			return instance;
 		}
 
 		console.error('No service factory or component factory found for ' + name);
@@ -120,7 +140,7 @@ export class ModuleFactory {
 	 * @memberof ModuleFactory
 	 */
 	getComponentRegistry() {
-		return [...this.components.keys()];
+		return mapToArray(mapFilter(this.instances, value => value instanceof ComponentFactory));
 	}
 
 	/**
