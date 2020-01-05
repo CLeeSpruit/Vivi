@@ -2,18 +2,21 @@ export class Factory {
 	/**
      *Creates an instance of Factory.
      * @param {Function} constructorFn - Constructor to be called on create
+	 * @param {FactoryService} factoryService - FactoryService to be injected in instances
+	 * @param {Array<string>} [prerequisites] - Prerequisites to be injected in instances
      * @memberof Factory
      */
-	constructor(constructorFn, prerequisites) {
+	constructor(constructorFn, factoryService, prerequisites) {
 		this.counter = 1;
 		this.construct = constructorFn;
 		this.instances = new Map();
+		this.factoryService = factoryService;
 		this.prerequisites = prerequisites || [];
 	}
 
 	create(data) {
-		const instance = new this.construct(...this.prerequisites.map(prereq => prereq.get())); // eslint-disable-line new-cap
-		instance.setData(this.counter, data);
+		const instance = new this.construct(this.factoryService); // eslint-disable-line new-cap
+		instance.setData(this.counter, data, this.prerequisites);
 		this.counter++;
 		this.instances.set(instance.id, instance);
 

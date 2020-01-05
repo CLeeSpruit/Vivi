@@ -1,5 +1,9 @@
-export class Service {
-	setData(id) {
-		this.id = `${this.constructor.name}-${id}`;
+import {Instance} from './instance';
+
+export class Service extends Instance {
+	constructor(factoryService) {
+		super(factoryService);
+
+		this.load();
 	}
 }

@@ -4,11 +4,12 @@ export class ServiceFactory extends Factory {
 	/**
 	 *Creates an instance of ServiceFactory.
 	 * @param {Function} constructorFn
+	 * @param {FactoryService} factoryService
 	 * @param {Array<Service>} prerequisitesArr
 	 * @memberof ServiceFactory
 	 */
-	constructor(constructorFn, prerequisitesArr) {
-		super(constructorFn, prerequisitesArr);
+	constructor(constructorFn, factoryService, prerequisitesArr) {
+		super(constructorFn, factoryService, prerequisitesArr);
 		this.create();
 	}
 }

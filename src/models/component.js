@@ -1,27 +1,18 @@
 import {listen} from '@cspruit/zephyr';
-import {FactoryService} from '../services/factory.service';
 import {ApplicationEventService} from '../services/application-event.service';
 import {ParseEngineService} from '../services/parse-engine.service';
 import {NodeTreeService} from '../services/node-tree.service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {getElements} from '../decorators/element.decorator';
+import {Instance} from './instance';
 
-export class Component {
+export class Component extends Instance {
 	/**
-	 *Creates an instance of Component.
+	 *Set Template and Style for component. Leave to import from vivi_application/componentName/component-name.component.html/scss
+	 *
 	 * @memberof Component
 	 */
-	constructor() {
-		// Default Services
-		this.factoryService = (window.vivi.get(FactoryService));
-		this.appEvents = this.factoryService.getFactory(ApplicationEventService).get();
-		this.engine = this.factoryService.getFactory(ParseEngineService).get();
-		this.nodeTreeService = this.factoryService.getFactory(NodeTreeService).get();
-
-		// Get template and style file
-
-		// Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
-		this.componentName = getElNameFromComponent(this.constructor.name);
+	setFiles() {
 		/*
             @todo Allow for components to grab the module folder / multiple modules
             @body Currently file structure is root/component-name/component-name.component.xyz. Allow for components to be in directories based off of the module
@@ -42,16 +33,14 @@ export class Component {
 		}
 	}
 
-	/**
-	 *Initializes id and data
-	 *
-	 * @param {string} id
-	 * @param {*} [data]
-	 * @memberof Component
-	 */
-	setData(id, data) {
-		this.data = data || {};
-		this.id = `${this.componentName}-${id}`;
+	setData(id, data, prereqs) {
+		super.setData(id, data, prereqs);
+
+		// Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
+		this.componentName = getElNameFromComponent(this.constructor.name);
+		this.appEvents = this.factoryService.getFactory(ApplicationEventService).get();
+		this.engine = this.factoryService.getFactory(ParseEngineService).get();
+		this.nodeTreeService = this.factoryService.getFactory(NodeTreeService).get();
 	}
 
 	/**
@@ -168,16 +157,6 @@ export class Component {
 		if (this.element) {
 			this.element.remove();
 		}
-	}
-
-	/* Hooks */
-	/**
-	 *Hook to run code immediate after the component is loaded into the DOM
-	 *
-	 * @memberof Component
-	 */
-	load() {
-		// Placeholder hook for inherited classes
 	}
 
 	/**

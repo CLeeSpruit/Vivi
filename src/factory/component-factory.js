@@ -1,20 +1,21 @@
+import {NodeTreeService} from '../services';
 import {Factory} from './factory';
 
 export class ComponentFactory extends Factory {
 	/**
 	 *Creates an instance of ComponentFactory.
 	 * @param {Function} constructorFn
+	 * @param {NodeTreeService} factoryService
 	 * @param {Array<Service>} services
-	 * @param {NodeTreeService} nodeTreeService
 	 * @memberof ComponentFactory
 	 */
 	constructor(
 		constructorFn,
-		services,
-		nodeTreeService
+		factoryService,
+		services
 	) {
-		super(constructorFn, services);
-		this.nodeTreeService = nodeTreeService;
+		super(constructorFn, factoryService, services);
+		this.nodeTreeService = this.factoryService.get(NodeTreeService);
 	}
 
 	/**

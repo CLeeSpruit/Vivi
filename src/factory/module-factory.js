@@ -1,6 +1,7 @@
 import {mapFilter, mapToArray} from '../helpers/array-like-map';
 import {loadViviServices} from '../services/load-services.static';
 import {NodeTreeService} from '../services/node-tree.service';
+import {FactoryService} from '../services/factory.service';
 import {ServiceFactory} from './service-factory';
 import {ComponentFactory} from './component-factory';
 import {Factory} from './factory';
@@ -20,8 +21,9 @@ export class ModuleFactory {
 	 */
 	constructor(module) {
 		this.instances = new Map();
-		// @todo Replace instances of window.vivi with an injected version
-		window.vivi = this;
+
+		// Create a new instance of the Factory Service. This injects the module itself, so it has to be created specifically.
+		const factoryService = new FactoryService(this);
 
 		// Append Vivi services - these should be before any custom services
 		if (module.serviceConstructors) {
@@ -41,7 +43,7 @@ export class ModuleFactory {
 				});
 			}
 
-			this.services.set(serviceConstructor.constructor.name, new ServiceFactory(serviceConstructor.constructor, prereqArr));
+			this.services.set(serviceConstructor.constructor.name, new ServiceFactory(serviceConstructor.constructor, factoryService, prereqArr));
 		});
 
 		// NodeTree is needed to inject into Factory
@@ -58,7 +60,7 @@ export class ModuleFactory {
 				});
 			}
 
-			this.instances.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, serviceArr, nodeTree));
+			this.instances.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, factoryService, serviceArr));
 		});
 
 		// Mount root component
@@ -83,7 +85,7 @@ export class ModuleFactory {
 		if (matches && matches[2] && matches[2] === 'Service') {
 			factory = new ServiceFactory(constructor);
 		} else if (matches && matches[2] && matches[2] === 'Component') {
-			factory = new ComponentFactory(constructor, this.get(NodeTreeService));
+			factory = new ComponentFactory(constructor, [], this.get(NodeTreeService));
 		} else {
 			factory = new Factory();
 		}

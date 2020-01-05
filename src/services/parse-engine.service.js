@@ -2,9 +2,7 @@ import {Service} from '../models/service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {conditional, applyWithContext} from '../helpers/eval';
 export class ParseEngineService extends Service {
-	constructor(factoryService) {
-		super();
-		this.factoryService = factoryService;
+	load() {
 		this.attributeBlackList = [
 			'v-class',
 			'v-each',

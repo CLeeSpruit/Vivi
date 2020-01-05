@@ -2,8 +2,7 @@ import {EventRegistry} from '@cspruit/zephyr';
 import {Service} from '../models/service';
 
 export class ApplicationEventService extends Service {
-	constructor() {
-		super();
+	load() {
 		this.eventRegistry = new EventRegistry();
 	}
 
