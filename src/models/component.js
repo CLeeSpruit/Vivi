@@ -3,7 +3,6 @@ import {ApplicationEventService} from '../services/application-event.service';
 import {ParseEngineService} from '../services/parse-engine.service';
 import {NodeTreeService} from '../services/node-tree.service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
-import {getElements} from '../decorators/element.decorator';
 import {Instance} from './instance';
 
 export class Component extends Instance {
@@ -113,20 +112,11 @@ export class Component extends Instance {
 	 * @memberof Component
 	 */
 	startLoad() {
-		// Assign Element and class params
+		// Assign Element
 		this.element = document.querySelector('#' + this.id);
 		if (!this.element) {
 			console.warn(`Error while loading ${this.id}. Element not was not created.`);
 		}
-
-		// Load in decorated elements
-		const els = getElements(this);
-		els.forEach(el => {
-			this[el.propertyKey] = this.element.querySelector(el.selector);
-			if (el.handlerFnName) {
-				this.listen(this[el.propertyKey], el.eventType, this[el.handlerFnName]);
-			}
-		});
 
 		// User Hook
 		this.load();

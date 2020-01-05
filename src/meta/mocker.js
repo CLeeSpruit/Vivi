@@ -69,18 +69,6 @@ export class Mocker {
 			comp.data = options.data ? options.data : this.defaultData;
 		}
 
-		// if (options.hasElements || options.elements) {
-		// 	if (options.elements) {
-		// 		Reflect.defineMetadata('ViviElement', options.elements, comp);
-		// 		options.elements.forEach(element => {
-		// 			comp[element.handlerFnName] = () => { };
-		// 		});
-		// 	} else {
-		// 		Reflect.defineMetadata('ViviElement', [this.defaultElement], comp);
-		// 		comp.template = this.defaultTemplate;
-		// 	}
-		// }
-
 		if (!options.doNotAppend) {
 			comp.append(this.rootComp.element, null);
 
