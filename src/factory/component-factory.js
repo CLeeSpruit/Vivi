@@ -5,7 +5,7 @@ export class ComponentFactory extends Factory {
 	/**
 	 *Creates an instance of ComponentFactory.
 	 * @param {Function} constructorFn
-	 * @param {NodeTreeService} factoryService
+	 * @param {FactoryService} factoryService
 	 * @param {Array<Service>} services
 	 * @memberof ComponentFactory
 	 */
@@ -24,8 +24,7 @@ export class ComponentFactory extends Factory {
 	 * @param {NodeTreeService} nodeTreeService
 	 * @memberof ComponentFactory
 	 */
-	createRoot(nodeTreeService) {
-		this.nodeTreeService = nodeTreeService;
+	createRoot() {
 		const comp = this.create(null, null, {parentEl: document.body, doNotLoad: true, isRoot: true});
 		this.nodeTreeService.setRoot(comp);
 		this.nodeTreeService.applicationTree.load();

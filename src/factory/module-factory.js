@@ -16,10 +16,14 @@ export class ModuleFactory {
 	/**
 	 * Creates an instance of ModuleFactory.
 	 *
-	 * @param {{componentConstructors: Array<Component>, serviceConstructors: Array<Service>, rootComponent: Component}} module
+	 * @param {{componentConstructors: Array<Component>, serviceConstructors: Array<Service>, rootComponent: Component}} [module]
 	 * @memberof ModuleFactory
 	 */
 	constructor(module) {
+		if (!module) {
+			module = {};
+		}
+
 		this.instances = new Map();
 
 		// Create a new instance of the Factory Service. This injects the module itself, so it has to be created specifically.
@@ -33,7 +37,6 @@ export class ModuleFactory {
 		}
 
 		// Init Services
-		// @todo: Automatically load services in the services folder
 		module.serviceConstructors.forEach(serviceConstructor => {
 			let prereqArr = [];
 			if (serviceConstructor.prereqArr) {
@@ -46,27 +49,27 @@ export class ModuleFactory {
 			this.services.set(serviceConstructor.constructor.name, new ServiceFactory(serviceConstructor.constructor, factoryService, prereqArr));
 		});
 
-		// NodeTree is needed to inject into Factory
-		const nodeTree = this.get(NodeTreeService);
+		if (module.componentConstructors) {
+			// Init Components
+			module.componentConstructors.forEach(constructor => {
+				let serviceArr = [];
+				if (constructor.services) {
+					serviceArr = constructor.services.map(service => {
+						// @todo: Components - Throw a specific warning to the user telling them about a missing service
+						return this.instances.get(service.name);
+					});
+				}
 
-		// Init Components
-		// @todo: Automatically load components in the components folder
-		module.componentConstructors.forEach(constructor => {
-			let serviceArr = [];
-			if (constructor.services) {
-				serviceArr = constructor.services.map(service => {
-					// @todo: Components - Throw a specific warning to the user telling them about a missing service
-					return this.instances.get(service.name);
-				});
-			}
+				this.instances.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, factoryService, serviceArr));
+			});
+		}
 
-			this.instances.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, factoryService, serviceArr));
-		});
-
-		// Mount root component
-		const rootFactory = this.getFactory(module.rootComponent);
-		// @todo Add ability to make root component append to a user-specified node
-		rootFactory.createRoot(nodeTree);
+		if (module.rootComponent) {
+			// Mount root component
+			const rootFactory = this.getFactory(module.rootComponent);
+			// @todo Add ability to make root component append to a user-specified node
+			rootFactory.createRoot();
+		}
 
 		// Initialize
 		this.start();
