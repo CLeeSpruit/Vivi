@@ -11,6 +11,9 @@ A lightweight component-focused Javascript framework. Vivi is currently still in
 ---
 
 ## Announcements
+### Typescript
+Vivi has converted from Typescript to Javascript for better compatitbility. It's still possible to run Vivi.js with TS, but if you want to use the old version of Vivi that took advantage of a lot of TS-only features like decorators, you can find it in the [Vivi-Typescript](https://github.com/CassandraSpruit/Vivi-Typescript) repo and under @cspruit/vivi-ts npm package.
+
 ### Versioning
 Vivi is moving over to true automated semantic releases, so future update announcements and milestones will be groups of major feature updates and fixes.
 
