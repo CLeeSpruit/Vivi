@@ -1,33 +1,33 @@
 import test from 'ava';
 import {MockComponent, MockChildComponent} from '../../models/__mocks__/component.mock';
-import {MockService, MockWithPrereqService} from '../../models/__mocks__/service.mock';
+import {MockService} from '../../models/__mocks__/service.mock';
 import {ModuleFactory} from '../module-factory';
 import {ComponentFactory} from '../component-factory';
 import {ServiceFactory} from '../service-factory';
 
 const minimumConstructor = () => {
 	return new ModuleFactory({
-		componentConstructors: [{constructor: MockComponent}],
+		componentConstructors: [MockComponent],
 		rootComponent: MockComponent
 	});
 };
 
 const fullConstructor = () => {
 	return new ModuleFactory({
-		serviceConstructors: [
-			{constructor: MockService},
-			{constructor: MockWithPrereqService, prereqArr: [MockService]}
-		],
-		componentConstructors: [
-			{constructor: MockChildComponent},
-			{constructor: MockComponent, services: [MockService]}
-		],
+		serviceConstructors: [MockService],
+		componentConstructors: [MockChildComponent, MockComponent],
 		rootComponent: MockComponent
 	});
 };
 
-test('should init - minimum', t => {
+test('should init - empty', t => {
+	const actual = new ModuleFactory();
+	t.assert(actual);
+});
+
+test.only('should init - minimum', t => {
 	const actual = minimumConstructor();
+	console.log(actual);
 	t.assert(actual);
 });
 
@@ -38,8 +38,8 @@ test('should init - full', t => {
 
 test('should init - root component is created', t => {
 	const vivi = new ModuleFactory({
-		componentConstructors: [{constructor: MockComponent, services: [MockService]}],
-		serviceConstructors: [{constructor: MockService}],
+		componentConstructors: [MockComponent],
+		serviceConstructors: [MockService],
 		rootComponent: MockComponent
 	});
 

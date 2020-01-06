@@ -12,10 +12,7 @@ export class ComponentFactory extends Factory {
 	 * @param {FactoryService} factoryService - Factory Service created from Module Factory
 	 * @memberof ComponentFactory
 	 */
-	constructor(
-		constructorFn,
-		factoryService
-	) {
+	constructor(constructorFn, factoryService) {
 		super(constructorFn, factoryService);
 		this.nodeTreeService = this.factoryService.get(NodeTreeService);
 	}

@@ -1,7 +1,8 @@
 import {ModuleFactory} from '../factory/module-factory';
 import {MockComponent} from '../models/__mocks__/component.mock';
-import {MockService, MockWithPrereqService} from '../models/__mocks__/service.mock';
+import {MockService} from '../models/__mocks__/service.mock';
 import {NodeTreeService} from '../services/node-tree.service';
+import {ComponentFactory} from '../factory/component-factory';
 
 export class Mocker {
 	/**
@@ -10,22 +11,12 @@ export class Mocker {
 	 * @memberof Mocker
 	 */
 	constructor() {
-		this.defaultComponents = [
-			{constructor: MockComponent, services: [MockService]}
-		];
 		this.defaultTemplate = '<span class="test">Test</span>';
 		this.defaultStyle = '* { color: red }';
 		this.defaultData = {name: 'test'};
-		this.defaultElement = {
-			selector: 'span.test',
-			propertyKey: 'test'
-		};
 		this.module = new ModuleFactory({
-			componentConstructors: this.defaultComponents,
-			serviceConstructors: [
-				{constructor: MockService},
-				{constructor: MockWithPrereqService, prereqArr: [MockService]}
-			],
+			componentConstructors: [MockComponent],
+			serviceConstructors: [MockService],
 			rootComponent: MockComponent
 		});
 
@@ -35,7 +26,7 @@ export class Mocker {
 	/**
 	 *Returns ComponentFactory of MockComponent
 	 *
-	 * @returns
+	 * @returns {ComponentFactory} - ComponentFactory of MockComponent
 	 * @memberof Mocker
 	 */
 	getFactory() {
@@ -45,7 +36,7 @@ export class Mocker {
 	/**
 	 *Creates a mock of MockComponent with optional parameters
 	 *
-	 * @param {*} options
+	 * @param {*} options - Options for component created
 	 * @returns {Component}
 	 * @memberof Mocker
 	 */

@@ -2,9 +2,8 @@
 import {Component} from '../component';
 
 export class MockComponent extends Component {
-	constructor(mockService) {
-		super();
-		this.mockService = mockService;
+	load() {
+		this.mockService = this.factoryService.get('MockService');
 	}
 }
 

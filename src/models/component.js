@@ -31,6 +31,7 @@ export class Component extends Instance {
 	 * Set Template and Style for component. Leave to import from vivi_application/componentName/component-name.component.html/scss
 	 *
 	 * @memberof Component
+	 * @todo rename to loadFiles
 	 */
 	setFiles() {
 		/*
