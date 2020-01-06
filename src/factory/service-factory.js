@@ -2,6 +2,13 @@ import {Service} from '../models/service';
 import {FactoryService} from '../services/factory.service';
 import {Factory} from './factory';
 
+/**
+ * Generates and manages components
+ *
+ * @export
+ * @class ServiceFactory
+ * @extends {Factory}
+ */
 export class ServiceFactory extends Factory {
 	/**
 	 *Creates an instance of ServiceFactory.

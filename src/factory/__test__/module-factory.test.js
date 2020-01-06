@@ -59,21 +59,6 @@ test('getFactory should return serviceFactory', t => {
 	t.assert(actual instanceof ServiceFactory);
 });
 
-test('getFactory should return componentFactory by string', t => {
-	const vivi = fullConstructor();
-	const actual = vivi.getFactoryByString('MockComponent');
-	t.assert(actual instanceof ComponentFactory);
-});
-
-test('getFactory should return serviceFactory by string', t => {
-	const vivi = fullConstructor();
-	const actual = vivi.getFactoryByString('MockService');
-	t.assert(actual instanceof ServiceFactory);
-});
-
-// Error related
-test.todo('getFactoryByString should throw error if no service or component is found');
-
 test('get should return component if created', t => {
 	const vivi = fullConstructor();
 	vivi.getFactory(MockComponent).create(null, null, {isRoot: true});

@@ -4,6 +4,12 @@ import {MockService} from '../models/__mocks__/service.mock';
 import {NodeTreeService} from '../services/node-tree.service';
 import {ComponentFactory} from '../factory/component-factory';
 
+/**
+ * Creates a mock instance of Vivi
+ *
+ * @private
+ * @class Mocker
+ */
 export class Mocker {
 	/**
 	 *Creates an instance of Mocker.

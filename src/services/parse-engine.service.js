@@ -2,6 +2,12 @@ import {Service} from '../models/service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {conditional, applyWithContext} from '../helpers/eval';
 import {Component} from '../models';
+/**
+ * The magic behind injecting javascript into html code. Parse is the main entry point.
+ *
+ * @class ParseEngineService
+ * @augments {Service}
+ */
 export class ParseEngineService extends Service {
 	/**
 	 * Load assigns attributeBlack list
@@ -69,7 +75,7 @@ export class ParseEngineService extends Service {
 				const arr = applyWithContext(key, data);
 				if (arr.forEach) {
 					arr.forEach(item => {
-						const factory = this.factoryService.getFactoryByString(componentName);
+						const factory = this.factoryService.getFactory(componentName);
 						factory.create(comp, item, {parentEl: el, doNotLoad: true});
 					});
 				}
@@ -104,7 +110,7 @@ export class ParseEngineService extends Service {
 			for (let i = 0; i < els.length; i++) {
 				const el = els.item(i);
 				if (!el.id) {
-					const factory = this.factoryService.getFactoryByString(reg);
+					const factory = this.factoryService.getFactory(reg);
 					factory.create(comp, (el).dataset, {parentEl: el.parentElement, replaceEl: el, doNotLoad: true});
 				}
 			}

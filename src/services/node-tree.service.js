@@ -2,6 +2,12 @@ import {NodeTree} from '../models/node-tree';
 import {Service} from '../models/service';
 import {Component} from '../models/component';
 
+/**
+ * Service that handles and creates NodeTrees
+ *
+ * @class NodeTreeService
+ * @augments {Service}
+ */
 export class NodeTreeService extends Service {
 	/**
 	 * Sets the root component of the application

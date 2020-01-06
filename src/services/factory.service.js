@@ -1,4 +1,11 @@
-// FactoryService is special and cannot inherit Service, despite the name.
+/**
+ * Interface for ModuleFactory. Provides an easy way for components and services to grab other components and services.
+ * Note: FactoryService is special and cannot inherit Service, despite the name.
+ *
+ * @class FactoryService
+ * @todo Move to factory folder and rename to something other than "FactoryService" as the name is confusing with other services.
+ * @body Optional this service might be superfluous and the module itself can be injected into the instances
+ */
 export class FactoryService {
 	/**
 	 * Creates an instance of FactoryService.

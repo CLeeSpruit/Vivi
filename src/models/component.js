@@ -5,6 +5,12 @@ import {NodeTreeService} from '../services/node-tree.service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {Instance} from './instance';
 
+/**
+ * Reusable chunk of code that contains template and style data
+ *
+ * @class Component
+ * @augments {Instance}
+ */
 export class Component extends Instance {
 	/**
 	 * Sets id, data, prereqs of component.

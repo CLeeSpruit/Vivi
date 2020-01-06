@@ -4,6 +4,13 @@ import {FactoryService} from '../services/factory.service';
 import {NodeTree} from '../models/node-tree';
 import {Factory} from './factory';
 
+/**
+ * Generates and manages components
+ *
+ * @export
+ * @class ComponentFactory
+ * @extends {Factory}
+ */
 export class ComponentFactory extends Factory {
 	/**
 	 *Creates an instance of ComponentFactory.

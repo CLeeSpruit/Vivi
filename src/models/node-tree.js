@@ -1,5 +1,10 @@
 import {Component} from './component';
 
+/**
+ * Wraps components in a recursive tree that has other nodes for children
+ *
+ * @class NodeTree
+ */
 export class NodeTree {
 	constructor(comp) {
 		this.children = [];

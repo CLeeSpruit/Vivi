@@ -131,7 +131,6 @@ export declare class FactoryService extends Service {
     constructor();
     getFactory<T extends Component = Component>(con: new (...args: any[]) => T): ComponentFactory<T>;
     getFactory<T extends Service = Service>(con: new (...args: any[]) => T): ServiceFactory<T>;
-    getFactoryByString(name: string): ServiceFactory<Service> | ComponentFactory<Component>;
 }
 
 export declare class NodeTreeService extends Service {

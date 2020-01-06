@@ -3,9 +3,15 @@ import {Component} from '../models/component';
 import {Instance} from '../models/instance';
 import {FactoryService} from '../services/factory.service';
 
+/**
+ * Parent class for ServiceFactory and ComponentFactory. Can create generic instances.
+ *
+ * @export
+ * @class Factory
+ */
 export class Factory {
 	/**
-	 *Creates an instance of Factory.
+	 * Creates an instance of Factory.
 	 *
 	 * @param {Function} constructorFn - Constructor to be called on create
 	 * @param {FactoryService} factoryService - FactoryService to be injected in instances
@@ -19,7 +25,7 @@ export class Factory {
 	}
 
 	/**
-	 *Creates an instance of the instance/component/service
+	 * Creates an instance of the instance/component/service
 	 *
 	 * @param {*} [data] - Data to be passed to instance
 	 * @returns {Component|Service|Instance} - Returns resulting instance
