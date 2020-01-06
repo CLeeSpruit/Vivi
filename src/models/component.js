@@ -4,7 +4,6 @@ import {ParseEngineService} from '../services/parse-engine.service';
 import {NodeTreeService} from '../services/node-tree.service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {Instance} from './instance';
-import {Service} from './service';
 
 export class Component extends Instance {
 	/**

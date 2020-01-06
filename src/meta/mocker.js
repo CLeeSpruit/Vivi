@@ -6,6 +6,7 @@ import {NodeTreeService} from '../services/node-tree.service';
 export class Mocker {
 	/**
 	 *Creates an instance of Mocker.
+	 *
 	 * @memberof Mocker
 	 */
 	constructor() {

@@ -1,7 +1,6 @@
 import {NodeTreeService} from '../services/node-tree.service';
 import {Component} from '../models/component';
 import {FactoryService} from '../services/factory.service';
-import {Service} from '../models/service';
 import {NodeTree} from '../models/node-tree';
 import {Factory} from './factory';
 
