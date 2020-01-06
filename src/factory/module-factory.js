@@ -1,4 +1,4 @@
-import {mapFilter, mapToArray} from '@cspruit/array-like-map';
+import {mapFilter, mapKeysToArray} from '@cspruit/array-like-map';
 import {loadViviServices} from '../services/load-services.static';
 import {NodeTreeService} from '../services/node-tree.service';
 import {FactoryService} from '../services/factory.service';
@@ -124,7 +124,7 @@ export class ModuleFactory {
 	 * @memberof ModuleFactory
 	 */
 	getComponentRegistry() {
-		return mapToArray(mapFilter(this.instances, value => value instanceof ComponentFactory));
+		return mapKeysToArray(mapFilter(this.instances, value => value instanceof ComponentFactory));
 	}
 
 	/**

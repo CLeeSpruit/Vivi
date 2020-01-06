@@ -6,5 +6,7 @@
  * @returns {string} - Resulting element string
  */
 export function getElNameFromComponent(name) {
-	return name.replace('Component', '').replace(/\B(?=[A-Z])/g, '-').toLowerCase();
+	if (typeof name === 'string') {
+		return name.replace('Component', '').replace(/\B(?=[A-Z])/g, '-').toLowerCase();
+	}
 }
