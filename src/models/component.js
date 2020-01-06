@@ -26,9 +26,9 @@ export class Component extends Instance {
 
 		// Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
 		this.componentName = getElNameFromComponent(this.constructor.name);
-		this.appEvents = this.factoryService.getFactory(ApplicationEventService).get();
-		this.engine = this.factoryService.getFactory(ParseEngineService).get();
-		this.nodeTreeService = this.factoryService.getFactory(NodeTreeService).get();
+		this.appEvents = this.vivi.getFactory(ApplicationEventService).get();
+		this.engine = this.vivi.getFactory(ParseEngineService).get();
+		this.nodeTreeService = this.vivi.getFactory(NodeTreeService).get();
 
 		this.setFiles();
 	}
@@ -209,7 +209,7 @@ export class Component extends Instance {
 	 * @memberof Component
 	 */
 	createChild(parentEl, component, data) {
-		const factory = this.factoryService.getFactory(component);
+		const factory = this.vivi.getFactory(component);
 		return factory.create(this, data, {parentEl});
 	}
 }

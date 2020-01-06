@@ -11,7 +11,6 @@ test('should init', t => {
 const mock = new Mocker();
 test('should init with default services', t => {
 	const actual = mock.createMock();
-	t.assert(actual.factoryService);
 	t.assert(actual.appEvents);
 	t.assert(actual.engine);
 	t.assert(actual.nodeTreeService);

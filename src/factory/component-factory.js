@@ -1,27 +1,18 @@
 import {NodeTreeService} from '../services/node-tree.service';
 import {Component} from '../models/component';
-import {FactoryService} from '../services/factory.service';
 import {NodeTree} from '../models/node-tree';
 import {Factory} from './factory';
 
 /**
  * Generates and manages components
  *
- * @export
  * @class ComponentFactory
- * @extends {Factory}
+ * @augments {Factory}
  */
 export class ComponentFactory extends Factory {
-	/**
-	 *Creates an instance of ComponentFactory.
-	 *
-	 * @param {Component} constructorFn - Component to be created in this factory
-	 * @param {FactoryService} factoryService - Factory Service created from Module Factory
-	 * @memberof ComponentFactory
-	 */
-	constructor(constructorFn, factoryService) {
-		super(constructorFn, factoryService);
-		this.nodeTreeService = this.factoryService.get(NodeTreeService);
+	constructor(constructorFn, vivi) {
+		super(constructorFn, vivi);
+		this.nodeTreeService = this.vivi.get(NodeTreeService);
 	}
 
 	/**

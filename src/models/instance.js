@@ -1,19 +1,11 @@
-import {FactoryService} from '../services/factory.service';
-
 /**
  * Generic instance of code. Base class for services and components.
  *
  * @class Instance
  */
 export class Instance {
-	/**
-	 * Creates an instance of Instance.
-	 *
-	 * @param {FactoryService} factoryService - FactoryService to be injected into the instance
-	 * @memberof Instance
-	 */
-	constructor(factoryService) {
-		this.factoryService = factoryService;
+	constructor(vivi) {
+		this.vivi = vivi;
 	}
 
 	/**

@@ -1,7 +1,6 @@
 import {mapFilter, mapKeysToArray} from '@cspruit/array-like-map';
 import {loadViviServices} from '../services/load-services.static';
 import {NodeTreeService} from '../services/node-tree.service';
-import {FactoryService} from '../services/factory.service';
 import {Component} from '../models/component';
 import {Service} from '../models/service';
 import {Instance} from '../models/instance';
@@ -31,9 +30,6 @@ export class ModuleFactory {
 
 		this.instances = new Map();
 
-		// Create a new instance of the Factory Service. This injects the module itself, so it has to be created specifically.
-		this.factoryService = new FactoryService(this);
-
 		// Append Vivi services - these should be before any custom services
 		if (module.serviceConstructors) {
 			module.serviceConstructors = [...loadViviServices(), ...module.serviceConstructors];
@@ -43,13 +39,13 @@ export class ModuleFactory {
 
 		// Init Services
 		module.serviceConstructors.forEach(serviceConstructor => {
-			this.instances.set(serviceConstructor.name, new ServiceFactory(serviceConstructor, this.factoryService));
+			this.instances.set(serviceConstructor.name, new ServiceFactory(serviceConstructor, this));
 		});
 
 		if (module.componentConstructors) {
 			// Init Components
 			module.componentConstructors.forEach(constructor => {
-				this.instances.set(constructor.name, new ComponentFactory(constructor, this.factoryService));
+				this.instances.set(constructor.name, new ComponentFactory(constructor, this));
 			});
 		}
 

@@ -18,7 +18,8 @@
         "watch": "webpack-cli -w",
         "semantic-release": "semantic-release",
         "commit": "git-cz",
-        "docs": "documentation build 'src/**' -f html -o docs"
+        "docs": "documentation build 'src/**' -f html -o docs",
+        "preflight": "npm run lint-fix && npm run build && npm run test && npm run docs"
     },
     "repository": {
         "type": "git",

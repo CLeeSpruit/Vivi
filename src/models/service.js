@@ -7,8 +7,8 @@ import {Instance} from './instance';
  * @augments {Instance}
  */
 export class Service extends Instance {
-	constructor(factoryService) {
-		super(factoryService);
+	constructor(vivi) {
+		super(vivi);
 
 		this.load();
 	}

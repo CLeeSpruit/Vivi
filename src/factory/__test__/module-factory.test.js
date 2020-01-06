@@ -25,7 +25,7 @@ test('should init - empty', t => {
 	t.assert(actual);
 });
 
-test.only('should init - minimum', t => {
+test('should init - minimum', t => {
 	const actual = minimumConstructor();
 	console.log(actual);
 	t.assert(actual);

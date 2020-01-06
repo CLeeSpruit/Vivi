@@ -1,7 +1,6 @@
 import {Service} from '../models/service';
 import {Component} from '../models/component';
 import {Instance} from '../models/instance';
-import {FactoryService} from '../services/factory.service';
 
 /**
  * Parent class for ServiceFactory and ComponentFactory. Can create generic instances.
@@ -10,18 +9,11 @@ import {FactoryService} from '../services/factory.service';
  * @class Factory
  */
 export class Factory {
-	/**
-	 * Creates an instance of Factory.
-	 *
-	 * @param {Function} constructorFn - Constructor to be called on create
-	 * @param {FactoryService} factoryService - FactoryService to be injected in instances
-	 * @memberof Factory
-	 */
-	constructor(constructorFn, factoryService) {
+	constructor(constructorFn, vivi) {
 		this.counter = 1;
 		this.construct = constructorFn;
 		this.instances = new Map();
-		this.factoryService = factoryService;
+		this.vivi = vivi;
 	}
 
 	/**
@@ -32,7 +24,7 @@ export class Factory {
 	 * @memberof Factory
 	 */
 	create(data) {
-		const instance = new this.construct(this.factoryService); // eslint-disable-line new-cap
+		const instance = new this.construct(this.vivi); // eslint-disable-line new-cap
 		instance.setData(this.counter, data);
 		this.counter++;
 		this.instances.set(instance.id, instance);

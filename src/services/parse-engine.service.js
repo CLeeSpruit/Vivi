@@ -75,7 +75,7 @@ export class ParseEngineService extends Service {
 				const arr = applyWithContext(key, data);
 				if (arr.forEach) {
 					arr.forEach(item => {
-						const factory = this.factoryService.getFactory(componentName);
+						const factory = this.vivi.getFactory(componentName);
 						factory.create(comp, item, {parentEl: el, doNotLoad: true});
 					});
 				}
@@ -103,14 +103,14 @@ export class ParseEngineService extends Service {
 		});
 
 		// Parsing Elements
-		this.factoryService.module.getComponentRegistry().forEach(reg => {
+		this.vivi.getComponentRegistry().forEach(reg => {
 			// Strip 'Component' off of name
 			const name = getElNameFromComponent(reg);
 			const els = node.querySelectorAll(name);
 			for (let i = 0; i < els.length; i++) {
 				const el = els.item(i);
 				if (!el.id) {
-					const factory = this.factoryService.getFactory(reg);
+					const factory = this.vivi.getFactory(reg);
 					factory.create(comp, (el).dataset, {parentEl: el.parentElement, replaceEl: el, doNotLoad: true});
 				}
 			}
