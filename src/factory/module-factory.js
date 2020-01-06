@@ -43,29 +43,13 @@ export class ModuleFactory {
 
 		// Init Services
 		module.serviceConstructors.forEach(serviceConstructor => {
-			let prereqArr = [];
-			if (serviceConstructor.prereqArr) {
-				prereqArr = serviceConstructor.prereqArr.map(prereq => {
-					// @todo: Services - Throw a specific warning to the user telling them about a missing service
-					return this.instances.get(prereq.name);
-				});
-			}
-
-			this.instances.set(serviceConstructor.constructor.name, new ServiceFactory(serviceConstructor.constructor, this.factoryService, prereqArr));
+			this.instances.set(serviceConstructor.name, new ServiceFactory(serviceConstructor, this.factoryService));
 		});
 
 		if (module.componentConstructors) {
 			// Init Components
 			module.componentConstructors.forEach(constructor => {
-				let serviceArr = [];
-				if (constructor.services) {
-					serviceArr = constructor.services.map(service => {
-						// @todo: Components - Throw a specific warning to the user telling them about a missing service
-						return this.instances.get(service.name);
-					});
-				}
-
-				this.instances.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, this.factoryService, serviceArr));
+				this.instances.set(constructor.name, new ComponentFactory(constructor, this.factoryService));
 			});
 		}
 

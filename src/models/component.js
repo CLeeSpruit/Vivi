@@ -14,11 +14,10 @@ export class Component extends Instance {
 	 *
 	 * @param {number} id - Number to be assigned to component
 	 * @param {*} [data] - Data to be passed to the component
-	 * @param {Array<Service|string>} [prereqs] - Services that need to be injected before load
 	 * @memberof Component
 	 */
-	setData(id, data, prereqs) {
-		super.setData(id, data, prereqs);
+	setData(id, data) {
+		super.setData(id, data);
 
 		// Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
 		this.componentName = getElNameFromComponent(this.constructor.name);

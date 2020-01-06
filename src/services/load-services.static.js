@@ -9,9 +9,8 @@ import {ParseEngineService} from './parse-engine.service';
  */
 export function loadViviServices() {
 	return [
-		// Tier 0
-		{constructor: ApplicationEventService},
-		{constructor: NodeTreeService},
-		{constructor: ParseEngineService}
+		ApplicationEventService,
+		NodeTreeService,
+		ParseEngineService
 	];
 }

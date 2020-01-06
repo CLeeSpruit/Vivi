@@ -11,15 +11,13 @@ export class ComponentFactory extends Factory {
 	 *
 	 * @param {Component} constructorFn - Component to be created in this factory
 	 * @param {FactoryService} factoryService - Factory Service created from Module Factory
-	 * @param {Array<Service>} [services] - Prereq services
 	 * @memberof ComponentFactory
 	 */
 	constructor(
 		constructorFn,
-		factoryService,
-		services
+		factoryService
 	) {
-		super(constructorFn, factoryService, services);
+		super(constructorFn, factoryService);
 		this.nodeTreeService = this.factoryService.get(NodeTreeService);
 	}
 
