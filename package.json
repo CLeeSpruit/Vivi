@@ -17,7 +17,8 @@
         "test:no-coverage": "ava",
         "watch": "webpack-cli -w",
         "semantic-release": "semantic-release",
-        "commit": "git-cz"
+        "commit": "git-cz",
+        "docs": "documentation build 'src/**' -f html -o docs"
     },
     "repository": {
         "type": "git",
@@ -44,6 +45,7 @@
         "browser-env": "^3.3.0",
         "codecov": "^3.6.1",
         "cz-conventional-changelog": "^3.0.2",
+        "documentation": "^12.1.4",
         "eslint-plugin-jsdoc": "^20.0.0",
         "nyc": "^14.1.1",
         "semantic-release": "^15.13.31",
@@ -62,7 +64,9 @@
     },
     "xo": {
         "env": "browser",
-        "plugins": ["jsdoc"],
+        "plugins": [
+            "jsdoc"
+        ],
         "extends": [
             "plugin:jsdoc/recommended"
         ]
