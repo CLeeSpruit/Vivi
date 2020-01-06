@@ -1,3 +1,9 @@
+/**
+ * Wraps the require function to fail gracefully if the module is not found.
+ *
+ * @param {string} path - Path to module
+ * @returns {*} - Will return required module like require(). Returns null if not found.
+ */
 export function requireOptional(path) {
 	try {
 		return require(path);

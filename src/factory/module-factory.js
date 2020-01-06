@@ -2,6 +2,9 @@ import {mapFilter, mapToArray} from '@cspruit/array-like-map';
 import {loadViviServices} from '../services/load-services.static';
 import {NodeTreeService} from '../services/node-tree.service';
 import {FactoryService} from '../services/factory.service';
+import {Component} from '../models/component';
+import {Service} from '../models/service';
+import {Instance} from '../models/instance';
 import {ServiceFactory} from './service-factory';
 import {ComponentFactory} from './component-factory';
 import {Factory} from './factory';
@@ -9,7 +12,6 @@ import {Factory} from './factory';
 /**
  * Module Factory - Initial Constructor for the Vivi Framework
  *
- * @export
  * @class ModuleFactory
  */
 export class ModuleFactory {
@@ -17,6 +19,9 @@ export class ModuleFactory {
 	 * Creates an instance of ModuleFactory.
 	 *
 	 * @param {{componentConstructors: Array<Component>, serviceConstructors: Array<Service>, rootComponent: Component}} [module]
+	 * 	- Component constructors: Array of Components to be initialized
+	 * 	- ServiceConstructors: Array of Services to be initialized
+	 *  - RootComponent: Component to be set as root. Must be set in the component constructors as well.
 	 * @memberof ModuleFactory
 	 */
 	constructor(module) {
@@ -27,7 +32,7 @@ export class ModuleFactory {
 		this.instances = new Map();
 
 		// Create a new instance of the Factory Service. This injects the module itself, so it has to be created specifically.
-		const factoryService = new FactoryService(this);
+		this.factoryService = new FactoryService(this);
 
 		// Append Vivi services - these should be before any custom services
 		if (module.serviceConstructors) {
@@ -46,7 +51,7 @@ export class ModuleFactory {
 				});
 			}
 
-			this.services.set(serviceConstructor.constructor.name, new ServiceFactory(serviceConstructor.constructor, factoryService, prereqArr));
+			this.instances.set(serviceConstructor.constructor.name, new ServiceFactory(serviceConstructor.constructor, this.factoryService, prereqArr));
 		});
 
 		if (module.componentConstructors) {
@@ -60,7 +65,7 @@ export class ModuleFactory {
 					});
 				}
 
-				this.instances.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, factoryService, serviceArr));
+				this.instances.set(constructor.constructor.name, new ComponentFactory(constructor.constructor, this.factoryService, serviceArr));
 			});
 		}
 
@@ -76,10 +81,10 @@ export class ModuleFactory {
 	}
 
 	/**
-	 *Creates a Component or Service factory
+	 *Creates a Component or Service factory based off of constructor
 	 *
-	 * @param {Service|Component} constructor
-	 * @returns {ServiceFactory|ComponentFactory|Factory}
+	 * @param {Service | Component} constructor - Service or Component to be created with Factory
+	 * @returns {ServiceFactory | ComponentFactory | Factory} - Resulting Factory. Will return a ServiceFactory or ComponentFactory based off of name of constructor.
 	 * @memberof ModuleFactory
 	 */
 	createFactory(constructor) {
@@ -101,8 +106,9 @@ export class ModuleFactory {
 	/**
 	 * Fetches a service or component from the constructor. If an id is not specified, it'll grab the last instance of that service or component.
 	 *
-	 * @param {Service | Component} constructor
-	 * @returns If an id is specified, that component/service instance. Otherwise the last created instance of that service/component
+	 * @param {Service | Component | Instance | string} constructor - Constructor or string of instance to be fetched
+	 * @param {string} [id] - Id of instance to be fetched
+	 * @returns {Service | Component | Instance }If an id is specified, that component/service instance. Otherwise the last created instance of that service/component
 	 * @memberof ModuleFactory
 	 */
 	get(constructor, id) {
@@ -112,26 +118,15 @@ export class ModuleFactory {
 	/**
 	 * Fetches a service factory or component factory from the service or component constructor
 	 *
-	 * @param {Service | Component} constructor
-	 * @returns If found, ServiceFactory or ComponentFactory of component/service
+	 * @param {Service | Component | Instance | string} instance - Instance that is created from factory
+	 * @returns {ServiceFactory | ComponentFactory | Factory } If found, ServiceFactory or ComponentFactory of component/service
 	 * @memberof ModuleFactory
 	 */
-	getFactory(constructor) {
-		const name = constructor;
-		return this.getFactoryByString(name);
-	}
-
-	/**
-	 * Fetches a service factory or component factory from a string
-	 *
-	 * @param {string} name - Name of the component. Ex: 'MyCoolComponent'
-	 * @returns If found, ServiceFactory or ComponentFactory of component/service
-	 * @memberof ModuleFactory
-	 */
-	getFactoryByString(name) {
-		const instance = this.instances.get(name);
-		if (instance) {
-			return instance;
+	getFactory(instance) {
+		const instanceName = typeof instance === 'string' ? instance : instance.name;
+		const inst = this.instances.get(instanceName);
+		if (inst) {
+			return inst;
 		}
 
 		console.error('No service factory or component factory found for ' + name);
@@ -141,7 +136,7 @@ export class ModuleFactory {
 	/**
 	 * Returns all component names registered in an array
 	 *
-	 * @returns {Array<string>}
+	 * @returns {Array<string>} - Component names as an array
 	 * @memberof ModuleFactory
 	 */
 	getComponentRegistry() {

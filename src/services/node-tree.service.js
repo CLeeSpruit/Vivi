@@ -1,11 +1,12 @@
 import {NodeTree} from '../models/node-tree';
 import {Service} from '../models/service';
+import {Component} from '../models/component';
 
 export class NodeTreeService extends Service {
 	/**
-	 *Sets the root component of the application
+	 * Sets the root component of the application
 	 *
-	 * @param {Component} rootComponent
+	 * @param {Component} rootComponent - Component to set the root to
 	 * @memberof NodeTreeService
 	 */
 	setRoot(rootComponent) {
@@ -13,10 +14,10 @@ export class NodeTreeService extends Service {
 	}
 
 	/**
-	 *Returns NodeTree of component
+	 * Returns NodeTree of component
 	 *
-	 * @param {Component} comp
-	 * @returns {NodeTree}
+	 * @param {Component} comp - component to return the nodeTree for
+	 * @returns {NodeTree} - Resulting NodeTree, if found
 	 * @memberof NodeTreeService
 	 */
 	getNode(comp) {
@@ -32,11 +33,11 @@ export class NodeTreeService extends Service {
 	}
 
 	/**
-	 *Adds NodeTree to a Component
+	 * Adds NodeTree to a Component
 	 *
-	 * @param {Component} parentComp
-	 * @param {NodeTree} childNode
-	 * @returns
+	 * @param {Component} parentComp - Parent component to add the child to. Must be already added to the tree.
+	 * @param {NodeTree} childNode - Child node that is added
+	 * @returns {void}
 	 * @memberof NodeTreeService
 	 */
 	addNodeToComponent(parentComp, childNode) {
@@ -50,10 +51,10 @@ export class NodeTreeService extends Service {
 	}
 
 	/**
-	 *Runs the load hook for node and it's chilren
+	 * Runs the load hook for node and it's chilren. Will not load the component if it has not been added to the tree.
 	 *
-	 * @param {Component} comp
-	 * @returns
+	 * @param {Component} comp - Component that has already been added to the tree
+	 * @returns {void}
 	 * @memberof NodeTreeService
 	 */
 	loadComponent(comp) {
@@ -67,12 +68,13 @@ export class NodeTreeService extends Service {
 	}
 
 	/**
-	 *Add component to parent component. If no parentNode is declared, child is added to application tree.
+	 * Add component to parent component. If no parentNode is declared, child is added to application tree.
 	 *
-	 * @param {Component} parentComp
-	 * @param {Component} childComp
-	 * @returns {NodeTree}
+	 * @param {Component} [parentComp] - Component to be appended to
+	 * @param {Component} childComp - Component to be appended
+	 * @returns {NodeTree} - Resulting nodeTree of the child
 	 * @memberof NodeTreeService
+	 * @todo Swap parentComp and child comp since parentComp is optional
 	 */
 	addComponent(parentComp, childComp) {
 		if (!this.applicationTree && parentComp) {
@@ -97,10 +99,10 @@ export class NodeTreeService extends Service {
 	}
 
 	/**
-	 *Triggers node destroy
+	 * Triggers node destroy
 	 *
-	 * @param {Component} comp
-	 * @returns
+	 * @param {Component} comp - Component to be destroyed
+	 * @returns {void}
 	 * @memberof NodeTreeService
 	 */
 	removeComponent(comp) {
@@ -114,10 +116,10 @@ export class NodeTreeService extends Service {
 	}
 
 	/**
-	 *Detaches the component from the DOM
+	 * Detaches the component from the DOM
 	 *
-	 * @param {*} comp
-	 * @returns {NodeTree}
+	 * @param {Component} comp - Component to be detached
+	 * @returns {NodeTree} - Detached node
 	 * @memberof NodeTreeService
 	 */
 	detachComponent(comp) {

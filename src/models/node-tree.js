@@ -1,3 +1,5 @@
+import {Component} from './component';
+
 export class NodeTree {
 	constructor(comp) {
 		this.children = [];
@@ -5,10 +7,10 @@ export class NodeTree {
 	}
 
 	/**
-	 *Adds component, converts it to a NodeTree, and adds it as a child
+	 * Adds component, converts it to a NodeTree, and adds it as a child
 	 *
-	 * @param {Component} comp
-	 * @returns {NodeTree}
+	 * @param {Component} comp - Component to add as a child
+	 * @returns {NodeTree} - Resulting node from component added
 	 * @memberof NodeTree
 	 */
 	addChild(comp) {
@@ -19,10 +21,10 @@ export class NodeTree {
 	}
 
 	/**
-	 *Removes node tree from children
+	 * Removes node tree from children
 	 *
-	 * @param {Component} comp
-	 * @returns
+	 * @param {Component} comp - Component in children to be removed
+	 * @returns {Component} - Component removed, if found
 	 * @memberof NodeTree
 	 */
 	removeChild(comp) {
@@ -35,12 +37,12 @@ export class NodeTree {
 	}
 
 	/**
-	 *Returns child node tree or component if found
+	 * Returns child node tree or component if found
 	 *
 	 * @param {string} id - Component Id
 	 * @param {boolean} [deepSearch] - If true, search down the tree in addition to direct children
 	 * @param {boolean} [returnNode] - Returns NodeTree instead of component
-	 * @returns {NodeTree|Component}
+	 * @returns {NodeTree | Component} - If found, will return the nodeTree or Component
 	 * @memberof NodeTree
 	 */
 	findChild(id, deepSearch, returnNode) {
@@ -57,10 +59,10 @@ export class NodeTree {
 	}
 
 	/**
-	 *Returns parent Node of component
+	 * Returns parent Node of component
 	 *
 	 * @param {string} id - Component Id
-	 * @returns {NodeTree}
+	 * @returns {NodeTree} - If found, returns node that is the parent of the component
 	 * @memberof NodeTree
 	 */
 	findParentOf(id) {
@@ -72,10 +74,10 @@ export class NodeTree {
 	}
 
 	/**
-	 *Returns if component is found in children
+	 * Returns if component is found in children
 	 *
 	 * @param {string} id - Component Id
-	 * @returns {boolean}
+	 * @returns {boolean} - Returns true if found
 	 * @memberof NodeTree
 	 */
 	hasChild(id) {
@@ -83,7 +85,7 @@ export class NodeTree {
 	}
 
 	/**
-	 *Runs load hook of component and chilren
+	 * Runs load hook of component and chilren
 	 *
 	 * @memberof NodeTree
 	 */
@@ -93,7 +95,7 @@ export class NodeTree {
 	}
 
 	/**
-	 *Runs destroy hook of component and children
+	 * Runs destroy hook of component and children
 	 *
 	 * @memberof NodeTree
 	 */

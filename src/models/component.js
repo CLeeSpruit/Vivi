@@ -4,10 +4,33 @@ import {ParseEngineService} from '../services/parse-engine.service';
 import {NodeTreeService} from '../services/node-tree.service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {Instance} from './instance';
+import {Service} from './service';
 
 export class Component extends Instance {
 	/**
-	 *Set Template and Style for component. Leave to import from vivi_application/componentName/component-name.component.html/scss
+	 * Sets id, data, prereqs of component.
+	 * Grabs appEvents, parseEngine, and nodeTree services
+	 * Triggers setFiles Fn
+	 *
+	 * @param {number} id - Number to be assigned to component
+	 * @param {*} [data] - Data to be passed to the component
+	 * @param {Array<Service|string>} [prereqs] - Services that need to be injected before load
+	 * @memberof Component
+	 */
+	setData(id, data, prereqs) {
+		super.setData(id, data, prereqs);
+
+		// Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
+		this.componentName = getElNameFromComponent(this.constructor.name);
+		this.appEvents = this.factoryService.getFactory(ApplicationEventService).get();
+		this.engine = this.factoryService.getFactory(ParseEngineService).get();
+		this.nodeTreeService = this.factoryService.getFactory(NodeTreeService).get();
+
+		this.setFiles();
+	}
+
+	/**
+	 * Set Template and Style for component. Leave to import from vivi_application/componentName/component-name.component.html/scss
 	 *
 	 * @memberof Component
 	 */
@@ -32,20 +55,10 @@ export class Component extends Instance {
 		}
 	}
 
-	setData(id, data, prereqs) {
-		super.setData(id, data, prereqs);
-
-		// Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
-		this.componentName = getElNameFromComponent(this.constructor.name);
-		this.appEvents = this.factoryService.getFactory(ApplicationEventService).get();
-		this.engine = this.factoryService.getFactory(ParseEngineService).get();
-		this.nodeTreeService = this.factoryService.getFactory(NodeTreeService).get();
-	}
-
 	/**
-	 *Retreives raw template element without any parsing
+	 * Retreives raw template element without any parsing
 	 *
-	 * @returns {HTMLElement}
+	 * @returns {HTMLElement} - Raw template html element
 	 * @memberof Component
 	 */
 	getUnparsedNode() {
@@ -57,7 +70,7 @@ export class Component extends Instance {
 	}
 
 	/**
-	 *Creates child nodes based off of template
+	 * Creates child nodes based off of template
 	 *
 	 * @memberof Component
 	 */
@@ -82,11 +95,10 @@ export class Component extends Instance {
 	}
 
 	/**
-	 *Appends component to an element
+	 * Appends component to an element
 	 *
-	 * @param {HTMLElement} parentEl
-	 * @param {HTMLElement} replaceEl
-	 * @returns
+	 * @param {HTMLElement} parentEl - Element to append component element to
+	 * @param {HTMLElement} [replaceEl] - Element to replace on append. Should be child of parentEl
 	 * @memberof Component
 	 */
 	append(parentEl, replaceEl) {
@@ -107,7 +119,7 @@ export class Component extends Instance {
 	}
 
 	/**
-	 *Begins the load hook
+	 * Begins the load hook
 	 *
 	 * @memberof Component
 	 */
@@ -123,7 +135,7 @@ export class Component extends Instance {
 	}
 
 	/**
-	 *Runs the component through the parse engine
+	 * Runs the component through the parse engine
 	 *
 	 * @memberof Component
 	 */
@@ -139,7 +151,7 @@ export class Component extends Instance {
 	}
 
 	/**
-	 *Removes Component from DOM
+	 * Removes Component from DOM
 	 *
 	 * @memberof Component
 	 */
@@ -150,7 +162,7 @@ export class Component extends Instance {
 	}
 
 	/**
-	 *Removes component from DOM
+	 * Removes component from DOM
 	 *
 	 * @memberof Component
 	 */
@@ -160,11 +172,11 @@ export class Component extends Instance {
 
 	/* Actions */
 	/**
-	 *Creates an element listener
+	 * Creates an element listener
 	 *
-	 * @param {HTMLElement} el
-	 * @param {string} eventType
-	 * @param {Function} cb
+	 * @param {HTMLElement} el - Element to attach the listener to
+	 * @param {string} eventType - Event type, can be defined by Zephyr's EventTypes or any accepted event, like 'click' or 'onMouseDown'
+	 * @param {Function} cb - Function to call when event fires
 	 * @memberof Component
 	 */
 	listen(el, eventType, cb) {
@@ -172,10 +184,10 @@ export class Component extends Instance {
 	}
 
 	/**
-	 *Creates a listener that waits for an application event to fire to trigger callback
+	 * Creates a listener that waits for an application event to fire to trigger callback
 	 *
-	 * @param {string} eventName
-	 * @param {Function} cb
+	 * @param {string} eventName - Custom name of event. Will fire event when eventName matches
+	 * @param {Function} cb - Function to call when event fires
 	 * @memberof Component
 	 */
 	appListen(eventName, cb) {
@@ -183,12 +195,12 @@ export class Component extends Instance {
 	}
 
 	/**
-	 *Creates a child component attached to an element
+	 * Creates a child component attached to an element
 	 *
-	 * @param {HTMLElement} parentEl
+	 * @param {HTMLElement} parentEl - Element anchor point to attach to
 	 * @param {Function} component - Component constructor function
-	 * @param {*} data - parameters to create component
-	 * @returns {Component}
+	 * @param {*} [data] - parameters to create component
+	 * @returns {Component} - Resulting component created
 	 * @memberof Component
 	 */
 	createChild(parentEl, component, data) {

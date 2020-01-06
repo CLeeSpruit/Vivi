@@ -1,12 +1,17 @@
-import {NodeTreeService} from '../services';
+import {NodeTreeService} from '../services/node-tree.service';
+import {Component} from '../models/component';
+import {FactoryService} from '../services/factory.service';
+import {Service} from '../models/service';
+import {NodeTree} from '../models/node-tree';
 import {Factory} from './factory';
 
 export class ComponentFactory extends Factory {
 	/**
 	 *Creates an instance of ComponentFactory.
-	 * @param {Function} constructorFn
-	 * @param {FactoryService} factoryService
-	 * @param {Array<Service>} services
+	 *
+	 * @param {Component} constructorFn - Component to be created in this factory
+	 * @param {FactoryService} factoryService - Factory Service created from Module Factory
+	 * @param {Array<Service>} [services] - Prereq services
 	 * @memberof ComponentFactory
 	 */
 	constructor(
@@ -21,7 +26,6 @@ export class ComponentFactory extends Factory {
 	/**
 	 *Sets the root component
 	 *
-	 * @param {NodeTreeService} nodeTreeService
 	 * @memberof ComponentFactory
 	 */
 	createRoot() {
@@ -33,10 +37,10 @@ export class ComponentFactory extends Factory {
 	/**
 	 *Creates a component
 	 *
-	 * @param {Component} parent
-	 * @param {*} data
-	 * @param {*} options
-	 * @returns Component
+	 * @param {Component} [parent] - Parent component to append to
+	 * @param {*} [data] - Data to be passed to the component
+	 * @param {{parentEl: HTMLElement, replaceEl: HTMLElement}} [options] - ParentEl: Must be provided to append. ReplaceEl: Element to replace on append
+	 * @returns {Component} - Component created
 	 * @memberof ComponentFactory
 	 */
 	create(parent, data, options) {
@@ -62,8 +66,8 @@ export class ComponentFactory extends Factory {
 	/**
 	 *Detaches component from the node tree
 	 *
-	 * @param {*} id
-	 * @returns
+	 * @param {string} id - Id of component to be detached
+	 * @returns {NodeTree} - Returns node of component, if found
 	 * @memberof ComponentFactory
 	 */
 	detach(id) {
@@ -79,8 +83,7 @@ export class ComponentFactory extends Factory {
 	/**
 	 *Destroys and removes the component
 	 *
-	 * @param {*} id
-	 * @returns
+	 * @param {string} id - Id of component to be destroyed
 	 * @memberof ComponentFactory
 	 */
 	destroy(id) {

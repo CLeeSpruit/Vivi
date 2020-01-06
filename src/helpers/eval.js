@@ -1,10 +1,9 @@
 /**
- *Evaluates a string condition with a context
+ * Evaluates a string condition with a context
  *
- * @export
- * @param {string} condition
- * @param {*} context
- * @returns {boolean}
+ * @param {string} condition - Condition to be evaluated
+ * @param {*} context - Object to be called with context
+ * @returns {boolean} - Result. Will return false if eval fails
  */
 export function conditional(condition, context) {
 	return (function (condition) {
@@ -18,12 +17,11 @@ export function conditional(condition, context) {
 }
 
 /**
- *Evaluates a value with context
+ * Evaluates a value with context
  *
- * @export
- * @param {*} value
- * @param {*} context
- * @returns Value withing context or value itself if eval fails
+ * @param {string} value - Value to be evaluated
+ * @param {*} context - Object to be called with context
+ * @returns {*} - Value within context or value itself if eval fails
  */
 export function applyWithContext(value, context) {
 	return (function (value) {

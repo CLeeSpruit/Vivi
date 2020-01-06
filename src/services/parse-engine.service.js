@@ -1,7 +1,13 @@
 import {Service} from '../models/service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {conditional, applyWithContext} from '../helpers/eval';
+import {Component} from '../models';
 export class ParseEngineService extends Service {
+	/**
+	 * Load assigns attributeBlack list
+	 *
+	 * @memberof ParseEngineService
+	 */
 	load() {
 		this.attributeBlackList = [
 			'v-class',
@@ -13,6 +19,15 @@ export class ParseEngineService extends Service {
 		];
 	}
 
+	/**
+	 * Parses a given HTML node.
+	 * Because node is passed in by reference, this does not return a value.
+	 *
+	 * @param {Node} node - Node to be parsed
+	 * @param {*} data - Data object from parent component
+	 * @param {Component} comp - Parent component
+	 * @memberof ParseEngineService
+	 */
 	parse(node, data, comp) {
 		// Get a list of all unique attributes
 		const attributes = this.buildAttributeList(node);
@@ -96,7 +111,16 @@ export class ParseEngineService extends Service {
 		});
 	}
 
-	buildAttributeList(node, attributes = new Set()) {
+	/**
+	 * Recursively searches the node for all attributes
+	 *
+	 * @param {HTMLElement} node - Node to search in
+	 * @param {Set<string>} [attributes] - Attribute list
+	 * @returns {Set<string>} - All unique attributes in the node
+	 * @memberof ParseEngineService
+	 */
+	buildAttributeList(node, attributes) {
+		attributes = attributes || new Set();
 		const attr = node.attributes;
 		if (attr) {
 			for (let i = 0; i < attr.length; i++) {
@@ -111,6 +135,15 @@ export class ParseEngineService extends Service {
 		return attributes;
 	}
 
+	/**
+	 * Searches the element for a single attribute to format
+	 *
+	 * @param {HTMLElement} el - Element to search
+	 * @param {*} data - context data
+	 * @param {string} name - name of attribute to search for
+	 * @param {Function} [customParseFn] - If it's more than a simple replacement, run this function if found
+	 * @memberof ParseEngineService
+	 */
 	attributeParse(el, data, name, customParseFn) {
 		el.querySelectorAll('[' + name + ']').forEach(el => {
 			const attr = el.getAttribute(name);
@@ -129,6 +162,15 @@ export class ParseEngineService extends Service {
 		});
 	}
 
+	/**
+	 * Wraps attribute parse for vif statements
+	 *
+	 * @param {HTMLElement} node - Element to search
+	 * @param {*} data - context data
+	 * @param {string} name - name of attribute to search for
+	 * @param {Function} customParseFn - If it's more than a simple replacement, run this function if found
+	 * @memberof ParseEngineService
+	 */
 	attributeParseVif(node, data, name, customParseFn) {
 		this.attributeParse(node, data, name, (attrName, el, attr) => {
 			// Match against (conditional) ? trueResult : falseResult

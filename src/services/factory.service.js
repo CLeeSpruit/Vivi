@@ -1,20 +1,32 @@
+import {Factory} from '../factory/factory';
+import {ServiceFactory} from '../factory/service-factory';
+import {ComponentFactory} from '../factory/component-factory';
+import {ModuleFactory} from '../factory/module-factory';
+import {Component, Service, Instance} from '../models';
+
 // FactoryService is special and cannot inherit Service, despite the name.
 export class FactoryService {
 	/**
-	 *Creates an instance of FactoryService.
-	 * @param {ModuleFactory} module
+	 * Creates an instance of FactoryService.
+	 *
+	 * @param {ModuleFactory} module - Required instance of ModuleFactory
 	 * @memberof FactoryService
 	 */
 	constructor(module) {
+		if (!module) {
+			throw new Error('Module is Required');
+		}
+
 		this.module = module;
 	}
 
 	/**
-	 *Returns component, service, or instance. Id is optional.
+	 * Returns component, service, or instance. Id is optional.
+	 * Wrapper around ModuleFactory.get() Fn
 	 *
-	 * @param {Component|Service|Instance} con
-	 * @param {string} [id]
-	 * @returns {Component|Service|Instance}
+	 * @param {Component|Service|Instance|string} con - Instance to be fetched
+	 * @param {string} [id] - Id of instance to be fetched
+	 * @returns {Component|Service|Instance} - Instance, if found. Will grab last created if no id is provided.
 	 * @memberof FactoryService
 	 */
 	get(con, id) {
@@ -22,38 +34,14 @@ export class FactoryService {
 	}
 
 	/**
-	 *Returns component, service, or instance searched by name string. Id is optional.
+	 * Returns componentFactory, serviceFactory, or factory.
+	 * Wrapper around ModuleFactory.get() Fn
 	 *
-	 * @param {string} name
-	 * @param {string} [id]
-	 * @returns {Component|Service|Instance}
-	 * @memberof FactoryService
-	 */
-	getByString(name, id) {
-		return this.module.getFactoryByString(name).get(id);
-	}
-
-	/**
-	 *Returns componentFactory, serviceFactory, or factory.
-	 *
-	 * @param {Component|Service|Instance} con
-	 * @param {string} [id]
-	 * @returns {ComponentFactory|ServiceFactory|Factory}
+	 * @param {Component|Service|Instance|string} con - Instance to fetch the factory for
+	 * @returns {ComponentFactory|ServiceFactory|Factory} - Factory of instance, if found
 	 * @memberof FactoryService
 	 */
 	getFactory(con) {
 		return this.module.getFactory(con);
-	}
-
-	/**
-	 *Returns componentFactory, serviceFactory, or factory.
-	 *
-	 * @param {string} name
-	 * @param {string} [id]
-	 * @returns {ComponentFactory|ServiceFactory|Factory}
-	 * @memberof FactoryService
-	 */
-	getFactoryByString(name) {
-		return this.module.getFactoryByString(name);
 	}
 }
