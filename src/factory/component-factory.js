@@ -16,12 +16,14 @@ export class ComponentFactory extends Factory {
 	}
 
 	/**
-	 *Sets the root component
+	 * Creats and sets the root component
 	 *
 	 * @memberof ComponentFactory
 	 */
 	createRoot() {
-		const comp = this.create(null, null, {parentEl: document.body, doNotLoad: true, isRoot: true});
+		const comp = super.create();
+		comp.append(document.body);
+
 		this.nodeTreeService.setRoot(comp);
 		this.nodeTreeService.applicationTree.load();
 	}
@@ -31,18 +33,18 @@ export class ComponentFactory extends Factory {
 	 *
 	 * @param {Component} [parent] - Parent component to append to
 	 * @param {*} [data] - Data to be passed to the component
-	 * @param {{parentEl: HTMLElement, replaceEl: HTMLElement}} [options] - ParentEl: Must be provided to append. ReplaceEl: Element to replace on append
+	 * @param {{parentEl: HTMLElement, replaceEl: HTMLElement, doNotLoad}} [options]
+	 * - parentEl: Element to anchor component to. Must be provided to append and load component.
+	 * - replaceEl: Element to replace on append
+	 * - doNotLoad: Do not fire load after creating. Often used for children components
 	 * @returns {Component} - Component created
 	 * @memberof ComponentFactory
 	 */
 	create(parent, data, options) {
 		const component = super.create(data);
 
-		// Set nodes
-		let node;
-		if (!options || !options.isRoot) {
-			node = this.nodeTreeService.addComponent(parent, component);
-		}
+		// Create nodeTree for component
+		const node = this.nodeTreeService.addComponent(parent, component);
 
 		if (options && options.parentEl) {
 			component.append(options.parentEl, options.replaceEl);
