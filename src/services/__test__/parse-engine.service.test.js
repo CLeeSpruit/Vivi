@@ -126,9 +126,12 @@ const testAttributeIf = attr => {
 };
 
 // Any v- prop
-attributeList.forEach(attr => {
-	testAttribute('v-' + attr);
-});
+// This only runs when the --full flag is provided as you probably don't need to run it every time. It's very rare these tests break and others don't.
+if (process.argv.find(arg => arg === 'full')) {
+	attributeList.forEach(attr => {
+		testAttribute('v-' + attr);
+	});
+}
 
 test('v-class - should add a list of classes', t => {
 	const data = {fluffy: 'bunny', puppy: 'bow-wow'};
@@ -148,10 +151,13 @@ test('v-innerHTML - should add content to innerHTML', t => {
 	t.is(actual.innerHTML, data.fluffy);
 });
 
-// Vif
-attributeList.forEach(attr => {
-	testAttributeIf('vif-' + attr);
-});
+// Any Vif- prop
+// This only runs when the --full flag is provided as you probably don't need to run it every time. It's very rare these tests break and others don't.
+if (process.argv.find(arg => arg === 'full')) {
+	attributeList.forEach(attr => {
+		testAttributeIf('vif-' + attr);
+	});
+}
 
 test('vif-class should add a list of classes if true', t => {
 	const data = {fluffy: 'bunny', puppy: 'bow'};
