@@ -20,17 +20,23 @@ export class ModuleFactory {
 	 * 	- Component constructors: Array of Components to be initialized
 	 * 	- ServiceConstructors: Array of Services to be initialized
 	 *  - RootComponent: Component to be set as root. Must be set in the component constructors as well.
+	 * @param {{log: ['verbose', 'info', 'warn', 'error', 'none']}} [options] - Options passed into the module
+	 *  - loglevel: Log level of application
+	 *      - none - no logging
+	 *      - error - output only errors
+	 *      - warn - output only errors and warnings
+	 *      - info - output errors, warnings, and other information
+	 * 	    - verbose - all levels, including debug information
+	 *
 	 * @memberof ModuleFactory
+	 * @todo Allow for default services to be overwritten
 	 */
-	constructor(module) {
-		if (!module) {
-			module = {};
-		}
-
-		this.instances = new Map();
+	constructor(module = {}, options = {}) {
+		this.factories = new Map();
+		this.options = options;
 
 		// Append Vivi services - these should be before any custom services
-		if (module.serviceConstructors) {
+		if (Array.isArray(module.serviceConstructors)) {
 			module.serviceConstructors = [...loadViviServices(), ...module.serviceConstructors];
 		} else {
 			module.serviceConstructors = loadViviServices();
@@ -38,13 +44,13 @@ export class ModuleFactory {
 
 		// Init Services
 		module.serviceConstructors.forEach(serviceConstructor => {
-			this.instances.set(serviceConstructor.name, new ServiceFactory(serviceConstructor, this));
+			this.factories.set(serviceConstructor.name, new ServiceFactory(serviceConstructor, this));
 		});
 
-		if (module.componentConstructors) {
+		if (Array.isArray(module.componentConstructors)) {
 			// Init Components
 			module.componentConstructors.forEach(constructor => {
-				this.instances.set(constructor.name, new ComponentFactory(constructor, this));
+				this.factories.set(constructor.name, new ComponentFactory(constructor, this));
 			});
 		}
 
@@ -68,7 +74,7 @@ export class ModuleFactory {
 	 */
 	createFactory(constructor) {
 		let factory;
-		const matches = name.match(/(.*)(Component|Service)$/);
+		const matches = constructor.name.match(/(.*)(Component|Service)$/);
 		if (matches && matches[2] && matches[2] === 'Service') {
 			factory = new ServiceFactory(constructor);
 		} else if (matches && matches[2] && matches[2] === 'Component') {
@@ -77,7 +83,7 @@ export class ModuleFactory {
 			factory = new Factory();
 		}
 
-		this.instances.set(constructor.name, factory);
+		this.factories.set(constructor.name, factory);
 
 		return factory;
 	}
@@ -103,12 +109,12 @@ export class ModuleFactory {
 	 */
 	getFactory(instance) {
 		const instanceName = typeof instance === 'string' ? instance : instance.name;
-		const inst = this.instances.get(instanceName);
+		const inst = this.factories.get(instanceName);
 		if (inst) {
 			return inst;
 		}
 
-		this.get('LoggerService').logError(`No service factory or component factory found for ${name}`, [{key: 'instance', value: instance}]);
+		this.get('LoggerService').logError(`No service factory or component factory found for ${instanceName}`, [{key: 'instance', value: instance}]);
 	}
 
 	/**
@@ -118,7 +124,7 @@ export class ModuleFactory {
 	 * @memberof ModuleFactory
 	 */
 	getComponentRegistry() {
-		return mapKeysToArray(mapFilter(this.instances, value => value instanceof ComponentFactory));
+		return mapKeysToArray(mapFilter(this.factories, value => value instanceof ComponentFactory));
 	}
 
 	/**
@@ -127,4 +133,15 @@ export class ModuleFactory {
 	 * @memberof ModuleFactory
 	 */
 	start() {}
+
+	/**
+	 * Used for testing purposes. Removes all instances.
+	 *
+	 * @memberof ModuleFactory
+	 * @private
+	 */
+	clearAll() {
+		this.factories.forEach(fact => fact.destroyAll());
+		this.factories.clear();
+	}
 }
