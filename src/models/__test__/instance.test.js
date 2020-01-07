@@ -3,7 +3,7 @@ import {Instance} from '../instance';
 import {ModuleFactory} from '../../factory/module-factory';
 import {MockService} from '../__mocks__/service.mock';
 
-const vivi = new ModuleFactory();
+const vivi = new ModuleFactory({serviceConstructors: [MockService]});
 
 test('should init', t => {
 	const instance = new Instance(vivi);

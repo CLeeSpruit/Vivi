@@ -1,24 +1,31 @@
 import test from 'ava';
 import {ParseEngineService} from '../parse-engine.service';
-import {Mocker} from '../../meta/mocker';
+import {ModuleFactory} from '../../factory/module-factory';
 import {attributeList} from '../../meta/attribute-list';
+import {MockComponent} from '../../models/__mocks__/component.mock';
 
-const mock = new Mocker();
+const vivi = new ModuleFactory({componentConstructors: [MockComponent]});
 test.afterEach(() => {
-	mock.clearMocks();
+	vivi.clearAll();
 });
-const service = mock.module.get(ParseEngineService);
+const service = vivi.get(ParseEngineService);
+const factory = vivi.get(MockComponent);
+
+test('should init', t => {
+	const parseEngine = new ParseEngineService(vivi);
+	t.assert(parseEngine);
+});
 
 test('should work', t => {
 	const node = document.createElement('div');
-	const comp = mock.createMock();
+	const comp = factory.create();
 	service.parse(node, {}, comp);
 	t.assert(node);
 });
 
 test('should work even if an element is just text', t => {
 	const node = document.createElement('div');
-	const comp = mock.createMock();
+	const comp = factory.create();
 	node.textContent = 'test';
 
 	service.parse(node, {}, comp);
@@ -28,7 +35,7 @@ test('should work even if an element is just text', t => {
 const setup = (attr, value, data) => {
 	const node = document.createElement('div');
 	const child = document.createElement('div');
-	const comp = mock.createMock();
+	const comp = factory.create();
 	child.setAttribute(attr, value);
 	node.append(child);
 	service.parse(node, data, comp);
@@ -41,7 +48,7 @@ const testAttribute = attr => {
 	test(`${attr} - should evaluate data objects`, t => {
 		const data = {fluffy: 'bunny'};
 		const value = 'this.fluffy';
-		mock.createMock();
+		factory.create();
 		const node = setup(attr, value, data);
 		const actual = node.querySelector('div');
 		t.assert(actual);
@@ -206,7 +213,7 @@ test('v-each nodes should render a list of components and supply object as data'
 
 	t.is(actual.children.length, data.puppies.length);
 	const {id} = actual.children.item(0);
-	const childComp = mock.getFactory().get(id);
+	const childComp = factory.get(id);
 	t.is(childComp.data, data.puppies[0]);
 });
 

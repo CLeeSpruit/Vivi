@@ -5,7 +5,6 @@ import {Instance} from '../models/instance';
 /**
  * Parent class for ServiceFactory and ComponentFactory. Can create generic instances.
  *
- * @export
  * @class Factory
  */
 export class Factory {

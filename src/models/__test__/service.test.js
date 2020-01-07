@@ -10,5 +10,5 @@ test('should setData', t => {
 	const actual = new Service();
 	const fakeId = 'test';
 	actual.setData(fakeId);
-	t.is(actual.id, fakeId);
+	t.is(actual.id, 'Service-' + fakeId);
 });

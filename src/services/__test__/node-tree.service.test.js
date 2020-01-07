@@ -1,21 +1,22 @@
 import test from 'ava';
 import {NodeTreeService} from '../node-tree.service';
-import {Mocker} from '../../meta/mocker';
 import {NodeTree} from '../../models/node-tree';
+import {ModuleFactory} from '../../factory/module-factory';
+import {MockComponent} from '../../models/__mocks__/component.mock';
 
-const mock = new Mocker();
+const vivi = new ModuleFactory({componentConstructors: [MockComponent]});
 test.afterEach(() => {
-	mock.clearMocks();
+	vivi.clearAll();
 });
 
 test('should init', t => {
-	const actual = new NodeTreeService();
+	const actual = new NodeTreeService(vivi);
 	t.assert(actual);
 });
 
 test('setRoot should set the application tree', t => {
-	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
+	const service = vivi.get(NodeTreeService);
+	const rootComponent = vivi.getFactory(MockComponent).create();
 
 	service.setRoot(rootComponent);
 
@@ -23,10 +24,10 @@ test('setRoot should set the application tree', t => {
 });
 
 test('getNode should get node of a component', t => {
-	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
+	const service = new NodeTreeService(vivi);
+	const rootComponent = vivi.getFactory(MockComponent).create();
 	service.setRoot(rootComponent);
-	const child = mock.createMock();
+	const child = vivi.getFactory(MockComponent).create();
 	service.addComponent(rootComponent, child);
 
 	const node = service.getNode(child);
@@ -35,7 +36,7 @@ test('getNode should get node of a component', t => {
 
 test('getNode should be able to get root', t => {
 	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
+	const rootComponent = vivi.getFactory(MockComponent).create();
 	service.setRoot(rootComponent);
 
 	const node = service.getNode(rootComponent);
@@ -44,9 +45,9 @@ test('getNode should be able to get root', t => {
 
 test('getNode should just return null if not found', t => {
 	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
+	const rootComponent = vivi.getFactory(MockComponent).create();
 	service.setRoot(rootComponent);
-	const randoComponent = mock.createMock();
+	const randoComponent = vivi.getFactory(MockComponent).create();
 
 	const node = service.getNode(randoComponent);
 	t.falsy(node);
@@ -54,7 +55,7 @@ test('getNode should just return null if not found', t => {
 
 test('getNode should return null if root is not set', t => {
 	const service = new NodeTreeService();
-	const randoComponent = mock.createMock();
+	const randoComponent = vivi.getFactory(MockComponent).create();
 
 	const node = service.getNode(randoComponent);
 	t.falsy(node);
@@ -62,10 +63,10 @@ test('getNode should return null if root is not set', t => {
 
 test('addComponent should add component to parent', t => {
 	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
+	const rootComponent = vivi.getFactory(MockComponent).create();
 	service.setRoot(rootComponent);
 
-	const child = mock.createMock();
+	const child = vivi.getFactory(MockComponent).create();
 	service.addComponent(rootComponent, child);
 
 	const parentNode = service.getNode(rootComponent);
@@ -74,11 +75,11 @@ test('addComponent should add component to parent', t => {
 
 test('addComponent should add component to root if no parentNode is defined', t => {
 	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
+	const rootComponent = vivi.getFactory(MockComponent).create();
 	service.setRoot(rootComponent);
 	const rootNode = service.getNode(rootComponent);
 
-	const child = mock.createMock();
+	const child = vivi.getFactory(MockComponent).create();
 	service.addComponent(null, child);
 	t.is(rootNode.children.length, 1);
 });
@@ -94,8 +95,8 @@ test.todo('addNodeToComponent should return error and do nothing if parent does 
 
 test('addNodeToComponent should add the node the parent node', t => {
 	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
-	const child = mock.createMock();
+	const rootComponent = vivi.getFactory(MockComponent).create();
+	const child = vivi.getFactory(MockComponent).create();
 	const childNode = new NodeTree(child);
 	service.setRoot(rootComponent);
 	const lengthBefore = service.applicationTree.children.length;
@@ -107,7 +108,7 @@ test('addNodeToComponent should add the node the parent node', t => {
 
 test('loadComponent should load node tree', t => {
 	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
+	const rootComponent = vivi.getFactory(MockComponent).create();
 	service.setRoot(rootComponent);
 	service.loadComponent(rootComponent);
 
@@ -119,8 +120,8 @@ test.todo('loadComponent should throw error if node cannot be found');
 
 test('detachComponent should remove the node and return it', t => {
 	const service = new NodeTreeService();
-	const rootComponent = mock.createMock();
-	const child = mock.createMock();
+	const rootComponent = vivi.getFactory(MockComponent).create();
+	const child = vivi.getFactory(MockComponent).create();
 	service.setRoot(rootComponent);
 	const addedNode = service.addComponent(rootComponent, child);
 	const detachedNode = service.detachComponent(child);

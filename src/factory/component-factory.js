@@ -1,4 +1,3 @@
-import {NodeTreeService} from '../services/node-tree.service';
 import {Component} from '../models/component';
 import {NodeTree} from '../models/node-tree';
 import {Factory} from './factory';
@@ -12,7 +11,7 @@ import {Factory} from './factory';
 export class ComponentFactory extends Factory {
 	constructor(constructorFn, vivi) {
 		super(constructorFn, vivi);
-		this.nodeTreeService = this.vivi.get(NodeTreeService);
+		this.nodeTreeService = this.vivi.get('NodeTreeService');
 	}
 
 	/**

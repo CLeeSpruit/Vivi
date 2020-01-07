@@ -3,7 +3,6 @@ import {Factory} from './factory';
 /**
  * Generates and manages components
  *
- * @export
  * @class ServiceFactory
  * @augments {Factory}
  */

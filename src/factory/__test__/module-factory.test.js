@@ -5,13 +5,6 @@ import {ModuleFactory} from '../module-factory';
 import {ComponentFactory} from '../component-factory';
 import {ServiceFactory} from '../service-factory';
 
-const minimumConstructor = () => {
-	return new ModuleFactory({
-		componentConstructors: [MockComponent],
-		rootComponent: MockComponent
-	});
-};
-
 const fullConstructor = () => {
 	return new ModuleFactory({
 		serviceConstructors: [MockService],
@@ -25,9 +18,18 @@ test('should init - empty', t => {
 	t.assert(actual);
 });
 
-test('should init - minimum', t => {
-	const actual = minimumConstructor();
-	console.log(actual);
+test('should init - no components', t => {
+	const actual = new ModuleFactory({serviceConstructors: [MockService]});
+	t.assert(actual);
+});
+
+test('should init - no services', t => {
+	const actual = new ModuleFactory({componentConstructors: [MockComponent], rootComponent: MockComponent});
+	t.assert(actual);
+});
+
+test('should init - no root component', t => {
+	const actual = new ModuleFactory({componentConstructors: [MockComponent], serviceConstructors: [MockService]});
 	t.assert(actual);
 });
 

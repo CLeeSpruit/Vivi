@@ -1,14 +1,16 @@
 import test from 'ava';
 import {NodeTree} from '../node-tree';
-import {Mocker} from '../../meta/mocker';
+import {ModuleFactory} from '../../factory/module-factory';
+import {MockComponent} from '../__mocks__/component.mock';
 
-const mock = new Mocker();
+const vivi = new ModuleFactory({componentConstructors: [MockComponent]});
+const factory = vivi.getFactory(MockComponent);
 test.afterEach(() => {
-	mock.clearMocks();
+	vivi.clearAll();
 });
 
 test('should init', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
 
 	t.assert(tree);
@@ -16,9 +18,9 @@ test('should init', t => {
 });
 
 test('addChild should add a new node tree to children', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
-	const child = mock.createMock();
+	const child = factory.create();
 
 	tree.addChild(child);
 
@@ -27,8 +29,8 @@ test('addChild should add a new node tree to children', t => {
 });
 
 test('removeChild should remove child and return removed node', t => {
-	const comp = mock.createMock();
-	const child = mock.createMock();
+	const comp = factory.create();
+	const child = factory.create();
 	const tree = new NodeTree(comp);
 	const addedNode = tree.addChild(child);
 	const removedNode = tree.removeChild(child);
@@ -37,8 +39,8 @@ test('removeChild should remove child and return removed node', t => {
 });
 
 test('removeChild should return null if child is not found', t => {
-	const comp = mock.createMock();
-	const child = mock.createMock();
+	const comp = factory.create();
+	const child = factory.create();
 	const tree = new NodeTree(comp);
 	const removedNode = tree.removeChild(child);
 
@@ -46,9 +48,9 @@ test('removeChild should return null if child is not found', t => {
 });
 
 test('findChild should find child if exists', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
-	const child = mock.createMock();
+	const child = factory.create();
 	tree.addChild(child);
 
 	const found = tree.findChild(child.id);
@@ -57,10 +59,10 @@ test('findChild should find child if exists', t => {
 });
 
 test('findChild should ignore child if it does not exist as a direct child and deepSearch is false', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
-	const child = mock.createMock();
-	const grandchild = mock.createMock();
+	const child = factory.create();
+	const grandchild = factory.create();
 	const node = tree.addChild(child);
 	node.addChild(grandchild);
 
@@ -70,10 +72,10 @@ test('findChild should ignore child if it does not exist as a direct child and d
 });
 
 test('findChild should find child if exists not as a direct child and deepSearch is true', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
-	const child = mock.createMock();
-	const grandchild = mock.createMock();
+	const child = factory.create();
+	const grandchild = factory.create();
 	const node = tree.addChild(child);
 	node.addChild(grandchild);
 
@@ -82,9 +84,9 @@ test('findChild should find child if exists not as a direct child and deepSearch
 });
 
 test('findChild should return node if returnNode is true', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
-	const child = mock.createMock();
+	const child = factory.create();
 	const node = tree.addChild(child);
 
 	const found = tree.findChild(child.id, false, true);
@@ -92,17 +94,17 @@ test('findChild should return node if returnNode is true', t => {
 });
 
 test('findChild should return null if nothing is found', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
-	const child = mock.createMock();
+	const child = factory.create();
 
 	const found = tree.findChild(child.id, false, true);
 	t.falsy(found);
 });
 
 test('findParentOf should return itself if it is the parent', t => {
-	const comp = mock.createMock();
-	const child = mock.createMock();
+	const comp = factory.create();
+	const child = factory.create();
 	const tree = new NodeTree(comp);
 	tree.addChild(child);
 
@@ -110,9 +112,9 @@ test('findParentOf should return itself if it is the parent', t => {
 });
 
 test('findParentOf should return parent if parent exists', t => {
-	const comp = mock.createMock();
-	const child = mock.createMock();
-	const grandChild = mock.createMock();
+	const comp = factory.create();
+	const child = factory.create();
+	const grandChild = factory.create();
 	const tree = new NodeTree(comp);
 	const childNode = tree.addChild(child);
 	childNode.addChild(grandChild);
@@ -121,16 +123,16 @@ test('findParentOf should return parent if parent exists', t => {
 });
 
 test('findParentOf should return null if there is no parent', t => {
-	const comp = mock.createMock();
-	const sassyChild = mock.createMock();
+	const comp = factory.create();
+	const sassyChild = factory.create();
 	const tree = new NodeTree(comp);
 
 	t.falsy(tree.findParentOf(sassyChild.id));
 });
 
 test('hasChild should return true if child exists', t => {
-	const comp = mock.createMock();
-	const child = mock.createMock();
+	const comp = factory.create();
+	const child = factory.create();
 	const tree = new NodeTree(comp);
 	tree.addChild(child);
 
@@ -138,15 +140,15 @@ test('hasChild should return true if child exists', t => {
 });
 
 test('hasChild should return false if child does not exist', t => {
-	const comp = mock.createMock();
-	const child = mock.createMock();
+	const comp = factory.create();
+	const child = factory.create();
 	const tree = new NodeTree(comp);
 
 	t.falsy(tree.hasChild(child.id));
 });
 
 test('destroy should trigger component destroy', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
 
 	tree.destroy();
@@ -155,9 +157,9 @@ test('destroy should trigger component destroy', t => {
 });
 
 test('destroy should destroy children', t => {
-	const comp = mock.createMock();
+	const comp = factory.create();
 	const tree = new NodeTree(comp);
-	const child = mock.createMock();
+	const child = factory.create();
 	tree.addChild(child);
 	tree.destroy();
 
