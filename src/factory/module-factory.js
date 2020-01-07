@@ -1,6 +1,5 @@
 import {mapFilter, mapKeysToArray} from '@cspruit/array-like-map';
 import {loadViviServices} from '../services/load-services.static';
-import {NodeTreeService} from '../services/node-tree.service';
 import {Component} from '../models/component';
 import {Service} from '../models/service';
 import {Instance} from '../models/instance';
@@ -73,7 +72,7 @@ export class ModuleFactory {
 		if (matches && matches[2] && matches[2] === 'Service') {
 			factory = new ServiceFactory(constructor);
 		} else if (matches && matches[2] && matches[2] === 'Component') {
-			factory = new ComponentFactory(constructor, [], this.get(NodeTreeService));
+			factory = new ComponentFactory(constructor, [], this.get('NodeTreeService'));
 		} else {
 			factory = new Factory();
 		}
@@ -109,8 +108,7 @@ export class ModuleFactory {
 			return inst;
 		}
 
-		console.error('No service factory or component factory found for ' + name);
-		console.trace();
+		this.get('LoggerService').logError(`No service factory or component factory found for ${name}`, [{key: 'instance', value: instance}]);
 	}
 
 	/**

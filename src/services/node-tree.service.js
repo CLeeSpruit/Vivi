@@ -49,7 +49,10 @@ export class NodeTreeService extends Service {
 	addNodeToComponent(parentComp, childNode) {
 		const parentNode = this.getNode(parentComp);
 		if (!parentNode) {
-			console.error(`Adding child node:${childNode.component.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`);
+			this.vivi.get(
+				'LoggerService').logError(`Adding child node:${childNode.component.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`,
+				[{key: 'parent component', parentComp}, {key: 'child node', childNode}]
+			);
 			return;
 		}
 
@@ -66,7 +69,7 @@ export class NodeTreeService extends Service {
 	loadComponent(comp) {
 		const node = this.getNode(comp);
 		if (!node) {
-			console.error(`Error loading node: ${comp.componentName}. Could not find node in tree.`);
+			this.vivi.get('LoggerService').logError(`Error loading node: ${comp.componentName}. Could not find node in tree.`, [{key: 'component being loaded', value: comp}]);
 			return;
 		}
 
@@ -84,7 +87,10 @@ export class NodeTreeService extends Service {
 	 */
 	addComponent(parentComp, childComp) {
 		if (!this.applicationTree && parentComp) {
-			console.error(`Error adding child node: ${childComp.componentName}. No root component has been set yet.`);
+			this.vivi.get('LoggerService').logError(
+				`Error adding child node: ${childComp.componentName}. No root component has been set yet.`,
+				[{key: 'Parent Component', value: parentComp}, {key: 'Child Component', value: childComp}]
+			);
 			return;
 		}
 
@@ -92,13 +98,15 @@ export class NodeTreeService extends Service {
 		if (parentComp) {
 			parentNode = this.getNode(parentComp);
 			if (!parentNode) {
-				console.error(`Adding child node:${childComp.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`);
+				this.vivi.get(
+					'LoggerService').logError(`Adding child node:${childComp.componentName} to parent node:${parentComp.componentName} failed. Parent node not found in tree.`,
+					[{key: 'Parent Component', value: parentNode}, {key: 'Child Component', value: childComp}]
+				);
 				return;
 			}
 		} else {
 			parentNode = this.applicationTree;
-			// @todo Make Errors, Warnings, Info configurable
-			// console.info(`No parent provided for ${childComp.componentName}. Appending to root.`);
+			this.vivi.get('LoggerService').log(`No parent provided for ${childComp.componentName}. Appending to root.`);
 		}
 
 		return parentNode.addChild(childComp);
@@ -131,7 +139,7 @@ export class NodeTreeService extends Service {
 	detachComponent(comp) {
 		const parent = this.applicationTree.findParentOf(comp.id);
 		if (!parent) {
-			console.error(`Error detaching node: ${comp.id}. Node not found in tree`);
+			this.vivi.get('LoggerService').logWarning(`Error detaching node: ${comp.id}. Node not found in tree`);
 			return;
 		}
 

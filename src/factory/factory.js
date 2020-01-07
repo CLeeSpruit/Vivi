@@ -46,7 +46,7 @@ export class Factory {
 				return instance;
 			}
 
-			console.error(`${this.construct.name}: No instance found with id: ${id}`);
+			this.vivi.get('LoggerService').logError(`${this.construct.name}: No instance found with id: ${id}`);
 			return;
 		}
 

@@ -432,11 +432,41 @@
               
                 
                 <li><a
-                  href='#loadviviservices'
-                  class="">
-                  loadViviServices
-                  
+                  href='#loggerservice'
+                  class=" toggle-sibling">
+                  LoggerService
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#loggerservicelogerror'
+                        class='regular pre-open'>
+                        .logError
+                      </a></li>
+                    
+                      <li><a
+                        href='#loggerservicelogwarning'
+                        class='regular pre-open'>
+                        .logWarning
+                      </a></li>
+                    
+                      <li><a
+                        href='#loggerservicelog'
+                        class='regular pre-open'>
+                        .log
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -625,7 +655,7 @@
 
   
 
-  <p>Sets the root component</p>
+  <p>Creats and sets the root component</p>
 
     <div class='pre p1 fill-light mt0'>createRoot()</div>
   
@@ -674,7 +704,7 @@
 
   <p>Creates a component</p>
 
-    <div class='pre p1 fill-light mt0'>create(parent: <a href="#component">Component</a>?, data: any?, options: {parentEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, replaceEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>}?): <a href="#component">Component</a></div>
+    <div class='pre p1 fill-light mt0'>create(parent: <a href="#component">Component</a>?, data: any?, options: {parentEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, replaceEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, doNotLoad}?): <a href="#component">Component</a></div>
   
   
 
@@ -709,8 +739,12 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>options</span> <code class='quiet'>({parentEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, replaceEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>}?)</code>
-	    ParentEl: Must be provided to append. ReplaceEl: Element to replace on append
+            <span class='code bold'>options</span> <code class='quiet'>({parentEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, replaceEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, doNotLoad}?)</code>
+	    parentEl: Element to anchor component to. Must be provided to append and load component.
+<ul>
+<li>replaceEl: Element to replace on append</li>
+<li>doNotLoad: Do not fire load after creating. Often used for children components</li>
+</ul>
 
           </div>
           
@@ -3490,44 +3524,250 @@ Triggers setFiles Fn</p>
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='loadviviservices'>
-      loadViviServices
+    <h3 class='fl m0' id='loggerservice'>
+      LoggerService
     </h3>
     
     
   </div>
   
 
-  <p>Array of services to be included in Module by default</p>
+  <p>Logs various levels of errors</p>
 
-    <div class='pre p1 fill-light mt0'>loadViviServices(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></div>
+    <div class='pre p1 fill-light mt0'>new LoggerService()</div>
   
   
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></code>:
-        Array of service constructors
-
+    <p>
+      Extends
       
-    
+        <a href="#service">Service</a>
+      
+    </p>
+  
+
+  
+  
+  
+  
+  
   
 
   
 
   
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='loggerservicelogerror'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>logError(error, context?)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Log message as warning</p>
+
+    <div class='pre p1 fill-light mt0'>logError(error: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, context: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;{key: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, value: any}>?)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>error</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Message to user
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>context</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;{key: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, value: any}>?)</code>
+	    Contextual parameters
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='loggerservicelogwarning'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>logWarning(warn)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Log message as warning</p>
+
+    <div class='pre p1 fill-light mt0'>logWarning(warn: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>warn</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Message to user
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='loggerservicelog'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>log(message, sendTrace)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Log message</p>
+
+    <div class='pre p1 fill-light mt0'>log(message: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, sendTrace: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>message</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Message to user
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>sendTrace</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    Add a console trace after log message
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 

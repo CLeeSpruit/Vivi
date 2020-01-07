@@ -108,7 +108,7 @@ export class Component extends Instance {
 	 */
 	append(parentEl, replaceEl) {
 		if (!parentEl) {
-			console.error(`Error while appending ${this.id}. Parent element does not exist.`);
+			this.vivi.get('LoggerService').logError(`Error while appending ${this.id}. Parent element does not exist.`);
 			return;
 		}
 
@@ -132,7 +132,7 @@ export class Component extends Instance {
 		// Assign Element
 		this.element = document.querySelector('#' + this.id);
 		if (!this.element) {
-			console.warn(`Error while loading ${this.id}. Element not was not created.`);
+			this.vivi.get('LoggerService').logWarning(`Error while loading ${this.id}. Element not was not created.`);
 		}
 
 		// User Hook

@@ -88,7 +88,7 @@ export class ComponentFactory extends Factory {
 
 		// Make sure this isn't the root component
 		if (id === this.nodeTreeService.applicationTree.component.id) {
-			// Console.info(`Destroy called on Root Component ${id}. The component was not destroyed.`);
+			this.vivi.get('LoggerService').log(`Destroy called on Root Component ${id}. The component was not destroyed.`);
 			return;
 		}
 
