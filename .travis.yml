@@ -9,7 +9,7 @@ jobs:
       skip_cleanup: true
     - stage: test
       script:
-        - npm run test:full
+        - npm run test
         - codecov -f coverage/*.json
       skip_cleanup: true
     - stage: dist
