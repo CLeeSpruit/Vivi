@@ -21,9 +21,16 @@ export class Instance {
 	}
 
 	/**
-	 *Placeholder for load hook function. If a component, will run after DOM loads. If service, will run after constructor.
+	 * Placeholder for load hook function. If a component, will run after DOM loads. If service, will run after constructor.
 	 *
 	 * @memberof Instance
 	 */
 	load() {}
+
+	/**
+	 * Placeholder for destroy hook function.
+	 *
+	 * @memberof Instance
+	 */
+	destroy() {}
 }

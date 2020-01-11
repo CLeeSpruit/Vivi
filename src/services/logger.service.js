@@ -16,9 +16,9 @@ export class LoggerService extends Service {
 	 * @param {Array<{key: string, value: *}>} [context] - Contextual parameters
 	 * @memberof LoggerService
 	 */
-	logError(error, context) {
-		const {log} = this.vivi.options.log;
-		if (log === 'none') {
+	error(error, context) {
+		const level = this.vivi.options.log;
+		if (level === 'none') {
 			return;
 		}
 
@@ -37,9 +37,9 @@ export class LoggerService extends Service {
 	 * @param {Array<{key: string, value: *}>} [context] - Contextual parameters
 	 * @memberof LoggerService
 	 */
-	logWarning(warn, context) {
-		const {log} = this.vivi.options.log;
-		if (log === 'none' || log === 'error') {
+	warn(warn, context) {
+		const level = this.vivi.options.log;
+		if (level === 'none' || level === 'error') {
 			return;
 		}
 
@@ -58,9 +58,9 @@ export class LoggerService extends Service {
 	 * @param {boolean} [sendTrace] - Add a console trace after log message.
 	 * @memberof LoggerService
 	 */
-	log(message, context, sendTrace) {
-		const {log} = this.vivi.options.log;
-		if (log === 'info' || log === 'verbose') {
+	info(message, context, sendTrace) {
+		const level = this.vivi.options.log;
+		if (level === 'info' || level === 'verbose') {
 			console.info(message);
 			this.printContext(context);
 
@@ -80,8 +80,8 @@ export class LoggerService extends Service {
 	 * @memberof LoggerService
 	 */
 	debug(message, context) {
-		const {log} = this.vivi.options.log;
-		if (log === 'verbose') {
+		const level = this.vivi.options.log;
+		if (level === 'verbose') {
 			console.log(message);
 		}
 

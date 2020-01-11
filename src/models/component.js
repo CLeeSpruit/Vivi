@@ -1,7 +1,4 @@
 import {listen} from '@cspruit/zephyr';
-import {ApplicationEventService} from '../services/application-event.service';
-import {ParseEngineService} from '../services/parse-engine.service';
-import {NodeTreeService} from '../services/node-tree.service';
 import {getElNameFromComponent} from '../helpers/get-el-name-from-component';
 import {Instance} from './instance';
 
@@ -26,10 +23,6 @@ export class Component extends Instance {
 
 		// Turns a name like "SearchBarComponent" to look for "search-bar.component.xyz"
 		this.componentName = getElNameFromComponent(this.constructor.name);
-		this.appEvents = this.vivi.getFactory(ApplicationEventService).get();
-		this.engine = this.vivi.getFactory(ParseEngineService).get();
-		this.nodeTreeService = this.vivi.getFactory(NodeTreeService).get();
-
 		this.setFiles();
 	}
 
@@ -96,7 +89,7 @@ export class Component extends Instance {
 
 		// Load data into template
 		this.parsedNode = this.getUnparsedNode();
-		this.engine.parse(this.parsedNode, this.data, this);
+		this.vivi.get('ParseEngineService').parse(this.parsedNode, this.data, this);
 	}
 
 	/**
@@ -108,7 +101,7 @@ export class Component extends Instance {
 	 */
 	append(parentEl, replaceEl) {
 		if (!parentEl) {
-			this.vivi.get('LoggerService').logError(`Error while appending ${this.id}. Parent element does not exist.`);
+			this.vivi.get('LoggerService').error(`Error while appending ${this.id}. Parent element does not exist.`);
 			return;
 		}
 
@@ -132,7 +125,7 @@ export class Component extends Instance {
 		// Assign Element
 		this.element = document.querySelector('#' + this.id);
 		if (!this.element) {
-			this.vivi.get('LoggerService').logWarning(`Error while loading ${this.id}. Element not was not created.`);
+			this.vivi.get('LoggerService').warn(`Error while loading ${this.id}. Element not was not created.`);
 		}
 
 		// User Hook
@@ -149,7 +142,7 @@ export class Component extends Instance {
 		const oldEl = document.querySelector('#' + this.id);
 		const newEl = this.getUnparsedNode();
 		const parentEl = oldEl.parentElement;
-		this.engine.parse(newEl, this.data, this);
+		this.vivi.get('ParseEngineService').parse(newEl, this.data, this);
 		parentEl.replaceChild(newEl, oldEl);
 		this.parsedNode = newEl;
 		this.element = document.querySelector('#' + this.id);
@@ -196,7 +189,7 @@ export class Component extends Instance {
 	 * @memberof Component
 	 */
 	appListen(eventName, cb) {
-		this.appEvents.createListener(eventName, cb.bind(this));
+		this.vivi.get('ApplicationEventsService').createListener(eventName, cb.bind(this));
 	}
 
 	/**

@@ -5,9 +5,6 @@ import {ModuleFactory} from '../../factory/module-factory';
 import {MockComponent} from '../../models/__mocks__/component.mock';
 
 const vivi = new ModuleFactory({componentConstructors: [MockComponent]});
-test.afterEach(() => {
-	vivi.clearAll();
-});
 
 test('should init', t => {
 	const actual = new NodeTreeService(vivi);

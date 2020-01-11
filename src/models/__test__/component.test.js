@@ -4,6 +4,7 @@ import {MockComponent} from '../__mocks__/component.mock';
 import {ModuleFactory} from '../../factory/module-factory';
 
 const vivi = new ModuleFactory({componentConstructors: [MockComponent]});
+const factory = vivi.getFactory(MockComponent);
 
 test('should init', t => {
 	const actual = new Component(vivi);
@@ -11,7 +12,7 @@ test('should init', t => {
 });
 
 test('should init with default services', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	comp.setData(1);
 	t.assert(comp.appEvents);
 	t.assert(comp.engine);
@@ -19,14 +20,14 @@ test('should init with default services', t => {
 });
 
 test('should assign template and style', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	comp.setFiles();
 	t.is(comp.template, '');
 	t.is(comp.style, '');
 });
 
 test('append should parse node', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	const data = {name: 'test'};
 	comp.setData(1, data);
 	comp.append(document.body);
@@ -34,31 +35,8 @@ test('append should parse node', t => {
 	t.assert(comp.parsedNode);
 });
 
-test('append should append style to head', t => {
-	const comp = new Component(vivi);
-	comp.style = 'mock: { color: red; }';
-	comp.append(document.body);
-
-	const styleTag = document.head.querySelector('style#style-mock');
-	t.assert(styleTag);
-});
-
-test('append should not append style if it already exists', t => {
-	const comp = new Component(vivi);
-	comp.style = 'mock: { color: red; }';
-	comp.append(document.body);
-	comp.append(document.body);
-
-	const styleTags = document.head.querySelectorAll('style#style-mock');
-
-	t.is(styleTags.length, 1);
-});
-
-// Error handling
-test.todo('append should throw error if parent is not provided');
-
 test('append should append to parent', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	comp.template = '<div>Test</div>';
 	const mockParent = document.createElement('parent');
 	document.body.append(mockParent);
@@ -71,44 +49,29 @@ test('append should append to parent', t => {
 });
 
 test('append should replace existing node in template', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	comp.template = '<mock></mock>';
 	comp.append(document.body);
 
 	t.is(comp.element.children.length, 1);
 });
 
-// Decorators are not working atm
-test.todo('append should automatically add elements and bind them');
-
-test.todo('should accept element selectors without events');
-
-// Error handling
-test.todo('loadall should throw a warning if element is not found');
-
-test('detach should remove element from DOM', t => {
-	const comp = new Component(vivi);
-	comp.append(document.body);
-	comp.detach();
-	t.falsy(comp.element.isConnected);
-});
-
 test('listen should create a listener for an element', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	const el = document.createElement('button');
 	comp.listen(el, 'click', () => t.pass());
 	el.click();
 });
 
 test('appListen should create an application listener', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 
 	comp.appListen('test', () => t.pass());
 	comp.appEvents.sendEvent('test', {});
 });
 
 test('redraw should not blow up if there is no template', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	const mockParent = document.createElement('parent');
 	document.body.append(mockParent);
 
@@ -118,13 +81,13 @@ test('redraw should not blow up if there is no template', t => {
 });
 
 test('should not blow up if there is no element', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	comp.redraw();
 	t.assert(comp);
 });
 
 test('should redraw with new params', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	comp.setData(1, {name: 'fluffy'});
 	comp.template = '<span v-innerHTML="this.name"></span>';
 
@@ -140,7 +103,7 @@ test('should redraw with new params', t => {
 });
 
 test('create child should create and return component', t => {
-	const comp = new Component(vivi);
+	const comp = factory.create();
 	const child = comp.createChild(comp.element, MockComponent);
 	t.assert(child);
 });

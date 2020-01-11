@@ -76,11 +76,11 @@ export class ModuleFactory {
 		let factory;
 		const matches = constructor.name.match(/(.*)(Component|Service)$/);
 		if (matches && matches[2] && matches[2] === 'Service') {
-			factory = new ServiceFactory(constructor);
+			factory = new ServiceFactory(constructor, this);
 		} else if (matches && matches[2] && matches[2] === 'Component') {
-			factory = new ComponentFactory(constructor, [], this.get('NodeTreeService'));
+			factory = new ComponentFactory(constructor, this);
 		} else {
-			factory = new Factory();
+			factory = new Factory(constructor, this);
 		}
 
 		this.factories.set(constructor.name, factory);
@@ -114,7 +114,7 @@ export class ModuleFactory {
 			return inst;
 		}
 
-		this.get('LoggerService').logError(`No service factory or component factory found for ${instanceName}`, [{key: 'instance', value: instance}]);
+		this.get('LoggerService').error(`No service factory or component factory found for ${instanceName}`, [{key: 'instance', value: instance}]);
 	}
 
 	/**
@@ -133,15 +133,4 @@ export class ModuleFactory {
 	 * @memberof ModuleFactory
 	 */
 	start() {}
-
-	/**
-	 * Used for testing purposes. Removes all instances.
-	 *
-	 * @memberof ModuleFactory
-	 * @private
-	 */
-	clearAll() {
-		this.factories.forEach(fact => fact.destroyAll());
-		this.factories.clear();
-	}
 }

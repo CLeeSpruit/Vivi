@@ -9,6 +9,16 @@ import {Instance} from '../models/instance';
  */
 export class Factory {
 	constructor(constructorFn, vivi) {
+		if (!vivi) {
+			// This error would cause an error _with_ the error logger, so throw it like a normal error
+			throw new ReferenceError('ModuleFactory is required.');
+		}
+
+		if (!constructorFn) {
+			this.vivi.get('LoggerService').error('Constructor function for Instance class required.');
+			return;
+		}
+
 		this.counter = 1;
 		this.construct = constructorFn;
 		this.instances = new Map();
@@ -45,7 +55,7 @@ export class Factory {
 				return instance;
 			}
 
-			this.vivi.get('LoggerService').logError(`${this.construct.name}: No instance found with id: ${id}`);
+			this.vivi.get('LoggerService').error(`${this.construct.name}: No instance found with id: ${id}`);
 			return;
 		}
 
@@ -61,6 +71,10 @@ export class Factory {
 	destroy(id) {
 		const instance = this.get(id);
 		if (!instance) {
+			this.vivi.get('LoggerService').warn(
+				`Error destroying instance ${id}. Id does not exist in factory.`,
+				[{key: 'Factory', value: this}]
+			);
 			return;
 		}
 

@@ -4,12 +4,9 @@ import {ModuleFactory} from '../../factory/module-factory';
 import {attributeList} from '../../meta/attribute-list';
 import {MockComponent} from '../../models/__mocks__/component.mock';
 
-const vivi = new ModuleFactory({componentConstructors: [MockComponent]});
-test.afterEach(() => {
-	vivi.clearAll();
-});
-const service = vivi.get(ParseEngineService);
-const factory = vivi.get(MockComponent);
+const vivi = new ModuleFactory();
+const factory = vivi.createFactory(MockComponent);
+const service = vivi.get('ParseEngineService');
 
 test('should init', t => {
 	const parseEngine = new ParseEngineService(vivi);

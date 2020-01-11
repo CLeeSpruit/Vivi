@@ -3,11 +3,8 @@ import {NodeTree} from '../node-tree';
 import {ModuleFactory} from '../../factory/module-factory';
 import {MockComponent} from '../__mocks__/component.mock';
 
-const vivi = new ModuleFactory({componentConstructors: [MockComponent]});
-const factory = vivi.getFactory(MockComponent);
-test.afterEach(() => {
-	vivi.clearAll();
-});
+const vivi = new ModuleFactory();
+const factory = vivi.createFactory(MockComponent);
 
 test('should init', t => {
 	const comp = factory.create();
@@ -145,23 +142,4 @@ test('hasChild should return false if child does not exist', t => {
 	const tree = new NodeTree(comp);
 
 	t.falsy(tree.hasChild(child.id));
-});
-
-test('destroy should trigger component destroy', t => {
-	const comp = factory.create();
-	const tree = new NodeTree(comp);
-
-	tree.destroy();
-
-	t.falsy(comp.element.isConnected);
-});
-
-test('destroy should destroy children', t => {
-	const comp = factory.create();
-	const tree = new NodeTree(comp);
-	const child = factory.create();
-	tree.addChild(child);
-	tree.destroy();
-
-	t.falsy(child.element.isConnected);
 });

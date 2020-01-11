@@ -1,5 +1,4 @@
 import {Component} from '../models/component';
-import {NodeTree} from '../models/node-tree';
 import {Factory} from './factory';
 
 /**
@@ -32,10 +31,12 @@ export class ComponentFactory extends Factory {
 	 *
 	 * @param {Component} [parent] - Parent component to append to
 	 * @param {*} [data] - Data to be passed to the component
-	 * @param {{parentEl: HTMLElement, replaceEl: HTMLElement, doNotLoad}} [options]
+	 * @param {{parentEl: HTMLElement, replaceEl: HTMLElement, doNotLoad: boolean}} [options]
 	 * - parentEl: Element to anchor component to. Must be provided to append and load component.
 	 * - replaceEl: Element to replace on append
 	 * - doNotLoad: Do not fire load after creating. Often used for children components
+	 * @todo Check: If a parentComp is provided, but a parentEl is not, should it just append to parentComp.element by default?
+	 * @todo Check: ParentEl seems to be common. Should it be normal param rather than in options?
 	 * @returns {Component} - Component created
 	 * @memberof ComponentFactory
 	 */
@@ -60,12 +61,14 @@ export class ComponentFactory extends Factory {
 	 *Detaches component from the node tree
 	 *
 	 * @param {string} id - Id of component to be detached
-	 * @returns {NodeTree} - Returns node of component, if found
+	 * @returns {*} - Returns node of component, if found
 	 * @memberof ComponentFactory
+	 * @todo Revist: Detach vs Destroy behavior. Is it needed?
 	 */
 	detach(id) {
 		const comp = this.get(id);
 		if (!comp) {
+			this.vivi.get('LoggerService').warn(`Detach: Component ${id} was not found.`);
 			return;
 		}
 
@@ -78,16 +81,18 @@ export class ComponentFactory extends Factory {
 	 *
 	 * @param {string} id - Id of component to be destroyed
 	 * @memberof ComponentFactory
+	 * @todo Revist: Detach vs Destroy behavior. Is it needed?
 	 */
 	destroy(id) {
 		const component = this.get(id);
 		if (!component) {
+			this.vivi.get('LoggerService').warn(`Destroy: Component ${id} was not found.`);
 			return;
 		}
 
-		// Make sure this isn't the root component
-		if (id === this.nodeTreeService.applicationTree.component.id) {
-			this.vivi.get('LoggerService').log(`Destroy called on Root Component ${id}. The component was not destroyed.`);
+		// Make sure this isn't the root component (also double check if a root has even been attached)
+		if (this.nodeTreeService.applicationTree && id === this.nodeTreeService.applicationTree.component.id) {
+			this.vivi.get('LoggerService').info(`Destroy called on Root Component ${id}. The component was not destroyed.`);
 			return;
 		}
 
