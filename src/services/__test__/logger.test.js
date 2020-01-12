@@ -1,11 +1,11 @@
 import test from 'ava';
-import {LoggerService} from '../logger.service';
+import {Logger} from '../logger';
 import {ModuleFactory} from '../../factory/module-factory';
 
 const vivi = new ModuleFactory();
-const service = vivi.get('LoggerService');
+const service = vivi.get('Logger');
 test('should init', t => {
-	const actual = new LoggerService(vivi);
+	const actual = new Logger(vivi);
 	t.assert(actual);
 });
 

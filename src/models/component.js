@@ -92,7 +92,7 @@ export class Component extends Instance {
 
 		// Load data into template
 		this.parsedNode = this.getUnparsedNode();
-		this.vivi.get('ParseEngineService').parse(this.parsedNode, this.data, this);
+		this.vivi.get('Engine').parse(this.parsedNode, this.data, this);
 	}
 
 	/**
@@ -105,7 +105,7 @@ export class Component extends Instance {
 	 */
 	append(parentEl, replaceEl) {
 		if (!parentEl) {
-			this.vivi.get('LoggerService').error(`Error while appending ${this.id}. Parent element does not exist.`);
+			this.vivi.get('Logger').error(`Error while appending ${this.id}. Parent element does not exist.`);
 			return;
 		}
 
@@ -130,7 +130,7 @@ export class Component extends Instance {
 		// Assign Element
 		this.element = document.querySelector('#' + this.id);
 		if (!this.element) {
-			this.vivi.get('LoggerService').warn(`Error while loading ${this.id}. Element not was not created.`);
+			this.vivi.get('Logger').warn(`Error while loading ${this.id}. Element not was not created.`);
 		}
 
 		// User Hook
@@ -148,12 +148,12 @@ export class Component extends Instance {
 		const newEl = this.getUnparsedNode();
 		if (oldEl && newEl) {
 			const parentEl = oldEl.parentElement;
-			this.vivi.get('ParseEngineService').parse(newEl, this.data, this);
+			this.vivi.get('Engine').parse(newEl, this.data, this);
 			parentEl.replaceChild(newEl, oldEl);
 			this.parsedNode = newEl;
 			this.element = document.querySelector('#' + this.id);
 		} else {
-			this.vivi.get('LoggerService').error(`Error redrawing component: ${this.id}. Element not found.`,
+			this.vivi.get('Logger').error(`Error redrawing component: ${this.id}. Element not found.`,
 				[
 					{key: 'Component', value: this},
 					{key: 'Old Element', value: oldEl},
@@ -204,7 +204,7 @@ export class Component extends Instance {
 	 * @memberof Component
 	 */
 	appListen(eventName, cb) {
-		this.vivi.get('ApplicationEventService').createListener(eventName, cb.bind(this));
+		this.vivi.get('AppEvent').createListener(eventName, cb.bind(this));
 	}
 
 	/**

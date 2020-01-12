@@ -9,7 +9,7 @@ import {Factory} from './factory';
 export class ComponentFactory extends Factory {
 	constructor(constructorFn, vivi) {
 		super(constructorFn, vivi);
-		this.nodeTreeService = this.vivi.get('NodeTreeService');
+		this.nodes = this.vivi.get('Nodes');
 	}
 
 	/**
@@ -22,8 +22,8 @@ export class ComponentFactory extends Factory {
 		const comp = super.create();
 		comp.append(document.body);
 
-		this.nodeTreeService.setRoot(comp);
-		this.nodeTreeService.applicationTree.load();
+		this.nodes.setRoot(comp);
+		this.nodes.applicationTree.load();
 		return comp;
 	}
 
@@ -43,7 +43,7 @@ export class ComponentFactory extends Factory {
 	 */
 	create(parent, data, options) {
 		if (!parent) {
-			this.vivi.get('LoggerService').error('Create: No parent given. Component has not been created. To create a root component, use createRoot().', [
+			this.vivi.get('Logger').error('Create: No parent given. Component has not been created. To create a root component, use createRoot().', [
 				{key: 'Parent', value: parent}
 			]);
 			return;
@@ -52,7 +52,7 @@ export class ComponentFactory extends Factory {
 		const component = super.create(data);
 
 		// Create nodeTree for component
-		const node = this.nodeTreeService.addComponent(parent, component);
+		const node = this.nodes.addComponent(parent, component);
 
 		if (options && options.parentEl) {
 			component.append(options.parentEl, options.replaceEl);
@@ -76,12 +76,12 @@ export class ComponentFactory extends Factory {
 	detach(id) {
 		const comp = this.get(id);
 		if (!comp) {
-			this.vivi.get('LoggerService').warn(`Detach: Component ${id} was not found.`);
+			this.vivi.get('Logger').warn(`Detach: Component ${id} was not found.`);
 			return;
 		}
 
 		// Remove from tree and return resulting node to re-attach later
-		return this.nodeTreeService.detachComponent(comp);
+		return this.nodes.detachComponent(comp);
 	}
 
 	/**
@@ -94,18 +94,18 @@ export class ComponentFactory extends Factory {
 	destroy(id) {
 		const component = this.get(id);
 		if (!component) {
-			this.vivi.get('LoggerService').warn(`Destroy: Component ${id} was not found.`);
+			this.vivi.get('Logger').warn(`Destroy: Component ${id} was not found.`);
 			return;
 		}
 
 		// Make sure this isn't the root component (also double check if a root has even been attached)
-		if (this.nodeTreeService.applicationTree && id === this.nodeTreeService.applicationTree.component.id) {
-			this.vivi.get('LoggerService').info(`Destroy called on Root Component ${id}. The component was not destroyed.`);
+		if (this.nodes.applicationTree && id === this.nodes.applicationTree.component.id) {
+			this.vivi.get('Logger').info(`Destroy called on Root Component ${id}. The component was not destroyed.`);
 			return;
 		}
 
 		// Remove from tree and DOM
-		this.nodeTreeService.removeComponent(component);
+		this.nodes.removeComponent(component);
 
 		super.destroy(id);
 	}

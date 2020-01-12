@@ -1,15 +1,15 @@
 import test from 'ava';
-import {ParseEngineService} from '../parse-engine.service';
+import {Engine} from '../engine';
 import {ModuleFactory} from '../../factory/module-factory';
 import {attributeList} from '../../meta/attribute-list';
 import {MockComponent} from '../../models/__mocks__/component.mock';
 
 const vivi = new ModuleFactory();
 const factory = vivi.createFactory(MockComponent);
-const service = vivi.get('ParseEngineService');
+const service = vivi.get('Engine');
 
 test('should init', t => {
-	const parseEngine = new ParseEngineService(vivi);
+	const parseEngine = new Engine(vivi);
 	t.assert(parseEngine);
 });
 

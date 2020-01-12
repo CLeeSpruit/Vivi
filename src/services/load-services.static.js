@@ -1,7 +1,7 @@
-import {ApplicationEventService} from './application-event.service';
-import {NodeTreeService} from './node-tree.service';
-import {ParseEngineService} from './parse-engine.service';
-import {LoggerService} from './logger.service';
+import {AppEvent} from './app-event';
+import {Nodes} from './nodes';
+import {Engine} from './engine';
+import {Logger} from './logger';
 
 /**
  * Array of services to be included in Module by default
@@ -11,9 +11,9 @@ import {LoggerService} from './logger.service';
  */
 export function loadViviServices() {
 	return [
-		ApplicationEventService,
-		LoggerService,
-		NodeTreeService,
-		ParseEngineService
+		AppEvent,
+		Logger,
+		Nodes,
+		Engine
 	];
 }

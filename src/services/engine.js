@@ -5,14 +5,14 @@ import {Component} from '../models';
 /**
  * The magic behind injecting javascript into html code. Parse is the main entry point.
  *
- * @class ParseEngineService
+ * @class Engine
  * @augments {Service}
  */
-export class ParseEngineService extends Service {
+export class Engine extends Service {
 	/**
 	 * Load assigns attributeBlack list
 	 *
-	 * @memberof ParseEngineService
+	 * @memberof Engine
 	 */
 	load() {
 		this.attributeBlackList = [
@@ -32,7 +32,7 @@ export class ParseEngineService extends Service {
 	 * @param {Node} node - Node to be parsed
 	 * @param {*} data - Data object from parent component
 	 * @param {Component} comp - Parent component
-	 * @memberof ParseEngineService
+	 * @memberof Engine
 	 */
 	parse(node, data, comp) {
 		// Get a list of all unique attributes
@@ -123,7 +123,7 @@ export class ParseEngineService extends Service {
 	 * @param {HTMLElement} node - Node to search in
 	 * @param {Set<string>} [attributes] - Attribute list
 	 * @returns {Set<string>} - All unique attributes in the node
-	 * @memberof ParseEngineService
+	 * @memberof Engine
 	 */
 	buildAttributeList(node, attributes) {
 		attributes = attributes || new Set();
@@ -148,7 +148,7 @@ export class ParseEngineService extends Service {
 	 * @param {*} data - context data
 	 * @param {string} name - name of attribute to search for
 	 * @param {Function} [customParseFn] - If it's more than a simple replacement, run this function if found
-	 * @memberof ParseEngineService
+	 * @memberof Engine
 	 */
 	attributeParse(el, data, name, customParseFn) {
 		el.querySelectorAll('[' + name + ']').forEach(el => {
@@ -175,7 +175,7 @@ export class ParseEngineService extends Service {
 	 * @param {*} data - context data
 	 * @param {string} name - name of attribute to search for
 	 * @param {Function} customParseFn - If it's more than a simple replacement, run this function if found
-	 * @memberof ParseEngineService
+	 * @memberof Engine
 	 */
 	attributeParseVif(node, data, name, customParseFn) {
 		this.attributeParse(node, data, name, (attrName, el, attr) => {

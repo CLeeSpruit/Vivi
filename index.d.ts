@@ -13,11 +13,11 @@ export declare function getElements(origin: Object): Array<ViviElementParams>;
 /* Factory */
 export declare class ComponentFactory<T extends Component = Component> {
     private services;
-    private nodeTreeService?;
+    private nodes?;
     private components;
     private counter;
-    constructor(constructor: new (...args: any[]) => T, services?: Array<ServiceFactory>, nodeTreeService?: NodeTreeService);
-    createRoot(nodeTreeService: NodeTreeService): void;
+    constructor(constructor: new (...args: any[]) => T, services?: Array<ServiceFactory>, nodes?: Nodes);
+    createRoot(nodes: Nodes): void;
     create(parent: Component, data?: Object, options?: {
         parentEl?: HTMLElement;
         replaceEl?: HTMLElement;
@@ -77,9 +77,9 @@ export declare abstract class Component {
     element: HTMLElement;
     parsedNode: HTMLElement;
     factoryService: FactoryService;
-    appEvents: ApplicationEventService;
-    engine: ParseEngineService;
-    nodeTreeService: NodeTreeService;
+    appEvents: AppEvent;
+    engine: Engine;
+    nodes: Nodes;
     constructor();
     setData(id: number, data?: Object): void;
     private getUnparsedNode;
@@ -120,7 +120,7 @@ export declare abstract class Service {
 }
 
 /* Services */
-export declare class ApplicationEventService extends Service {
+export declare class AppEvent extends Service {
     eventRegistry: EventRegistry;
     sendEvent(eventName: string, data?: any): void;
     createListener(eventName: string, callback: (event: any) => any): Stream;
@@ -133,7 +133,7 @@ export declare class FactoryService extends Service {
     getFactory<T extends Service = Service>(con: new (...args: any[]) => T): ServiceFactory<T>;
 }
 
-export declare class NodeTreeService extends Service {
+export declare class Nodes extends Service {
     applicationTree: NodeTree;
     setRoot(rootComponent: Component): void;
     getNode(comp: Component): NodeTree;
@@ -143,7 +143,7 @@ export declare class NodeTreeService extends Service {
     detachComponent(comp: Component): NodeTree;
 }
 
-export declare class ParseEngineService extends Service {
+export declare class Engine extends Service {
     private factoryService;
     private readonly attributeBlackList;
     constructor(factoryService: FactoryService);

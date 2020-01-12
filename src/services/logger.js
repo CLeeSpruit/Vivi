@@ -3,10 +3,10 @@ import {Service} from '../models/service';
 /**
  * Logs various levels of errors
  *
- * @class LoggerService
+ * @class Logger
  * @augments {Service}
  */
-export class LoggerService extends Service {
+export class Logger extends Service {
 	/**
 	 * Log message as error
 	 * Levels: error, warn, info, verbose
@@ -14,7 +14,7 @@ export class LoggerService extends Service {
 	 *
 	 * @param {string} error - Message to user
 	 * @param {Array<{key: string, value: *}>} [context] - Contextual parameters
-	 * @memberof LoggerService
+	 * @memberof Logger
 	 */
 	error(error, context) {
 		const level = this.vivi.options.log;
@@ -35,7 +35,7 @@ export class LoggerService extends Service {
 	 *
 	 * @param {string} warn - Message to user
 	 * @param {Array<{key: string, value: *}>} [context] - Contextual parameters
-	 * @memberof LoggerService
+	 * @memberof Logger
 	 */
 	warn(warn, context) {
 		const level = this.vivi.options.log;
@@ -56,7 +56,7 @@ export class LoggerService extends Service {
 	 * @param {string} message - Message to user
 	 * @param {Array<{key: string, value: *}>} [context] - Contextual parameters
 	 * @param {boolean} [sendTrace] - Add a console trace after log message.
-	 * @memberof LoggerService
+	 * @memberof Logger
 	 */
 	info(message, context, sendTrace) {
 		const level = this.vivi.options.log;
@@ -77,7 +77,7 @@ export class LoggerService extends Service {
 	 *
 	 * @param {string} message - Message to user
 	 * @param {Array<{key: string, value: *}>} [context] - Contextual parameters
-	 * @memberof LoggerService
+	 * @memberof Logger
 	 */
 	debug(message, context) {
 		const level = this.vivi.options.log;
@@ -93,7 +93,7 @@ export class LoggerService extends Service {
 	 *
 	 * @param {Array<{key: string, value: *}>} [context] - Key/Value to output to console
 	 * @private
-	 * @memberof LoggerService
+	 * @memberof Logger
 	 */
 	printContext(context) {
 		if (context) {

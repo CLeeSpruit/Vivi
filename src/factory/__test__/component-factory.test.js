@@ -22,9 +22,9 @@ test('should create a new component and return that component', t => {
 	t.assert(actual instanceof MockComponent);
 });
 
-test('should create component and set root in nodeTreeService', t => {
+test('should create component and set root in nodes', t => {
 	factory.createRoot();
 	const actual = factory.get();
 	t.assert(actual);
-	t.assert(vivi.get('NodeTreeService').applicationTree);
+	t.assert(vivi.get('Nodes').applicationTree);
 });

@@ -4,10 +4,10 @@ import {Service} from '../models/service';
 /**
  * Service that provides an event registry. Essentially a wrapper around Zephyr.
  *
- * @class ApplicationEventService
+ * @class AppEvent
  * @augments {Service}
  */
-export class ApplicationEventService extends Service {
+export class AppEvent extends Service {
 	load() {
 		this.eventRegistry = new EventRegistry();
 	}

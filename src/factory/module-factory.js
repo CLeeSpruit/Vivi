@@ -5,7 +5,6 @@ import {Service} from '../models/service';
 import {Instance} from '../models/instance';
 import {ServiceFactory} from './service-factory';
 import {ComponentFactory} from './component-factory';
-import {Factory} from './factory';
 
 /**
  * Module Factory - Initial Constructor for the Vivi Framework
@@ -69,18 +68,16 @@ export class ModuleFactory {
 	 *Creates a Component or Service factory based off of constructor
 	 *
 	 * @param {Service | Component} constructor - Service or Component to be created with Factory
-	 * @returns {ServiceFactory | ComponentFactory | Factory} - Resulting Factory. Will return a ServiceFactory or ComponentFactory based off of name of constructor.
+	 * @returns {ServiceFactory | ComponentFactory} - Resulting Factory. Will return a ServiceFactory or ComponentFactory based off of name of constructor.
 	 * @memberof ModuleFactory
 	 */
 	createFactory(constructor) {
 		let factory;
-		const matches = constructor.name.match(/(.*)(Component|Service)$/);
-		if (matches && matches[2] && matches[2] === 'Service') {
-			factory = new ServiceFactory(constructor, this);
-		} else if (matches && matches[2] && matches[2] === 'Component') {
+		const matches = constructor.name.match(/(.*)(Component)$/);
+		if (matches && matches[2] && matches[2] === 'Component') {
 			factory = new ComponentFactory(constructor, this);
 		} else {
-			factory = new Factory(constructor, this);
+			factory = new ServiceFactory(constructor, this);
 		}
 
 		this.factories.set(constructor.name, factory);
@@ -103,8 +100,8 @@ export class ModuleFactory {
 	/**
 	 * Fetches a service factory or component factory from the service or component constructor
 	 *
-	 * @param {Service | Component | Instance | string} instance - Instance that is created from factory
-	 * @returns {ServiceFactory | ComponentFactory | Factory } If found, ServiceFactory or ComponentFactory of component/service
+	 * @param {Service | Component | string} instance - Instance that is created from factory
+	 * @returns {ServiceFactory | ComponentFactory } If found, ServiceFactory or ComponentFactory of component/service
 	 * @memberof ModuleFactory
 	 */
 	getFactory(instance) {
@@ -114,7 +111,7 @@ export class ModuleFactory {
 			return inst;
 		}
 
-		this.get('LoggerService').error(`No service factory or component factory found for ${instanceName}`, [{key: 'instance', value: instance}]);
+		this.get('Logger').error(`No service factory or component factory found for ${instanceName}`, [{key: 'instance', value: instance}]);
 	}
 
 	/**
