@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/CassandraSpruit/Vivi/compare/v5.0.1...v5.0.2) (2020-01-12)
+
+
+### Bug Fixes
+
+* **pkg:** manually updating pkg ([3019925](https://github.com/CassandraSpruit/Vivi/commit/3019925ca07d9bba75ff93c76115bc212f6cd6b4))
+
 ## [1.0.1](https://github.com/CassandraSpruit/Vivi/compare/v1.0.0...v1.0.1) (2020-01-12)
 
 
