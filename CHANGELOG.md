@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/CassandraSpruit/Vivi/compare/v5.0.4...v5.1.0) (2020-01-12)
+
+
+### Features
+
+* **services:** services are injectable ([4fd8583](https://github.com/CassandraSpruit/Vivi/commit/4fd8583edcfca8bd264e35d2a90e46ed99f36043)), closes [#10](https://github.com/CassandraSpruit/Vivi/issues/10)
+
 ## [5.0.4](https://github.com/CassandraSpruit/Vivi/compare/v5.0.3...v5.0.4) (2020-01-12)
 
 
