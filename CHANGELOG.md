@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/CassandraSpruit/Vivi/compare/v5.1.0...v5.2.0) (2020-01-12)
+
+
+### Features
+
+* **component:** added bind ([db5c020](https://github.com/CassandraSpruit/Vivi/commit/db5c02048df854ce55cd7c0f16a7140a46c45a1d))
+
 # [5.1.0](https://github.com/CassandraSpruit/Vivi/compare/v5.0.4...v5.1.0) (2020-01-12)
 
 
