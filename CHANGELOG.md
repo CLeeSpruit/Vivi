@@ -1,3 +1,10 @@
+## [5.0.4](https://github.com/CassandraSpruit/Vivi/compare/v5.0.3...v5.0.4) (2020-01-12)
+
+
+### Bug Fixes
+
+* **service:** dropped "service" from baked-in services ([69141a4](https://github.com/CassandraSpruit/Vivi/commit/69141a491606cce997138cacc0a3e52ce3920839)), closes [#9](https://github.com/CassandraSpruit/Vivi/issues/9)
+
 ## [5.0.3](https://github.com/CassandraSpruit/Vivi/compare/v5.0.2...v5.0.3) (2020-01-12)
 
 
