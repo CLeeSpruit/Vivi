@@ -26,13 +26,17 @@ export class ModuleFactory {
 	 *      - warn - output only errors and warnings
 	 *      - info - output errors, warnings, and other information
 	 * 	    - verbose - all levels, including debug information
-	 *
+	 * @param {Array<Service | {key: string, override: Service}>} [overrides] - An array of services that inherit a baked in service or can also specify by {key: override}
+	 *     - Ex: ```new ModuleFactory(null, null, [MyCoolEventService, MyCoolerLogger]);``` - _(Provided MyCoolEventService extends AppEvent and MyCoolerLogger extends Logger)_
+	 *     - Ex: ```new ModuleFactory(null, null, [{key: 'AppEvent', override: SomeWeirdEventService}, {key: 'Logger', override: SuperCustomLoggerService }]);```
 	 * @memberof ModuleFactory
 	 * @todo Allow for default services to be overwritten
 	 */
-	constructor(module = {}, options = {}) {
+	constructor(module, options, overrides) {
 		this.factories = new Map();
-		this.options = options;
+		module = module || {};
+		this.options = options || {};
+		overrides = overrides || [];
 
 		// Append Vivi services - these should be before any custom services
 		if (Array.isArray(module.serviceConstructors)) {
@@ -40,6 +44,24 @@ export class ModuleFactory {
 		} else {
 			module.serviceConstructors = loadViviServices();
 		}
+
+		overrides.forEach(override => {
+			if (override.key) {
+				const foundIndex = module.serviceConstructors.findIndex(serviceConstructor => serviceConstructor.name === override.key);
+				if (foundIndex > -1) {
+					module.serviceConstructors[foundIndex] = override.override;
+				} else {
+					throw new Error(`Cannot find service to override: ${override.key}.`);
+				}
+			} else {
+				const foundIndex = module.serviceConstructors.findIndex(serviceConstructor => Reflect.getPrototypeOf(override) === serviceConstructor);
+				if (foundIndex > -1) {
+					module.serviceConstructors[foundIndex] = override;
+				} else {
+					throw new Error(`Cannot find service to override: ${override.name}`);
+				}
+			}
+		});
 
 		// Init Services
 		module.serviceConstructors.forEach(serviceConstructor => {
