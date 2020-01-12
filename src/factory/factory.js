@@ -1,7 +1,3 @@
-import {Service} from '../models/service';
-import {Component} from '../models/component';
-import {Instance} from '../models/instance';
-
 /**
  * Parent class for ServiceFactory and ComponentFactory. Can create generic instances.
  *
@@ -29,7 +25,7 @@ export class Factory {
 	 * Creates an instance of the instance/component/service
 	 *
 	 * @param {*} [data] - Data to be passed to instance
-	 * @returns {Component|Service|Instance} - Returns resulting instance
+	 * @returns {*} - Returns resulting instance
 	 * @memberof Factory
 	 */
 	create(data) {
@@ -45,7 +41,7 @@ export class Factory {
 	 *Returns an instance from the Factory
 	 *
 	 * @param {string} [id] - Optional
-	 * @returns {Component|Service|Instance} - Instance from the Factory that matches the id or latest created if no id is provided
+	 * @returns {*} - Instance from the Factory that matches the id or latest created if no id is provided
 	 * @memberof Factory
 	 */
 	get(id) {

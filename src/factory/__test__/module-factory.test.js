@@ -63,7 +63,7 @@ test('getFactory should return serviceFactory', t => {
 
 test('get should return component if created', t => {
 	const vivi = fullConstructor();
-	vivi.getFactory(MockComponent).create(null, null, {isRoot: true});
+	vivi.getFactory(MockComponent).createRoot(null, null, {isRoot: true});
 	const actual = vivi.get(MockComponent);
 	t.assert(actual instanceof MockComponent);
 });

@@ -138,7 +138,6 @@ export declare class NodeTreeService extends Service {
     setRoot(rootComponent: Component): void;
     getNode(comp: Component): NodeTree;
     addNodeToComponent(parentComp: Component, childNode: NodeTree): void;
-    loadComponent(comp: Component): void;
     addComponent(parentComp: Component, childComp: Component): NodeTree;
     removeComponent(comp: Component): void;
     detachComponent(comp: Component): NodeTree;

@@ -514,12 +514,6 @@
                       </a></li>
                     
                       <li><a
-                        href='#nodetreeserviceloadcomponent'
-                        class='regular pre-open'>
-                        .loadComponent
-                      </a></li>
-                    
-                      <li><a
                         href='#nodetreeserviceaddcomponent'
                         class='regular pre-open'>
                         .addComponent
@@ -669,7 +663,7 @@
 
   <p>Creats and sets the root component</p>
 
-    <div class='pre p1 fill-light mt0'>createRoot()</div>
+    <div class='pre p1 fill-light mt0'>createRoot(): any</div>
   
   
 
@@ -684,6 +678,14 @@
 
   
 
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        Returns root component created
+
+      
+    
   
 
   
@@ -706,7 +708,7 @@
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>create(parent?, data?, options?)</span>
+            <span class='code strong strong truncate'>create(parent, data?, options?)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -716,7 +718,7 @@
 
   <p>Creates a component</p>
 
-    <div class='pre p1 fill-light mt0'>create(parent: <a href="#component">Component</a>?, data: any?, options: {parentEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, replaceEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, doNotLoad: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>}?): <a href="#component">Component</a></div>
+    <div class='pre p1 fill-light mt0'>create(parent: any, data: any?, options: {parentEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, replaceEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, doNotLoad: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>}?): any</div>
   
   
 
@@ -733,7 +735,7 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>parent</span> <code class='quiet'>(<a href="#component">Component</a>?)</code>
+            <span class='code bold'>parent</span> <code class='quiet'>(any)</code>
 	    Parent component to append to
 
           </div>
@@ -770,7 +772,7 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="#component">Component</a></code>:
+      <code>any</code>:
         Component created
 
       
@@ -991,7 +993,7 @@
 
   <p>Creates an instance of the instance/component/service</p>
 
-    <div class='pre p1 fill-light mt0'>create(data: any?): (<a href="#component">Component</a> | <a href="#service">Service</a> | <a href="#instance">Instance</a>)</div>
+    <div class='pre p1 fill-light mt0'>create(data: any?): any</div>
   
   
 
@@ -1023,7 +1025,7 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>(<a href="#component">Component</a> | <a href="#service">Service</a> | <a href="#instance">Instance</a>)</code>:
+      <code>any</code>:
         Returns resulting instance
 
       
@@ -1060,7 +1062,7 @@
 
   <p>Returns an instance from the Factory</p>
 
-    <div class='pre p1 fill-light mt0'>get(id: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?): (<a href="#component">Component</a> | <a href="#service">Service</a> | <a href="#instance">Instance</a>)</div>
+    <div class='pre p1 fill-light mt0'>get(id: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?): any</div>
   
   
 
@@ -1092,7 +1094,7 @@
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>(<a href="#component">Component</a> | <a href="#service">Service</a> | <a href="#instance">Instance</a>)</code>:
+      <code>any</code>:
         Instance from the Factory that matches the id or latest created if no id is provided
 
       
@@ -2024,7 +2026,7 @@ Example: "SearchBarComponent" will return "search-bar"</p>
 
   <p>Sets id, data, prereqs of component.
 Grabs appEvents, parseEngine, and nodeTree services
-Triggers setFiles Fn</p>
+Called By: Factory.create</p>
 
     <div class='pre p1 fill-light mt0'>setData(id: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, data: any?)</div>
   
@@ -2094,7 +2096,8 @@ Triggers setFiles Fn</p>
 
   
 
-  <p>Set Template and Style for component. Leave to import from vivi_application/componentName/component-name.component.html/scss</p>
+  <p>Set Template and Style for component. Leave to import from vivi_application/componentName/component-name.component.html/scss
+Called By: Component.setData</p>
 
     <div class='pre p1 fill-light mt0'>setFiles()</div>
   
@@ -2141,7 +2144,8 @@ Triggers setFiles Fn</p>
 
   
 
-  <p>Retreives raw template element without any parsing</p>
+  <p>Retreives raw template element without any parsing
+Called By: Component.createNodes, Component.redraw</p>
 
     <div class='pre p1 fill-light mt0'>getUnparsedNode(): <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a></div>
   
@@ -2196,7 +2200,8 @@ Triggers setFiles Fn</p>
 
   
 
-  <p>Creates child nodes based off of template</p>
+  <p>Creates child nodes based off of template
+Called By: Component.append if it hasn't been called before</p>
 
     <div class='pre p1 fill-light mt0'>createNodes()</div>
   
@@ -2243,7 +2248,8 @@ Triggers setFiles Fn</p>
 
   
 
-  <p>Appends component to an element</p>
+  <p>Appends component to an element
+Called By: Factory.create</p>
 
     <div class='pre p1 fill-light mt0'>append(parentEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>, replaceEl: <a href="https://developer.mozilla.org/docs/Web/HTML/Element">HTMLElement</a>?)</div>
   
@@ -2313,7 +2319,8 @@ Triggers setFiles Fn</p>
 
   
 
-  <p>Begins the load hook</p>
+  <p>Begins the load hook
+Called By: NodeTree.load</p>
 
     <div class='pre p1 fill-light mt0'>startLoad()</div>
   
@@ -3011,7 +3018,7 @@ Triggers setFiles Fn</p>
 
   <p>Adds component, converts it to a NodeTree, and adds it as a child</p>
 
-    <div class='pre p1 fill-light mt0'>addChild(comp: <a href="#component">Component</a>): <a href="#nodetree">NodeTree</a></div>
+    <div class='pre p1 fill-light mt0'>addChild(comp: any): <a href="#nodetree">NodeTree</a></div>
   
   
 
@@ -3028,7 +3035,7 @@ Triggers setFiles Fn</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>comp</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
+            <span class='code bold'>comp</span> <code class='quiet'>(any)</code>
 	    Component to add as a child
 
           </div>
@@ -3080,7 +3087,7 @@ Triggers setFiles Fn</p>
 
   <p>Removes node tree from children</p>
 
-    <div class='pre p1 fill-light mt0'>removeChild(comp: <a href="#component">Component</a>): <a href="#component">Component</a></div>
+    <div class='pre p1 fill-light mt0'>removeChild(comp: any): any</div>
   
   
 
@@ -3097,7 +3104,7 @@ Triggers setFiles Fn</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>comp</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
+            <span class='code bold'>comp</span> <code class='quiet'>(any)</code>
 	    Component in children to be removed
 
           </div>
@@ -3112,7 +3119,7 @@ Triggers setFiles Fn</p>
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="#component">Component</a></code>:
+      <code>any</code>:
         Component removed, if found
 
       
@@ -3149,7 +3156,7 @@ Triggers setFiles Fn</p>
 
   <p>Returns child node tree or component if found</p>
 
-    <div class='pre p1 fill-light mt0'>findChild(id: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, deepSearch: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>?, returnNode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>?): (<a href="#nodetree">NodeTree</a> | <a href="#component">Component</a>)</div>
+    <div class='pre p1 fill-light mt0'>findChild(id: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, deepSearch: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>?, returnNode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>?): (<a href="#nodetree">NodeTree</a> | any)</div>
   
   
 
@@ -3199,7 +3206,7 @@ Triggers setFiles Fn</p>
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>(<a href="#nodetree">NodeTree</a> | <a href="#component">Component</a>)</code>:
+      <code>(<a href="#nodetree">NodeTree</a> | any)</code>:
         If found, will return the nodeTree or Component
 
       
@@ -3372,7 +3379,8 @@ Triggers setFiles Fn</p>
 
   
 
-  <p>Runs load hook of component and chilren</p>
+  <p>Runs load hook of component and chilren
+Called By: Factory.create</p>
 
     <div class='pre p1 fill-light mt0'>load()</div>
   
@@ -3997,7 +4005,7 @@ Is NOT on by default</p>
 
   <p>Sets the root component of the application</p>
 
-    <div class='pre p1 fill-light mt0'>setRoot(rootComponent: <a href="#component">Component</a>)</div>
+    <div class='pre p1 fill-light mt0'>setRoot(rootComponent: any)</div>
   
   
 
@@ -4014,7 +4022,7 @@ Is NOT on by default</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>rootComponent</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
+            <span class='code bold'>rootComponent</span> <code class='quiet'>(any)</code>
 	    Component to set the root to
 
           </div>
@@ -4056,9 +4064,10 @@ Is NOT on by default</p>
 
   
 
-  <p>Returns NodeTree of component</p>
+  <p>Returns NodeTree of component.
+Note: Root needs to be set before getting a node</p>
 
-    <div class='pre p1 fill-light mt0'>getNode(comp: <a href="#component">Component</a>): <a href="#nodetree">NodeTree</a></div>
+    <div class='pre p1 fill-light mt0'>getNode(comp: any): <a href="#nodetree">NodeTree</a></div>
   
   
 
@@ -4075,7 +4084,7 @@ Is NOT on by default</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>comp</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
+            <span class='code bold'>comp</span> <code class='quiet'>(any)</code>
 	    component to return the nodeTree for
 
           </div>
@@ -4127,7 +4136,7 @@ Is NOT on by default</p>
 
   <p>Adds NodeTree to a Component</p>
 
-    <div class='pre p1 fill-light mt0'>addNodeToComponent(parentComp: <a href="#component">Component</a>, childNode: <a href="#nodetree">NodeTree</a>): void</div>
+    <div class='pre p1 fill-light mt0'>addNodeToComponent(parentComp: any, childNode: <a href="#nodetree">NodeTree</a>): void</div>
   
   
 
@@ -4144,7 +4153,7 @@ Is NOT on by default</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>parentComp</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
+            <span class='code bold'>parentComp</span> <code class='quiet'>(any)</code>
 	    Parent component to add the child to. Must be already added to the tree.
 
           </div>
@@ -4155,75 +4164,6 @@ Is NOT on by default</p>
           <div>
             <span class='code bold'>childNode</span> <code class='quiet'>(<a href="#nodetree">NodeTree</a>)</code>
 	    Child node that is added
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>void</code>:
-        
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='nodetreeserviceloadcomponent'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>loadComponent(comp)</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Runs the load hook for node and it's chilren. Will not load the component if it has not been added to the tree.</p>
-
-    <div class='pre p1 fill-light mt0'>loadComponent(comp: <a href="#component">Component</a>): void</div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>comp</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
-	    Component that has already been added to the tree
 
           </div>
           
@@ -4274,7 +4214,7 @@ Is NOT on by default</p>
 
   <p>Add component to parent component. If no parentNode is declared, child is added to application tree.</p>
 
-    <div class='pre p1 fill-light mt0'>addComponent(parentComp: <a href="#component">Component</a>?, childComp: <a href="#component">Component</a>): <a href="#nodetree">NodeTree</a></div>
+    <div class='pre p1 fill-light mt0'>addComponent(parentComp: any?, childComp: any): <a href="#nodetree">NodeTree</a></div>
   
   
 
@@ -4291,7 +4231,7 @@ Is NOT on by default</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>parentComp</span> <code class='quiet'>(<a href="#component">Component</a>?)</code>
+            <span class='code bold'>parentComp</span> <code class='quiet'>(any?)</code>
 	    Component to be appended to
 
           </div>
@@ -4300,7 +4240,7 @@ Is NOT on by default</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>childComp</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
+            <span class='code bold'>childComp</span> <code class='quiet'>(any)</code>
 	    Component to be appended
 
           </div>
@@ -4352,7 +4292,7 @@ Is NOT on by default</p>
 
   <p>Triggers node destroy</p>
 
-    <div class='pre p1 fill-light mt0'>removeComponent(comp: <a href="#component">Component</a>): void</div>
+    <div class='pre p1 fill-light mt0'>removeComponent(comp: any): void</div>
   
   
 
@@ -4369,7 +4309,7 @@ Is NOT on by default</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>comp</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
+            <span class='code bold'>comp</span> <code class='quiet'>(any)</code>
 	    Component to be destroyed
 
           </div>
@@ -4421,7 +4361,7 @@ Is NOT on by default</p>
 
   <p>Detaches the component from the DOM</p>
 
-    <div class='pre p1 fill-light mt0'>detachComponent(comp: <a href="#component">Component</a>): <a href="#nodetree">NodeTree</a></div>
+    <div class='pre p1 fill-light mt0'>detachComponent(comp: any): <a href="#nodetree">NodeTree</a></div>
   
   
 
@@ -4438,7 +4378,7 @@ Is NOT on by default</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>comp</span> <code class='quiet'>(<a href="#component">Component</a>)</code>
+            <span class='code bold'>comp</span> <code class='quiet'>(any)</code>
 	    Component to be detached
 
           </div>

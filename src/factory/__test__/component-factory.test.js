@@ -16,7 +16,8 @@ test('should init', t => {
 });
 
 test('should create a new component and return that component', t => {
-	const actual = factory.create();
+	const rootComponent = factory.createRoot();
+	const actual = factory.create(rootComponent);
 	t.assert(actual);
 	t.assert(actual instanceof MockComponent);
 });

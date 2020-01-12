@@ -15,14 +15,14 @@ test('should init', t => {
 
 test('should work', t => {
 	const node = document.createElement('div');
-	const comp = factory.create();
+	const comp = factory.createRoot();
 	service.parse(node, {}, comp);
 	t.assert(node);
 });
 
 test('should work even if an element is just text', t => {
 	const node = document.createElement('div');
-	const comp = factory.create();
+	const comp = factory.createRoot();
 	node.textContent = 'test';
 
 	service.parse(node, {}, comp);
@@ -32,7 +32,7 @@ test('should work even if an element is just text', t => {
 const setup = (attr, value, data) => {
 	const node = document.createElement('div');
 	const child = document.createElement('div');
-	const comp = factory.create();
+	const comp = factory.createRoot();
 	child.setAttribute(attr, value);
 	node.append(child);
 	service.parse(node, data, comp);
@@ -45,7 +45,7 @@ const testAttribute = attr => {
 	test(`${attr} - should evaluate data objects`, t => {
 		const data = {fluffy: 'bunny'};
 		const value = 'this.fluffy';
-		factory.create();
+		factory.createRoot();
 		const node = setup(attr, value, data);
 		const actual = node.querySelector('div');
 		t.assert(actual);

@@ -1,4 +1,3 @@
-import {Component} from '../models/component';
 import {Factory} from './factory';
 
 /**
@@ -16,6 +15,7 @@ export class ComponentFactory extends Factory {
 	/**
 	 * Creats and sets the root component
 	 *
+	 * @returns {*} - Returns root component created
 	 * @memberof ComponentFactory
 	 */
 	createRoot() {
@@ -24,12 +24,13 @@ export class ComponentFactory extends Factory {
 
 		this.nodeTreeService.setRoot(comp);
 		this.nodeTreeService.applicationTree.load();
+		return comp;
 	}
 
 	/**
 	 *Creates a component
 	 *
-	 * @param {Component} [parent] - Parent component to append to
+	 * @param {*} parent - Parent component to append to
 	 * @param {*} [data] - Data to be passed to the component
 	 * @param {{parentEl: HTMLElement, replaceEl: HTMLElement, doNotLoad: boolean}} [options]
 	 * - parentEl: Element to anchor component to. Must be provided to append and load component.
@@ -37,10 +38,17 @@ export class ComponentFactory extends Factory {
 	 * - doNotLoad: Do not fire load after creating. Often used for children components
 	 * @todo Check: If a parentComp is provided, but a parentEl is not, should it just append to parentComp.element by default?
 	 * @todo Check: ParentEl seems to be common. Should it be normal param rather than in options?
-	 * @returns {Component} - Component created
+	 * @returns {*} - Component created
 	 * @memberof ComponentFactory
 	 */
 	create(parent, data, options) {
+		if (!parent) {
+			this.vivi.get('LoggerService').error('Create: No parent given. Component has not been created. To create a root component, use createRoot().', [
+				{key: 'Parent', value: parent}
+			]);
+			return;
+		}
+
 		const component = super.create(data);
 
 		// Create nodeTree for component

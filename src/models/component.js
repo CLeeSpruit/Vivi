@@ -12,7 +12,7 @@ export class Component extends Instance {
 	/**
 	 * Sets id, data, prereqs of component.
 	 * Grabs appEvents, parseEngine, and nodeTree services
-	 * Triggers setFiles Fn
+	 * Called By: Factory.create
 	 *
 	 * @param {number} id - Number to be assigned to component
 	 * @param {*} [data] - Data to be passed to the component
@@ -28,6 +28,7 @@ export class Component extends Instance {
 
 	/**
 	 * Set Template and Style for component. Leave to import from vivi_application/componentName/component-name.component.html/scss
+	 * Called By: Component.setData
 	 *
 	 * @memberof Component
 	 * @todo rename to loadFiles
@@ -55,6 +56,7 @@ export class Component extends Instance {
 
 	/**
 	 * Retreives raw template element without any parsing
+	 * Called By: Component.createNodes, Component.redraw
 	 *
 	 * @returns {HTMLElement} - Raw template html element
 	 * @memberof Component
@@ -69,6 +71,7 @@ export class Component extends Instance {
 
 	/**
 	 * Creates child nodes based off of template
+	 * Called By: Component.append if it hasn't been called before
 	 *
 	 * @memberof Component
 	 */
@@ -94,6 +97,7 @@ export class Component extends Instance {
 
 	/**
 	 * Appends component to an element
+	 * Called By: Factory.create
 	 *
 	 * @param {HTMLElement} parentEl - Element to append component element to
 	 * @param {HTMLElement} [replaceEl] - Element to replace on append. Should be child of parentEl
@@ -118,6 +122,7 @@ export class Component extends Instance {
 
 	/**
 	 * Begins the load hook
+	 * Called By: NodeTree.load
 	 *
 	 * @memberof Component
 	 */
@@ -141,11 +146,21 @@ export class Component extends Instance {
 		// Remove
 		const oldEl = document.querySelector('#' + this.id);
 		const newEl = this.getUnparsedNode();
-		const parentEl = oldEl.parentElement;
-		this.vivi.get('ParseEngineService').parse(newEl, this.data, this);
-		parentEl.replaceChild(newEl, oldEl);
-		this.parsedNode = newEl;
-		this.element = document.querySelector('#' + this.id);
+		if (oldEl && newEl) {
+			const parentEl = oldEl.parentElement;
+			this.vivi.get('ParseEngineService').parse(newEl, this.data, this);
+			parentEl.replaceChild(newEl, oldEl);
+			this.parsedNode = newEl;
+			this.element = document.querySelector('#' + this.id);
+		} else {
+			this.vivi.get('LoggerService').error(`Error redrawing component: ${this.id}. Element not found.`,
+				[
+					{key: 'Component', value: this},
+					{key: 'Old Element', value: oldEl},
+					{key: 'New Element', value: newEl}
+				]
+			);
+		}
 	}
 
 	/**
@@ -189,7 +204,7 @@ export class Component extends Instance {
 	 * @memberof Component
 	 */
 	appListen(eventName, cb) {
-		this.vivi.get('ApplicationEventsService').createListener(eventName, cb.bind(this));
+		this.vivi.get('ApplicationEventService').createListener(eventName, cb.bind(this));
 	}
 
 	/**

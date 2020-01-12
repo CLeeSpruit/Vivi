@@ -10,21 +10,23 @@ test('should init', t => {
 });
 
 test('error should log errors', t => {
-	service.error('test');
+	// Error here is valid
+	service.error('This error is valid. Disregard.');
 	t.pass();
 });
 
 test('warn should log warning', t => {
-	service.warn('test');
+	// Warning is valid
+	service.warn('This warning is valid. Disregard.');
 	t.pass();
 });
 
 test('log should log information', t => {
-	service.info('test');
+	service.info('This info is valid. Disregard.');
 	t.pass();
 });
 
 test('debug should log debug messages', t => {
-	service.debug('test');
+	service.debug('This log is valid. Disregard.');
 	t.pass();
 });

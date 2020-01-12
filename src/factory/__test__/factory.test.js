@@ -43,6 +43,3 @@ test('should remove from the factory map', t => {
 
 	t.falsy(factory.get(comp.id));
 });
-
-// Error related. Refactor.
-test.todo('destroy should throw error if instance does not exist');

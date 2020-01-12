@@ -1,6 +1,5 @@
 import {NodeTree} from '../models/node-tree';
 import {Service} from '../models/service';
-import {Component} from '../models/component';
 
 /**
  * Service that handles and creates NodeTrees
@@ -12,7 +11,7 @@ export class NodeTreeService extends Service {
 	/**
 	 * Sets the root component of the application
 	 *
-	 * @param {Component} rootComponent - Component to set the root to
+	 * @param {*} rootComponent - Component to set the root to
 	 * @memberof NodeTreeService
 	 */
 	setRoot(rootComponent) {
@@ -20,14 +19,28 @@ export class NodeTreeService extends Service {
 	}
 
 	/**
-	 * Returns NodeTree of component
+	 * Returns NodeTree of component.
+	 * Note: Root needs to be set before getting a node
 	 *
-	 * @param {Component} comp - component to return the nodeTree for
+	 * @param {*} comp - component to return the nodeTree for
 	 * @returns {NodeTree} - Resulting NodeTree, if found
 	 * @memberof NodeTreeService
+	 * @todo Switch this to only need the id instead of the whole component
 	 */
 	getNode(comp) {
 		if (!this.applicationTree) {
+			this.vivi.get('LoggerService').warn(
+				'Error trying to get Node: No application tree set',
+				[{key: 'NodeTreeService', value: this}, {key: 'Component', value: comp}]
+			);
+			return;
+		}
+
+		if (!comp || !comp.id) {
+			this.vivi.get('LoggerService').warn(
+				'Error trying to get node: No component given',
+				[{key: 'NodeTreeService', value: this}, {key: 'Component', value: comp}]
+			);
 			return;
 		}
 
@@ -41,7 +54,7 @@ export class NodeTreeService extends Service {
 	/**
 	 * Adds NodeTree to a Component
 	 *
-	 * @param {Component} parentComp - Parent component to add the child to. Must be already added to the tree.
+	 * @param {*} parentComp - Parent component to add the child to. Must be already added to the tree.
 	 * @param {NodeTree} childNode - Child node that is added
 	 * @returns {void}
 	 * @memberof NodeTreeService
@@ -60,27 +73,10 @@ export class NodeTreeService extends Service {
 	}
 
 	/**
-	 * Runs the load hook for node and it's chilren. Will not load the component if it has not been added to the tree.
-	 *
-	 * @param {Component} comp - Component that has already been added to the tree
-	 * @returns {void}
-	 * @memberof NodeTreeService
-	 */
-	loadComponent(comp) {
-		const node = this.getNode(comp);
-		if (!node) {
-			this.vivi.get('LoggerService').error(`Error loading node: ${comp.componentName}. Could not find node in tree.`, [{key: 'component being loaded', value: comp}]);
-			return;
-		}
-
-		node.load();
-	}
-
-	/**
 	 * Add component to parent component. If no parentNode is declared, child is added to application tree.
 	 *
-	 * @param {Component} [parentComp] - Component to be appended to
-	 * @param {Component} childComp - Component to be appended
+	 * @param {*} [parentComp] - Component to be appended to
+	 * @param {*} childComp - Component to be appended
 	 * @returns {NodeTree} - Resulting nodeTree of the child
 	 * @memberof NodeTreeService
 	 * @todo Swap parentComp and child comp since parentComp is optional
@@ -115,7 +111,7 @@ export class NodeTreeService extends Service {
 	/**
 	 * Triggers node destroy
 	 *
-	 * @param {Component} comp - Component to be destroyed
+	 * @param {*} comp - Component to be destroyed
 	 * @returns {void}
 	 * @memberof NodeTreeService
 	 */
@@ -132,7 +128,7 @@ export class NodeTreeService extends Service {
 	/**
 	 * Detaches the component from the DOM
 	 *
-	 * @param {Component} comp - Component to be detached
+	 * @param {*} comp - Component to be detached
 	 * @returns {NodeTree} - Detached node
 	 * @memberof NodeTreeService
 	 */

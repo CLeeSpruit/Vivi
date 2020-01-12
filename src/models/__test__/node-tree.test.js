@@ -3,11 +3,18 @@ import {NodeTree} from '../node-tree';
 import {ModuleFactory} from '../../factory/module-factory';
 import {MockComponent} from '../__mocks__/component.mock';
 
-const vivi = new ModuleFactory();
-const factory = vivi.createFactory(MockComponent);
+let vivi;
+let factory;
+let rootComponent;
+
+test.before(() => {
+	vivi = new ModuleFactory();
+	factory = vivi.createFactory(MockComponent);
+	rootComponent = factory.createRoot();
+});
 
 test('should init', t => {
-	const comp = factory.create();
+	const comp = factory.create(rootComponent);
 	const tree = new NodeTree(comp);
 
 	t.assert(tree);
@@ -15,9 +22,9 @@ test('should init', t => {
 });
 
 test('addChild should add a new node tree to children', t => {
-	const comp = factory.create();
+	const comp = factory.create(rootComponent);
 	const tree = new NodeTree(comp);
-	const child = factory.create();
+	const child = factory.create(comp);
 
 	tree.addChild(child);
 
@@ -26,8 +33,8 @@ test('addChild should add a new node tree to children', t => {
 });
 
 test('removeChild should remove child and return removed node', t => {
-	const comp = factory.create();
-	const child = factory.create();
+	const comp = factory.create(rootComponent);
+	const child = factory.create(comp);
 	const tree = new NodeTree(comp);
 	const addedNode = tree.addChild(child);
 	const removedNode = tree.removeChild(child);
@@ -36,8 +43,8 @@ test('removeChild should remove child and return removed node', t => {
 });
 
 test('removeChild should return null if child is not found', t => {
-	const comp = factory.create();
-	const child = factory.create();
+	const comp = factory.create(rootComponent);
+	const child = factory.create(comp);
 	const tree = new NodeTree(comp);
 	const removedNode = tree.removeChild(child);
 
@@ -45,9 +52,9 @@ test('removeChild should return null if child is not found', t => {
 });
 
 test('findChild should find child if exists', t => {
-	const comp = factory.create();
+	const comp = factory.create(rootComponent);
 	const tree = new NodeTree(comp);
-	const child = factory.create();
+	const child = factory.create(comp);
 	tree.addChild(child);
 
 	const found = tree.findChild(child.id);
@@ -56,10 +63,10 @@ test('findChild should find child if exists', t => {
 });
 
 test('findChild should ignore child if it does not exist as a direct child and deepSearch is false', t => {
-	const comp = factory.create();
+	const comp = factory.create(rootComponent);
 	const tree = new NodeTree(comp);
-	const child = factory.create();
-	const grandchild = factory.create();
+	const child = factory.create(comp);
+	const grandchild = factory.create(child);
 	const node = tree.addChild(child);
 	node.addChild(grandchild);
 
@@ -69,10 +76,10 @@ test('findChild should ignore child if it does not exist as a direct child and d
 });
 
 test('findChild should find child if exists not as a direct child and deepSearch is true', t => {
-	const comp = factory.create();
+	const comp = factory.create(rootComponent);
 	const tree = new NodeTree(comp);
-	const child = factory.create();
-	const grandchild = factory.create();
+	const child = factory.create(comp);
+	const grandchild = factory.create(child);
 	const node = tree.addChild(child);
 	node.addChild(grandchild);
 
@@ -81,9 +88,9 @@ test('findChild should find child if exists not as a direct child and deepSearch
 });
 
 test('findChild should return node if returnNode is true', t => {
-	const comp = factory.create();
+	const comp = factory.create(rootComponent);
 	const tree = new NodeTree(comp);
-	const child = factory.create();
+	const child = factory.create(comp);
 	const node = tree.addChild(child);
 
 	const found = tree.findChild(child.id, false, true);
@@ -91,17 +98,17 @@ test('findChild should return node if returnNode is true', t => {
 });
 
 test('findChild should return null if nothing is found', t => {
-	const comp = factory.create();
+	const comp = factory.create(rootComponent);
 	const tree = new NodeTree(comp);
-	const child = factory.create();
+	const child = factory.create(comp);
 
 	const found = tree.findChild(child.id, false, true);
 	t.falsy(found);
 });
 
 test('findParentOf should return itself if it is the parent', t => {
-	const comp = factory.create();
-	const child = factory.create();
+	const comp = factory.create(rootComponent);
+	const child = factory.create(comp);
 	const tree = new NodeTree(comp);
 	tree.addChild(child);
 
@@ -109,9 +116,9 @@ test('findParentOf should return itself if it is the parent', t => {
 });
 
 test('findParentOf should return parent if parent exists', t => {
-	const comp = factory.create();
-	const child = factory.create();
-	const grandChild = factory.create();
+	const comp = factory.create(rootComponent);
+	const child = factory.create(comp);
+	const grandChild = factory.create(child);
 	const tree = new NodeTree(comp);
 	const childNode = tree.addChild(child);
 	childNode.addChild(grandChild);
@@ -120,16 +127,16 @@ test('findParentOf should return parent if parent exists', t => {
 });
 
 test('findParentOf should return null if there is no parent', t => {
-	const comp = factory.create();
-	const sassyChild = factory.create();
+	const comp = factory.create(rootComponent);
+	const sassyChild = factory.create(comp);
 	const tree = new NodeTree(comp);
 
 	t.falsy(tree.findParentOf(sassyChild.id));
 });
 
 test('hasChild should return true if child exists', t => {
-	const comp = factory.create();
-	const child = factory.create();
+	const comp = factory.create(rootComponent);
+	const child = factory.create(comp);
 	const tree = new NodeTree(comp);
 	tree.addChild(child);
 
@@ -137,8 +144,8 @@ test('hasChild should return true if child exists', t => {
 });
 
 test('hasChild should return false if child does not exist', t => {
-	const comp = factory.create();
-	const child = factory.create();
+	const comp = factory.create(rootComponent);
+	const child = factory.create(comp);
 	const tree = new NodeTree(comp);
 
 	t.falsy(tree.hasChild(child.id));

@@ -1,5 +1,3 @@
-import {Component} from './component';
-
 /**
  * Wraps components in a recursive tree that has other nodes for children
  *
@@ -14,7 +12,7 @@ export class NodeTree {
 	/**
 	 * Adds component, converts it to a NodeTree, and adds it as a child
 	 *
-	 * @param {Component} comp - Component to add as a child
+	 * @param {*} comp - Component to add as a child
 	 * @returns {NodeTree} - Resulting node from component added
 	 * @memberof NodeTree
 	 */
@@ -28,8 +26,8 @@ export class NodeTree {
 	/**
 	 * Removes node tree from children
 	 *
-	 * @param {Component} comp - Component in children to be removed
-	 * @returns {Component} - Component removed, if found
+	 * @param {*} comp - Component in children to be removed
+	 * @returns {*} - Component removed, if found
 	 * @memberof NodeTree
 	 */
 	removeChild(comp) {
@@ -47,7 +45,7 @@ export class NodeTree {
 	 * @param {string} id - Component Id
 	 * @param {boolean} [deepSearch] - If true, search down the tree in addition to direct children
 	 * @param {boolean} [returnNode] - Returns NodeTree instead of component
-	 * @returns {NodeTree | Component} - If found, will return the nodeTree or Component
+	 * @returns {NodeTree | *} - If found, will return the nodeTree or Component
 	 * @memberof NodeTree
 	 */
 	findChild(id, deepSearch, returnNode) {
@@ -91,12 +89,13 @@ export class NodeTree {
 
 	/**
 	 * Runs load hook of component and chilren
+	 * Called By: Factory.create
 	 *
 	 * @memberof NodeTree
 	 */
 	load() {
 		this.component.startLoad();
-		this.children.forEach(child => child.load());
+		this.children.forEach(child => child.startLoad());
 	}
 
 	/**
