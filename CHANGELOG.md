@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/CassandraSpruit/Vivi/compare/v1.0.0...v1.0.1) (2020-01-12)
+
+
+### Bug Fixes
+
+* **pkg:** Manually updating package number ([7fcfdff](https://github.com/CassandraSpruit/Vivi/commit/7fcfdfff05f8af8eb9babd7cc4bebfa277d96a7c))
+
 # 1.0.0 (2020-01-12)
 
 
