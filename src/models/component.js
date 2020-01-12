@@ -220,4 +220,32 @@ export class Component extends Instance {
 		const factory = this.vivi.getFactory(component);
 		return factory.create(this, data, {parentEl});
 	}
+
+	/**
+	 * Finds an element and binds an event to it, if provided.
+	 *
+	 * @param {string} selector - selector to call querySelector on
+	 * @param {string} [eventType] - EventType to fire on
+	 * @param {Function} [cb] - Callback to fire when event happens
+	 * @returns {HTMLElement} - Element, if found
+	 * @memberof Component
+	 */
+	bindElement(selector, eventType, cb) {
+		if (!this.element) {
+			this.vivi.get('Logger').error(`No element for ${this.id} found. Cannot find ${selector}.`, [{key: 'Component', value: this}]);
+			return;
+		}
+
+		const el = this.element.querySelector(selector);
+		if (!el) {
+			this.vivi.get('Logger').warn(`Nothing found for selector ${selector} in component: ${this.id}`, [{key: 'Component Element', value: this.element}]);
+			return;
+		}
+
+		if (eventType && cb) {
+			this.listen(el, eventType, cb);
+		}
+
+		return el;
+	}
 }
