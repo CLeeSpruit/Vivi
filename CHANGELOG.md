@@ -1,3 +1,10 @@
+## [5.0.3](https://github.com/CassandraSpruit/Vivi/compare/v5.0.2...v5.0.3) (2020-01-12)
+
+
+### Bug Fixes
+
+* **greenkeeper:** enabled Greenkeeper ([69009eb](https://github.com/CassandraSpruit/Vivi/commit/69009ebbc8ff8da2e5edd952b3c7b43b0bdee59e))
+
 ## [5.0.2](https://github.com/CassandraSpruit/Vivi/compare/v5.0.1...v5.0.2) (2020-01-12)
 
 
