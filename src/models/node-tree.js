@@ -95,7 +95,7 @@ export class NodeTree {
 	 */
 	load() {
 		this.component.startLoad();
-		this.children.forEach(child => child.startLoad());
+		this.children.forEach(child => child.load());
 	}
 
 	/**

@@ -27,8 +27,37 @@ test('can override services - {key, override}', t => {
 	t.assert(vivi.get(MockLogger) instanceof MockLogger);
 });
 
-test('can override services - service', t => {
+test('can override services - [service]', t => {
 	const vivi = new ModuleFactory(null, null, [MockLogger]);
+
+	t.assert(vivi);
+	t.assert(vivi.get(MockLogger) instanceof MockLogger);
+});
+
+test('can override services with standard constructor', t => {
+	const vivi = new ModuleFactory(
+		{
+			componentConstructors: [MockComponent],
+			serviceConstructors: [MockService],
+			rootComponent: MockComponent
+		},
+		{},
+		[{key: 'Logger', override: MockLogger}]
+	);
+
+	t.assert(vivi);
+	t.assert(vivi.get(MockLogger) instanceof MockLogger);
+});
+
+test('can override services with constructor without module.serviceConstructors', t => {
+	const vivi = new ModuleFactory(
+		{
+			componentConstructors: [MockComponent],
+			rootComponent: MockComponent
+		},
+		{},
+		[{key: 'Logger', override: MockLogger}]
+	);
 
 	t.assert(vivi);
 	t.assert(vivi.get(MockLogger) instanceof MockLogger);

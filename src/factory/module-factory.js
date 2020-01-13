@@ -133,7 +133,12 @@ export class ModuleFactory {
 			return inst;
 		}
 
-		this.get('Logger').error(`No service factory or component factory found for ${instanceName}`, [{key: 'instance', value: instance}]);
+		// Double check this isn't blowing up on the logger otherwise this goes into an infinite loop
+		if (instanceName === 'Logger') {
+			throw new Error(`No service factory or component factory found for ${instanceName}`);
+		} else {
+			this.get('Logger').error(`No service factory or component factory found for ${instanceName}`, [{key: 'instance', value: instance}]);
+		}
 	}
 
 	/**
