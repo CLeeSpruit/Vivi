@@ -1,3 +1,10 @@
+## [5.2.1](https://github.com/CassandraSpruit/Vivi/compare/v5.2.0...v5.2.1) (2020-01-13)
+
+
+### Bug Fixes
+
+* **component:** child elements throw error when loaded in load fn ([80004bb](https://github.com/CassandraSpruit/Vivi/commit/80004bb77dd90f0730dc0928a5adfb2f0abbb7f1))
+
 # [5.2.0](https://github.com/CassandraSpruit/Vivi/compare/v5.1.0...v5.2.0) (2020-01-12)
 
 
