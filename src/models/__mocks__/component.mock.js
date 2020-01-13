@@ -8,3 +8,9 @@ export class MockLoadComponent extends Component {
 		this.childComponent = this.createChild(this.element, MockComponent);
 	}
 }
+
+export class MockLoadTemplateComponent extends Component {
+	setFiles() {
+		this.template = '<mock></mock>';
+	}
+}
