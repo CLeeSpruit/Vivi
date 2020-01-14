@@ -38,35 +38,23 @@ export class ModuleFactory {
 		this.options = options || {};
 		overrides = overrides || [];
 
-		// Append Vivi services - these should be before any custom services
-		if (Array.isArray(module.serviceConstructors)) {
-			module.serviceConstructors = [...loadViviServices(), ...module.serviceConstructors];
-		} else {
-			module.serviceConstructors = loadViviServices();
-		}
-
-		overrides.forEach(override => {
-			if (override.key) {
-				const foundIndex = module.serviceConstructors.findIndex(serviceConstructor => serviceConstructor.name === override.key);
-				if (foundIndex > -1) {
-					module.serviceConstructors[foundIndex] = override.override;
-				} else {
-					throw new Error(`Cannot find service to override: ${override.key}.`);
-				}
+		// Init baked-in services and load overrides
+		loadViviServices().forEach(service => {
+			// Find override if it exists
+			const override = overrides.find(override => override.key === service.name || Reflect.getPrototypeOf(override) === service);
+			if (override) {
+				this.factories.set(service.name, new ServiceFactory(override.key ? override.override : override, this));
 			} else {
-				const foundIndex = module.serviceConstructors.findIndex(serviceConstructor => Reflect.getPrototypeOf(override) === serviceConstructor);
-				if (foundIndex > -1) {
-					module.serviceConstructors[foundIndex] = override;
-				} else {
-					throw new Error(`Cannot find service to override: ${override.name}`);
-				}
+				this.factories.set(service.name, new ServiceFactory(service, this));
 			}
 		});
 
 		// Init Services
-		module.serviceConstructors.forEach(serviceConstructor => {
-			this.factories.set(serviceConstructor.name, new ServiceFactory(serviceConstructor, this));
-		});
+		if (Array.isArray(module.serviceConstructors)) {
+			module.serviceConstructors.forEach(serviceConstructor => {
+				this.factories.set(serviceConstructor.name, new ServiceFactory(serviceConstructor, this));
+			});
+		}
 
 		if (Array.isArray(module.componentConstructors)) {
 			// Init Components

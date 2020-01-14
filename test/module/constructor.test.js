@@ -24,14 +24,14 @@ test('can override services - {key, override}', t => {
 	const vivi = new ModuleFactory(null, null, [{key: 'Logger', override: MockLogger}]);
 
 	t.assert(vivi);
-	t.assert(vivi.get(MockLogger) instanceof MockLogger);
+	t.assert(vivi.get('Logger') instanceof MockLogger);
 });
 
 test('can override services - [service]', t => {
 	const vivi = new ModuleFactory(null, null, [MockLogger]);
 
 	t.assert(vivi);
-	t.assert(vivi.get(MockLogger) instanceof MockLogger);
+	t.assert(vivi.get('Logger') instanceof MockLogger);
 });
 
 test('can override services with standard constructor', t => {
@@ -46,7 +46,7 @@ test('can override services with standard constructor', t => {
 	);
 
 	t.assert(vivi);
-	t.assert(vivi.get(MockLogger) instanceof MockLogger);
+	t.assert(vivi.get('Logger') instanceof MockLogger);
 });
 
 test('can override services with constructor without module.serviceConstructors', t => {
@@ -60,5 +60,12 @@ test('can override services with constructor without module.serviceConstructors'
 	);
 
 	t.assert(vivi);
-	t.assert(vivi.get(MockLogger) instanceof MockLogger);
+	t.assert(vivi.get('Logger') instanceof MockLogger);
+});
+
+test('override can get services', t => {
+	const vivi = new ModuleFactory(null, null, [{key: 'Logger', override: MockLogger}]);
+
+	t.assert(vivi);
+	t.assert(vivi.get('Logger') instanceof MockLogger);
 });

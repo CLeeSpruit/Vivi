@@ -14,7 +14,7 @@ test.before(t => {
 		{},
 		[{key: 'Logger', override: MockLogger}]
 	);
-	vivi.get(MockLogger).setTest(t);
+	vivi.get('Logger').setTest(t);
 });
 
 // Related to https://github.com/CassandraSpruit/Vivi/issues/14
