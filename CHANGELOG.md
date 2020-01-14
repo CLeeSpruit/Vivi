@@ -1,3 +1,11 @@
+## [5.2.2](https://github.com/CassandraSpruit/Vivi/compare/v5.2.1...v5.2.2) (2020-01-14)
+
+
+### Bug Fixes
+
+* **module:** fixed overrides using the wrong names ([ebc055b](https://github.com/CassandraSpruit/Vivi/commit/ebc055bc95a5ffd19248c79a338ff3e1b247da3e))
+* **module:** fixed overrides using the wrong names ([1811ac5](https://github.com/CassandraSpruit/Vivi/commit/1811ac564ccbadf0ec2765cf7931c92620f96a13)), closes [#16](https://github.com/CassandraSpruit/Vivi/issues/16)
+
 ## [5.2.1](https://github.com/CassandraSpruit/Vivi/compare/v5.2.0...v5.2.1) (2020-01-13)
 
 
