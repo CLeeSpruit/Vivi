@@ -1,3 +1,4 @@
+import {NodeTree} from '../models';
 import {Factory} from './factory';
 
 /**
@@ -20,10 +21,10 @@ export class ComponentFactory extends Factory {
 	 */
 	createRoot() {
 		const comp = super.create();
+		const node = new NodeTree(comp);
+		this.nodes.setRoot(node);
 		comp.append(document.body);
-
-		this.nodes.setRoot(comp);
-		this.nodes.applicationTree.load();
+		node.load();
 		return comp;
 	}
 
@@ -51,8 +52,9 @@ export class ComponentFactory extends Factory {
 
 		const component = super.create(data);
 
-		// Create nodeTree for component
-		const node = this.nodes.addComponent(parent, component);
+		// Setup node tree
+		const node = new NodeTree(component);
+		this.nodes.addNodeToComponent(parent.id, node);
 
 		if (options && options.parentEl) {
 			component.append(options.parentEl, options.replaceEl);
@@ -69,19 +71,15 @@ export class ComponentFactory extends Factory {
 	 *Detaches component from the node tree
 	 *
 	 * @param {string} id - Id of component to be detached
-	 * @returns {*} - Returns node of component, if found
+	 * @returns {NodeTree} - Returns node of component, if found
 	 * @memberof ComponentFactory
 	 * @todo Revist: Detach vs Destroy behavior. Is it needed?
+	 * @todo Consider: should this only be called from the nodes service?
+	 * @deprecated - Use nodes.detachComponent instead
 	 */
 	detach(id) {
-		const comp = this.get(id);
-		if (!comp) {
-			this.vivi.get('Logger').warn(`Detach: Component ${id} was not found.`);
-			return;
-		}
-
 		// Remove from tree and return resulting node to re-attach later
-		return this.nodes.detachComponent(comp);
+		return this.nodes.detachComponent(id);
 	}
 
 	/**
@@ -92,20 +90,8 @@ export class ComponentFactory extends Factory {
 	 * @todo Revist: Detach vs Destroy behavior. Is it needed?
 	 */
 	destroy(id) {
-		const component = this.get(id);
-		if (!component) {
-			this.vivi.get('Logger').warn(`Destroy: Component ${id} was not found.`);
-			return;
-		}
-
-		// Make sure this isn't the root component (also double check if a root has even been attached)
-		if (this.nodes.applicationTree && id === this.nodes.applicationTree.component.id) {
-			this.vivi.get('Logger').info(`Destroy called on Root Component ${id}. The component was not destroyed.`);
-			return;
-		}
-
 		// Remove from tree and DOM
-		this.nodes.removeComponent(component);
+		this.nodes.removeComponent(id);
 
 		super.destroy(id);
 	}

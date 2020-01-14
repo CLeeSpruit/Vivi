@@ -8,8 +8,8 @@ let vivi;
 test.before(t => {
 	vivi = new ModuleFactory(
 		{
-			componentConstructors: [MockComponent],
-			rootComponent: MockComponent
+			componentConstructors: [MockComponent, MockLoadTemplateComponent],
+			rootComponent: MockLoadTemplateComponent
 		},
 		{},
 		[{key: 'Logger', override: MockLogger}]
@@ -26,13 +26,13 @@ test('it should not throw error when adding children to component', t => {
 	t.assert(rootComponent.childComponent);
 });
 
+// Related to https://github.com/CassandraSpruit/Vivi/issues/15
 test('it should not throw error when adding children the root component when children are in the template', t => {
-	const factory = vivi.createFactory(MockLoadTemplateComponent);
-	const rootComponent = factory.createRoot();
+	// Child should be created in MockLoadTemplateComponent.template
 	const nodes = vivi.get('Nodes');
-	const rootNode = nodes.getNode(rootComponent);
+	const rootNode = nodes.applicationTree;
 
-	t.assert(rootComponent);
 	t.assert(rootNode);
+	t.assert(rootNode.component.element);
 	t.is(rootNode.children.length, 1);
 });
