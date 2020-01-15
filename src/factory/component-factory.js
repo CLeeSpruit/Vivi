@@ -78,8 +78,14 @@ export class ComponentFactory extends Factory {
 	 * @deprecated - Use nodes.detachComponent instead
 	 */
 	detach(id) {
+		const comp = this.get(id);
+		if (!comp) {
+			this.vivi.get('Logger').warn(`Detach: Component ${id} was not found.`);
+			return;
+		}
+
 		// Remove from tree and return resulting node to re-attach later
-		return this.nodes.detachComponent(id);
+		return this.nodes.detachComponent(comp);
 	}
 
 	/**
@@ -90,9 +96,19 @@ export class ComponentFactory extends Factory {
 	 * @todo Revist: Detach vs Destroy behavior. Is it needed?
 	 */
 	destroy(id) {
-		// Remove from tree and DOM
-		this.nodes.removeComponent(id);
+		const component = this.get(id);
+		if (!component) {
+			this.vivi.get('Logger').warn(`Destroy: Component ${id} was not found.`);
+			return;
+		}
 
-		super.destroy(id);
+		// Make sure this isn't the root component (also double check if a root has even been attached)
+		if (this.nodes.applicationTree && id === this.nodes.applicationTree.component.id) {
+			this.vivi.get('Logger').info(`Destroy called on Root Component ${id}. The component was not destroyed.`);
+			return;
+		}
+
+		// Remove from tree and DOM
+		this.nodes.removeComponent(component);
 	}
 }
