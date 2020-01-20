@@ -33,6 +33,5 @@ test('it should not throw error when adding children the root component when chi
 	const rootNode = nodes.applicationTree;
 
 	t.assert(rootNode);
-	t.assert(rootNode.component.element);
 	t.is(rootNode.children.length, 1);
 });
