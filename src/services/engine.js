@@ -49,6 +49,28 @@ export class Engine extends Service {
 
 		// Parse blacklist items
 
+		// V-if
+		// *** V-if should run _before_ other blacklist items for better performance and to avoid errors
+		// https://github.com/CassandraSpruit/Vivi/issues/31
+		this.attributeParse(node, data, 'v-if', (name, el, attr) => {
+			if (!conditional(attr, data)) {
+				el.remove();
+			}
+		});
+
+		this.attributeParseVif(node, data, 'vif-class', (name, el, attr) => {
+			const list = attr.split(' ');
+			const parsed = list.map(li => {
+				// Allow for data and non-data strings
+				return applyWithContext(li, data);
+			});
+			el.classList.add(...parsed);
+		});
+
+		this.attributeParseVif(node, data, 'vif-innerHTML', (name, el, attr) => {
+			el.innerHTML = applyWithContext(attr, data);
+		});
+
 		// Classes
 		this.attributeParse(node, data, 'v-class', (name, el, attr) => {
 			const list = attr.split(' ');
@@ -73,33 +95,13 @@ export class Engine extends Service {
 				const key = match[1];
 				const componentName = match[2];
 				const arr = applyWithContext(key, data);
-				if (arr.forEach) {
+				if (arr && arr.forEach) {
 					arr.forEach(item => {
 						const factory = this.vivi.getFactory(componentName);
 						factory.create(comp, item, {parentEl: el, doNotLoad: true});
 					});
 				}
 			}
-		});
-
-		// V-if
-		this.attributeParse(node, data, 'v-if', (name, el, attr) => {
-			if (!conditional(attr, data)) {
-				el.remove();
-			}
-		});
-
-		this.attributeParseVif(node, data, 'vif-class', (name, el, attr) => {
-			const list = attr.split(' ');
-			const parsed = list.map(li => {
-				// Allow for data and non-data strings
-				return applyWithContext(li, data);
-			});
-			el.classList.add(...parsed);
-		});
-
-		this.attributeParseVif(node, data, 'vif-innerHTML', (name, el, attr) => {
-			el.innerHTML = applyWithContext(attr, data);
 		});
 
 		// Parsing Elements
