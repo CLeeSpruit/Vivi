@@ -1,3 +1,11 @@
+## [5.2.4](https://github.com/CassandraSpruit/Vivi/compare/v5.2.3...v5.2.4) (2020-02-04)
+
+
+### Bug Fixes
+
+* v-each doesn't blow up if array is undefined ([15ebbac](https://github.com/CassandraSpruit/Vivi/commit/15ebbac0d42a7bf00d7879aabd16cf04c57e9413))
+* v-each doesn't blow up if array is undefined ([40f6cc5](https://github.com/CassandraSpruit/Vivi/commit/40f6cc5c1f0ad4f543263d7954d384fedd5f4633))
+
 ## [5.2.3](https://github.com/CassandraSpruit/Vivi/compare/v5.2.2...v5.2.3) (2020-01-29)
 
 ## [5.2.2](https://github.com/CassandraSpruit/Vivi/compare/v5.2.1...v5.2.2) (2020-01-14)
