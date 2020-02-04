@@ -246,3 +246,39 @@ test('v-each nodes should not render if data is not array', t => {
 
 	t.is(actual.children.length, 0);
 });
+
+test('v-each should not crash if array is undefined', t => {
+	const data = {};
+	const value = 'this.puppies as MockComponent';
+	t.notThrows(() => {
+		setup('v-each', value, data);
+	});
+});
+
+test('v-if runs before v-each', t => {
+	const data = {
+		display: false,
+		puppies: [
+			{breed: 'Doberman'},
+			{breed: 'Pit Bull'}
+		]
+	};
+	const value = 'this.puppies as MockComponent';
+
+	const mockCreatedBefore = vivi.getFactory('MockComponent').instances.size;
+
+	// This one has multiple attributes interacting, so manual setup is needed
+	const node = document.createElement('div');
+	const child = document.createElement('div');
+	const comp = factory.createRoot();
+	child.setAttribute('v-if', 'this.display');
+	child.setAttribute('v-each', value);
+	node.append(child);
+	service.parse(node, data, comp);
+
+	const actual = node.querySelector('div');
+	const mockCreatedAfter = vivi.getFactory('MockComponent').instances.size;
+
+	t.falsy(actual);
+	t.is(mockCreatedBefore + 1, mockCreatedAfter);
+});
