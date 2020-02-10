@@ -1,3 +1,4 @@
+import {NodeTree} from '../models';
 import {Factory} from './factory';
 
 /**
@@ -20,10 +21,10 @@ export class ComponentFactory extends Factory {
 	 */
 	createRoot() {
 		const comp = super.create();
+		const node = new NodeTree(comp);
+		this.nodes.setRoot(node);
 		comp.append(document.body);
-
-		this.nodes.setRoot(comp);
-		this.nodes.applicationTree.load();
+		node.load();
 		return comp;
 	}
 
@@ -33,15 +34,15 @@ export class ComponentFactory extends Factory {
 	 * @param {*} parent - Parent component to append to
 	 * @param {*} [data] - Data to be passed to the component
 	 * @param {{parentEl: HTMLElement, replaceEl: HTMLElement, doNotLoad: boolean}} [options]
-	 * - parentEl: Element to anchor component to. Must be provided to append and load component.
+	 * - parentEl: Element to anchor component to. Defaults to parent.element if not provided.
 	 * - replaceEl: Element to replace on append
 	 * - doNotLoad: Do not fire load after creating. Often used for children components
-	 * @todo Check: If a parentComp is provided, but a parentEl is not, should it just append to parentComp.element by default?
 	 * @todo Check: ParentEl seems to be common. Should it be normal param rather than in options?
 	 * @returns {*} - Component created
 	 * @memberof ComponentFactory
 	 */
 	create(parent, data, options) {
+		options = options || {};
 		if (!parent) {
 			this.vivi.get('Logger').error('Create: No parent given. Component has not been created. To create a root component, use createRoot().', [
 				{key: 'Parent', value: parent}
@@ -52,10 +53,13 @@ export class ComponentFactory extends Factory {
 		const component = super.create(data);
 
 		// Create nodeTree for component
-		const node = this.nodes.addComponent(parent, component);
+		const node = new NodeTree(component);
+		const parentNode = this.nodes.getNode(parent.id);
+		parentNode.addChild(node);
 
-		if (options && options.parentEl) {
-			component.append(options.parentEl, options.replaceEl);
+		const anchorPoint = options.parentEl || parent.element;
+		if (anchorPoint) {
+			component.append(anchorPoint, options.replaceEl);
 
 			if (!options.doNotLoad) {
 				node.load();
@@ -66,30 +70,10 @@ export class ComponentFactory extends Factory {
 	}
 
 	/**
-	 *Detaches component from the node tree
-	 *
-	 * @param {string} id - Id of component to be detached
-	 * @returns {*} - Returns node of component, if found
-	 * @memberof ComponentFactory
-	 * @todo Revist: Detach vs Destroy behavior. Is it needed?
-	 */
-	detach(id) {
-		const comp = this.get(id);
-		if (!comp) {
-			this.vivi.get('Logger').warn(`Detach: Component ${id} was not found.`);
-			return;
-		}
-
-		// Remove from tree and return resulting node to re-attach later
-		return this.nodes.detachComponent(comp);
-	}
-
-	/**
 	 *Destroys and removes the component
 	 *
 	 * @param {string} id - Id of component to be destroyed
 	 * @memberof ComponentFactory
-	 * @todo Revist: Detach vs Destroy behavior. Is it needed?
 	 */
 	destroy(id) {
 		const component = this.get(id);
@@ -106,7 +90,5 @@ export class ComponentFactory extends Factory {
 
 		// Remove from tree and DOM
 		this.nodes.removeComponent(component);
-
-		super.destroy(id);
 	}
 }

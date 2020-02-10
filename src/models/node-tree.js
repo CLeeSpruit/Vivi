@@ -1,3 +1,5 @@
+import {mapFind} from '@cspruit/array-like-map';
+
 /**
  * Wraps components in a recursive tree that has other nodes for children
  *
@@ -5,38 +7,31 @@
  */
 export class NodeTree {
 	constructor(comp) {
-		this.children = [];
+		this.children = new Map();
 		this.component = comp;
 	}
 
 	/**
 	 * Adds component, converts it to a NodeTree, and adds it as a child
 	 *
-	 * @param {*} comp - Component to add as a child
-	 * @returns {NodeTree} - Resulting node from component added
+	 * @param {NodeTree} node - Node to add as a child
 	 * @memberof NodeTree
 	 */
-	addChild(comp) {
-		const node = new NodeTree(comp);
-		this.children.push(node);
-
-		return node;
+	addChild(node) {
+		this.children.set(node.component.id, node);
 	}
 
 	/**
-	 * Removes node tree from children
+	 * Removes node tree from children and returns the node, if found
 	 *
-	 * @param {*} comp - Component in children to be removed
-	 * @returns {*} - Component removed, if found
+	 * @param {string} id - ComponentId in children to be removed
+	 * @returns {NodeTree} - Component's node removed, if found
 	 * @memberof NodeTree
 	 */
-	removeChild(comp) {
-		const foundIndex = this.children.findIndex(child => child.component.id === comp.id);
-		if (foundIndex === -1) {
-			return;
-		}
-
-		return this.children.splice(foundIndex, 1)[0];
+	removeChild(id) {
+		const child = this.children.get(id);
+		this.children.delete(id);
+		return child;
 	}
 
 	/**
@@ -44,21 +39,17 @@ export class NodeTree {
 	 *
 	 * @param {string} id - Component Id
 	 * @param {boolean} [deepSearch] - If true, search down the tree in addition to direct children
-	 * @param {boolean} [returnNode] - Returns NodeTree instead of component
-	 * @returns {NodeTree | *} - If found, will return the nodeTree or Component
+	 * @returns {NodeTree} - If found, will return the nodeTree or Component
 	 * @memberof NodeTree
 	 */
-	findChild(id, deepSearch, returnNode) {
-		const child = this.children.find(child => {
-			return deepSearch ?
-				child.component.id === id || Boolean(child.findChild(id, true)) :
-				child.component.id === id;
-		});
-		if (returnNode) {
-			return child;
+	findChild(id, deepSearch) {
+		let foundChild = this.children.get(id);
+
+		if (!foundChild && deepSearch) {
+			foundChild = mapFind(this.children, value => value.findChild(id, true));
 		}
 
-		return child ? child.component : null;
+		return foundChild;
 	}
 
 	/**
@@ -73,7 +64,7 @@ export class NodeTree {
 			return this;
 		}
 
-		return this.children.find(child => Boolean(child.findParentOf(id)));
+		return mapFind(this.children, child => Boolean(child.findParentOf(id)));
 	}
 
 	/**
@@ -84,7 +75,7 @@ export class NodeTree {
 	 * @memberof NodeTree
 	 */
 	hasChild(id) {
-		return Boolean(this.children.find(child => child.component.id === id));
+		return Boolean(this.children.get(id));
 	}
 
 	/**
@@ -105,7 +96,7 @@ export class NodeTree {
 	 */
 	destroy() {
 		this.children.forEach(child => child.destroy());
-		this.children = [];
+		this.children.clear();
 		this.component.destroy();
 	}
 }
