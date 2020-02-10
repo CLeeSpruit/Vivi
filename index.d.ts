@@ -87,7 +87,6 @@ export declare abstract class Component {
     append(parentEl: HTMLElement, replaceEl?: HTMLElement): void;
     startLoad(): void;
     redraw(): void;
-    detach(): void;
     load(): void;
     destroy(): void;
     listen(el: HTMLElement, eventType: string, cb: Function, options?: AddEventListenerOptions): void;
@@ -101,7 +100,7 @@ export declare class NodeTree {
     constructor(comp: Component);
     addChild(comp: Component): NodeTree;
     removeChild(comp: Component): NodeTree;
-    findChild(id: string, deepSearch?: boolean, returnNode?: boolean): Component | NodeTree;
+    findChild(id: string, deepSearch?: boolean): NodeTree;
     findParentOf(id: string): NodeTree;
     hasChild(id: string): boolean;
     load(): void;
@@ -137,8 +136,6 @@ export declare class Nodes extends Service {
     applicationTree: NodeTree;
     setRoot(rootComponent: Component): void;
     getNode(comp: Component): NodeTree;
-    addNodeToComponent(parentComp: Component, childNode: NodeTree): void;
-    addComponent(parentComp: Component, childComp: Component): NodeTree;
     removeComponent(comp: Component): void;
     detachComponent(comp: Component): NodeTree;
 }
