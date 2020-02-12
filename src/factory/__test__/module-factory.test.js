@@ -78,5 +78,5 @@ test('get should return service if created', t => {
 test('getComponentRegistry should return array of component names in the module', t => {
 	const vivi = fullConstructor();
 	const actual = vivi.getComponentRegistry();
-	t.is(actual, ['MockChildComponent', 'MockComponent']);
+	t.deepEqual(actual, ['MockChildComponent', 'MockComponent']);
 });

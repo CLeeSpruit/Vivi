@@ -56,8 +56,8 @@
         "xo": "^0.25.3"
     },
     "dependencies": {
-        "@cspruit/array-like-map": "^1.0.0",
-        "@cspruit/zephyr": "^1.0.2"
+		"@cspruit/array-like-map": "^1.2.3",
+        "@cspruit/zephyr": "^1.0.6"
     },
     "config": {
         "commitizen": {
