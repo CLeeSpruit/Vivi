@@ -12,10 +12,6 @@
                     {
                         "type": "improvement",
                         "release": "patch"
-                    },
-                    {
-                        "type": "build",
-                        "release": "patch"
                     }
                 ],
                 "parserOpts": {
