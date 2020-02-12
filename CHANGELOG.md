@@ -1,3 +1,12 @@
+## [5.2.5](https://github.com/CassandraSpruit/Vivi/compare/v5.2.4...v5.2.5) (2020-02-12)
+
+
+### Bug Fixes
+
+* updated array-like-map fix ([200e4fb](https://github.com/CassandraSpruit/Vivi/commit/200e4fb921df9f3fdd876bade96f4114c0e2cf7d))
+* **compFactory:** create root and create split into different fn ([c35e620](https://github.com/CassandraSpruit/Vivi/commit/c35e6201f34d531645cc839664d6acfc27acba18))
+* **compFactory:** create root and create split into different fn ([780db32](https://github.com/CassandraSpruit/Vivi/commit/780db3258191b84a87613446e870cd387ffc6a19))
+
 ## [5.2.4](https://github.com/CassandraSpruit/Vivi/compare/v5.2.3...v5.2.4) (2020-02-04)
 
 
