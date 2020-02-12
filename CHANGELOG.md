@@ -1,3 +1,5 @@
+## [5.2.6](https://github.com/CassandraSpruit/Vivi/compare/v5.2.5...v5.2.6) (2020-02-12)
+
 ## [5.2.5](https://github.com/CassandraSpruit/Vivi/compare/v5.2.4...v5.2.5) (2020-02-12)
 
 
