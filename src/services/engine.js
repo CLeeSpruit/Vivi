@@ -112,8 +112,17 @@ export class Engine extends Service {
 			for (let i = 0; i < els.length; i++) {
 				const el = els.item(i);
 				if (!el.id) {
+					const dataset = {};
+					Object.entries(el.dataset).forEach(value => {
+						try {
+							dataset[value[0]] = JSON.parse(value[1]);
+						} catch {
+							dataset[value[0]] = value[1];
+						}
+					});
+
 					const factory = this.vivi.getFactory(reg);
-					factory.create(comp, (el).dataset, {parentEl: el.parentElement, replaceEl: el, doNotLoad: true});
+					factory.create(comp, dataset, {parentEl: el.parentElement, replaceEl: el, doNotLoad: true});
 				}
 			}
 		});
@@ -161,7 +170,7 @@ export class Engine extends Service {
 			} else {
 				// Simple replace
 				const newAttribute = name.replace('v-', '');
-				el.setAttribute(newAttribute, applyWithContext(attr, data));
+				el.setAttribute(newAttribute, JSON.stringify(applyWithContext(attr, data)));
 			}
 
 			// Rename to data to make parseable
@@ -201,7 +210,7 @@ export class Engine extends Service {
 					customParseFn(name, el, result);
 				} else {
 					const newAttribute = name.replace('vif-', '');
-					el.setAttribute(newAttribute, applyWithContext(result, data));
+					el.setAttribute(newAttribute, JSON.stringify(applyWithContext(result, data)));
 				}
 			}
 		});

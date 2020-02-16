@@ -282,3 +282,34 @@ test('v-if runs before v-each', t => {
 	t.falsy(actual);
 	t.is(mockCreatedBefore + 1, mockCreatedAfter);
 });
+
+test('v-data-* can process objects into child components', t => {
+	const data = {
+		color: 'brown',
+		puppy: {
+			tailStatus: 'wagging'
+		},
+		bunny: {
+			hopping: true,
+			status: 'nibbling'
+		}
+	};
+
+	const node = document.createElement('div');
+	const child = document.createElement('mock');
+	const comp = factory.createRoot();
+	child.setAttribute('v-data-puppy', 'this.puppy');
+	child.setAttribute('v-class', 'this.color');
+	child.setAttribute('v-data-coat', '"fluffy"');
+	child.setAttribute('vif-data-bunny', '(this.color === "brown") ? this.bunny');
+	node.append(child);
+	service.parse(node, data, comp);
+	// Fetch last created
+	const createdComponent = vivi.get('MockComponent');
+
+	t.truthy(createdComponent.data);
+	t.deepEqual(createdComponent.data.puppy, data.puppy);
+	t.deepEqual(createdComponent.data.bunny, data.bunny);
+	t.is(createdComponent.data.coat, 'fluffy');
+});
+
