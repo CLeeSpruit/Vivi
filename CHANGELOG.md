@@ -1,3 +1,11 @@
+## [5.2.7](https://github.com/CassandraSpruit/Vivi/compare/v5.2.6...v5.2.7) (2020-02-16)
+
+
+### Bug Fixes
+
+* v-data can be passed into children via template ([286c982](https://github.com/CassandraSpruit/Vivi/commit/286c9826924f4773bdb6384dfb898909df3db664))
+* v-data can be passed into children via template ([afb7294](https://github.com/CassandraSpruit/Vivi/commit/afb7294f28e3e24b1e81038eb9bdcba54d59b85d))
+
 ## [5.2.6](https://github.com/CassandraSpruit/Vivi/compare/v5.2.5...v5.2.6) (2020-02-12)
 
 ## [5.2.5](https://github.com/CassandraSpruit/Vivi/compare/v5.2.4...v5.2.5) (2020-02-12)
