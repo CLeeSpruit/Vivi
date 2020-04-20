@@ -53,7 +53,7 @@
         "semantic-release": "^17.0.0",
         "webpack": "4.42.1",
         "webpack-cli": "3.3.10",
-        "xo": "^0.28.0"
+        "xo": "^0.29.0"
     },
     "dependencies": {
         "@cspruit/array-like-map": "^1.2.3",
