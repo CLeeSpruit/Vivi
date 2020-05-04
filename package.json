@@ -46,7 +46,7 @@
         "babel-loader": "^8.0.6",
         "browser-env": "^3.3.0",
         "codecov": "^3.6.1",
-        "cz-conventional-changelog": "^3.0.2",
+        "cz-conventional-changelog": "^3.2.0",
         "documentation": "^12.1.4",
         "eslint-plugin-jsdoc": "^23.0.0",
         "nyc": "^15.0.0",
