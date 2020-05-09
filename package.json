@@ -47,7 +47,7 @@
         "browser-env": "^3.3.0",
         "codecov": "^3.6.1",
         "cz-conventional-changelog": "^3.0.2",
-        "documentation": "^12.1.4",
+        "documentation": "^13.0.0",
         "eslint-plugin-jsdoc": "^23.0.0",
         "nyc": "^15.0.0",
         "semantic-release": "^17.0.0",
