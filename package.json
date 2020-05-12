@@ -48,7 +48,7 @@
         "codecov": "^3.6.1",
         "cz-conventional-changelog": "^3.0.2",
         "documentation": "^12.1.4",
-        "eslint-plugin-jsdoc": "^23.0.0",
+        "eslint-plugin-jsdoc": "^25.3.0",
         "nyc": "^15.0.0",
         "semantic-release": "^17.0.0",
         "webpack": "4.42.1",
