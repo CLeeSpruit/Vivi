@@ -1,4 +1,5 @@
 import { EventRegistry, Stream } from '@cspruit/zephyr';
+import { Module } from 'webpack';
 
 /* Decorators */
 export interface ViviElementParams {
@@ -31,14 +32,39 @@ export declare class ComponentFactory<T extends Component = Component> {
 }
 
 export interface ViviFactoryConstructor {
-    serviceConstructors?: Array<ServiceConstructor>;
-    componentConstructors: Array<ComponentConstructor>;
-    rootComponent: new (...args: any[]) => Component;
+    serviceConstructors?: Array<typeof Service>;
+    componentConstructors?: Array<typeof Component>;
+    rootComponent?: new (...args: any[]) => Component;
+    modules?: Array<ModuleFactory>
 }
+
+export interface ViviFactoryOptions {
+    log: 'verbose' | 'info' | 'warn' | 'error' | 'none'
+}
+
 export declare class ModuleFactory {
     services: Map<string, ServiceFactory>;
     components: Map<string, ComponentFactory>;
-    constructor(module: ViviFactoryConstructor);
+    /**
+	 * Creates an instance of ModuleFactory.
+	 *
+	 * @param {{componentConstructors: Array<typeof Component>, serviceConstructors: Array<typeof Service>, rootComponent: typeof Component}} [module]
+	 * 	- Component constructors: Array of Components to be initialized
+	 * 	- ServiceConstructors: Array of Services to be initialized
+	 *  - RootComponent: Component to be set as root. Must be set in the component constructors as well.
+	 * @param {{log: ['verbose', 'info', 'warn', 'error', 'none']}} [options] - Options passed into the module
+	 *  - loglevel: Log level of application
+	 *      - none - no logging
+	 *      - error - output only errors
+	 *      - warn - output only errors and warnings
+	 *      - info - output errors, warnings, and other information
+	 * 	    - verbose - all levels, including debug information
+	 * @param {Array<Service | {key: string, override: Service}>} [overrides] - An array of services that inherit a baked in service or can also specify by {key: override}
+	 *     - Ex: ```new ModuleFactory(null, null, [MyCoolEventService, MyCoolerLogger]);``` - _(Provided MyCoolEventService extends AppEvent and MyCoolerLogger extends Logger)_
+	 *     - Ex: ```new ModuleFactory(null, null, [{key: 'AppEvent', override: SomeWeirdEventService}, {key: 'Logger', override: SuperCustomLoggerService }]);```
+	 * @memberof ModuleFactory
+	 */
+    constructor(module: ViviFactoryConstructor, options?: ViviFactoryOptions, overrides?: Array<typeof Service | {[key: string]: typeof Service}>);
     get<T extends Component>(constuctor: new (...args: any[]) => T, id?: string): T;
     get<T extends Service>(constuctor: new (...args: any[]) => T, id?: string): T;
     getFactory<T extends Component = Component>(constructor: new (...args: any[]) => T): ComponentFactory<T>;
@@ -68,7 +94,7 @@ export interface ComponentConstructor<T extends Component = Component> {
     services?: Array<new (...args: any[]) => Service>;
 }
 
-export declare abstract class Component {
+export declare abstract class Component extends Instance {
     id: string;
     componentName: string;
     template: string;
@@ -92,6 +118,16 @@ export declare abstract class Component {
     listen(el: HTMLElement, eventType: string, cb: Function, options?: AddEventListenerOptions): void;
     appListen(eventName: string, cb: Function): void;
     createChild<T extends Component = Component>(parentEl: HTMLElement, component: new (...args) => T, data?: Object): T;
+    /**
+	 * Finds an element and binds an event to it, if provided.
+	 *
+	 * @param {string} selector - selector to call querySelector on
+	 * @param {string} [eventType] - EventType to fire on
+	 * @param {Function} [cb] - Callback to fire when event happens
+	 * @returns {HTMLElement} - Element, if found
+	 * @memberof Component
+	*/
+    bindElement(selector: string, eventType?: string, cb?: Function): HTMLElement;
 }
 
 export declare class NodeTree {
@@ -112,8 +148,16 @@ export interface ServiceConstructor<T extends Service = Service> {
     prereqArr?: Array<new (...args: any[]) => any>;
 }
 
-export declare abstract class Service {
+export declare abstract class Service extends Instance {
     id: string;
+    setData(id: number): void;
+    destroy(): void;
+}
+
+declare abstract class Instance {
+    vivi: ModuleFactory;
+    id: string;
+    load(): void;
     setData(id: number): void;
     destroy(): void;
 }
