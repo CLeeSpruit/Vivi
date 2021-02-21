@@ -15,7 +15,7 @@ export class ModuleFactory {
 	/**
 	 * Creates an instance of ModuleFactory.
 	 *
-	 * @param {{componentConstructors: Array<Component>, serviceConstructors: Array<Service>, rootComponent: Component}} [module]
+	 * @param {{componentConstructors: Array<typeof Component>, serviceConstructors: Array<typeof Service>, rootComponent: typeof Component, modules: Array<ModuleFactory>}} [module]
 	 * 	- Component constructors: Array of Components to be initialized
 	 * 	- ServiceConstructors: Array of Services to be initialized
 	 *  - RootComponent: Component to be set as root. Must be set in the component constructors as well.
@@ -30,13 +30,22 @@ export class ModuleFactory {
 	 *     - Ex: ```new ModuleFactory(null, null, [MyCoolEventService, MyCoolerLogger]);``` - _(Provided MyCoolEventService extends AppEvent and MyCoolerLogger extends Logger)_
 	 *     - Ex: ```new ModuleFactory(null, null, [{key: 'AppEvent', override: SomeWeirdEventService}, {key: 'Logger', override: SuperCustomLoggerService }]);```
 	 * @memberof ModuleFactory
-	 * @todo Allow for default services to be overwritten
 	 */
 	constructor(module, options, overrides) {
 		this.factories = new Map();
 		module = module || {};
 		this.options = options || {};
 		overrides = overrides || [];
+		this.directory = __dirname;
+
+		// Load in common modules
+		if (Array.isArray(module.modules)) {
+			module.modules.forEach(childModule => {
+				childModule.factories.forEach((value, key) => {
+					this.factories.set(key, value);
+				});
+			});
+		}
 
 		// Init baked-in services and load overrides
 		loadViviServices().forEach(service => {
@@ -77,7 +86,7 @@ export class ModuleFactory {
 	/**
 	 *Creates a Component or Service factory based off of constructor
 	 *
-	 * @param {Service | Component} constructor - Service or Component to be created with Factory
+	 * @param {typeof Service | typeof Component} constructor - Service or Component to be created with Factory
 	 * @returns {ServiceFactory | ComponentFactory} - Resulting Factory. Will return a ServiceFactory or ComponentFactory based off of name of constructor.
 	 * @memberof ModuleFactory
 	 */
@@ -98,7 +107,7 @@ export class ModuleFactory {
 	/**
 	 * Fetches a service or component from the constructor. If an id is not specified, it'll grab the last instance of that service or component.
 	 *
-	 * @param {Service | Component | Instance | string} constructor - Constructor or string of instance to be fetched
+	 * @param {typeof Service | typeof Component | typeof Instance | string} constructor - Constructor or string of instance to be fetched
 	 * @param {string} [id] - Id of instance to be fetched
 	 * @returns {Service | Component | Instance }If an id is specified, that component/service instance. Otherwise the last created instance of that service/component
 	 * @memberof ModuleFactory
@@ -110,7 +119,7 @@ export class ModuleFactory {
 	/**
 	 * Fetches a service factory or component factory from the service or component constructor
 	 *
-	 * @param {Service | Component | string} instance - Instance that is created from factory
+	 * @param {typeof Service | typeof Component | string} instance - Instance that is created from factory
 	 * @returns {ServiceFactory | ComponentFactory } If found, ServiceFactory or ComponentFactory of component/service
 	 * @memberof ModuleFactory
 	 */
