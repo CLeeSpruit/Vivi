@@ -38,19 +38,24 @@ export class Component extends Instance {
             @todo Allow for components to grab the module folder / multiple modules
             @body Currently file structure is root/component-name/component-name.component.xyz. Allow for components to be in directories based off of the module
         */
-		const directory = this.componentName + '/' + this.componentName;
+		const directory = '/' + this.componentName + '/' + this.componentName;
 
 		// Sadly because of how context replacement plugin works for webpack, this can't really be functionalized
-		try {
-			this.template = require('vivi_application/' + directory + '.component.html');
-		} catch {
-			this.template = '';
+		// TODO: THIS IS CURRENTLY IN A BROKEN STATE SINCE THE TS -> JS CONVERSION. Allow the user to override template and style
+		if (!this.template) {
+			try {
+				this.template = require(this.vivi.directory + directory + '.component.html');
+			} catch {
+				this.template = '';
+			}
 		}
 
-		try {
-			this.style = require('vivi_application/' + directory + '.component.scss');
-		} catch {
-			this.style = '';
+		if (!this.style) {
+			try {
+				this.style = require(this.vivi.directory + directory + '.component.scss');
+			} catch {
+				this.style = '';
+			}
 		}
 	}
 

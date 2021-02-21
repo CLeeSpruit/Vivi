@@ -107,10 +107,10 @@ export declare abstract class Component extends Instance {
     engine: Engine;
     nodes: Nodes;
     constructor();
-    setData(id: number, data?: Object): void;
     private getUnparsedNode;
     private createNodes;
     append(parentEl: HTMLElement, replaceEl?: HTMLElement): void;
+    setFiles(): void;
     startLoad(): void;
     redraw(): void;
     load(): void;
@@ -150,7 +150,6 @@ export interface ServiceConstructor<T extends Service = Service> {
 
 export declare abstract class Service extends Instance {
     id: string;
-    setData(id: number): void;
     destroy(): void;
 }
 
@@ -158,7 +157,7 @@ declare abstract class Instance {
     vivi: ModuleFactory;
     id: string;
     load(): void;
-    setData(id: number): void;
+    setData(id: number, data?: Object): void;
     destroy(): void;
 }
 
