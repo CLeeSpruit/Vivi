@@ -21,6 +21,28 @@ export class Instance {
 	}
 
 	/**
+	 * Creates a listener that waits for an application event to fire to trigger callback
+	 *
+	 * @param {string} eventName - Custom name of event. Will fire event when eventName matches
+	 * @param {Function} cb - Function to call when event fires
+	 * @memberof Component
+	 */
+	appListen(eventName, cb) {
+		this.vivi.get('AppEvent').createListener(eventName, cb.bind(this));
+	}
+
+	/**
+	 * Sends an application event to fire
+	 *
+	 * @param {string} eventName - Custom name of event. Something must listen to this before firing in order to trigger.
+	 * @param {Object} data - Optional data to send along event
+	 * @memberof Component
+	 */
+	sendEvent(eventName, data) {
+		this.vivi.get('AppEvent').sendEvent(eventName, data);
+	}
+
+	/**
 	 * Placeholder for load hook function. If a component, will run after DOM loads. If service, will run after constructor.
 	 *
 	 * @memberof Instance

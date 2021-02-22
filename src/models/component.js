@@ -202,17 +202,6 @@ export class Component extends Instance {
 	}
 
 	/**
-	 * Creates a listener that waits for an application event to fire to trigger callback
-	 *
-	 * @param {string} eventName - Custom name of event. Will fire event when eventName matches
-	 * @param {Function} cb - Function to call when event fires
-	 * @memberof Component
-	 */
-	appListen(eventName, cb) {
-		this.vivi.get('AppEvent').createListener(eventName, cb.bind(this));
-	}
-
-	/**
 	 * Creates a child component attached to an element
 	 *
 	 * @param {HTMLElement} parentEl - Element anchor point to attach to

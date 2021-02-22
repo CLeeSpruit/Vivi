@@ -116,7 +116,6 @@ export declare abstract class Component extends Instance {
     load(): void;
     destroy(): void;
     listen(el: HTMLElement, eventType: string, cb: Function, options?: AddEventListenerOptions): void;
-    appListen(eventName: string, cb: Function): void;
     createChild<T extends Component = Component>(parentEl: HTMLElement, component: new (...args) => T, data?: Object): T;
     /**
 	 * Finds an element and binds an event to it, if provided.
@@ -158,6 +157,8 @@ declare abstract class Instance {
     id: string;
     load(): void;
     setData(id: number, data?: Object): void;
+    appListen(eventName: string, cb: Function): void;
+    sendEvent(eventName: string, data?: Object): void;
     destroy(): void;
 }
 
