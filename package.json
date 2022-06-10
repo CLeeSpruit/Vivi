@@ -50,7 +50,7 @@
         "documentation": "^13.1.1",
         "eslint-plugin-jsdoc": "^23.0.0",
         "nyc": "^15.0.0",
-        "semantic-release": "^17.0.0",
+        "semantic-release": "^19.0.3",
         "webpack": "4.42.1",
         "webpack-cli": "3.3.10",
         "xo": "^0.38.1"
